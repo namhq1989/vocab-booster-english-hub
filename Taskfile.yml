@@ -1,0 +1,48 @@
+version: '3'
+
+tasks:
+  install-tools:
+    cmds:
+      - echo "installing tools"
+      - go install google.golang.org/protobuf/cmd/protoc-gen-go
+      - go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
+      - echo "done"
+
+  generate:
+    cmds:
+      - echo "running code generation"
+      - go generate ./...
+      - echo "done"
+
+  run:
+    cmds:
+      - doppler run -- go run cmd/*.go
+
+  mock-gen:
+    cmds:
+      # grpc
+      - mockgen -source=internal/genproto/authpb/hub_grpc.pb.go -destination=internal/mock/grpc/auth_client.go -package=mockgrpc
+      - mockgen -source=internal/genproto/vocabularypb/hub_grpc.pb.go -destination=internal/mock/grpc/staff_client.go -package=mockgrpc
+      - mockgen -source=internal/genproto/auditpb/hub_grpc.pb.go -destination=internal/mock/grpc/audit_client.go -package=mockgrpc
+
+      # jwt
+      - mockgen -source=internal/utils/jwt/jwt.go -destination=internal/mock/jwt/jwt.go -package=mockjwt
+
+      # domain
+      - mockgen -source=pkg/auth/domain/staff_auth_token.go -destination=internal/mock/domain/auth/staff_auth_token.go -package=mockauth
+
+  test:
+    dotenv: ['.env.test']
+    cmds:
+      - gotestsum --junitfile-hide-empty-pkg --format testname ./pkg/...
+
+  test-coverage:
+    dotenv: ['.env.test']
+    cmds:
+      - gotestsum --format testname -- -coverprofile=coverrage.out ./pkg/... && \
+      - go tool cover -html=coverrage.out -o coverage.html
+
+  test-debug:
+    dotenv: ['.env.test']
+    cmds:
+      - go test -v ./pkg/...
