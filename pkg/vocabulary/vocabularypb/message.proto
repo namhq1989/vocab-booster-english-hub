@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package vocabularypb;
+
+message Vocabulary {
+  string id = 1;
+  string authorId = 2;
+  string term = 3;
+  VocabularyData data = 4;
+  repeated VocabularyExample examples = 5;
+}
+
+message VocabularyData {
+  repeated string partsOfSpeech = 1;
+  string ipa = 2;
+  string audio_name = 3;
+  repeated string synonyms = 4;
+  repeated string antonyms = 5;
+}
+
+message VocabularyExample {
+  string id = 1;
+  string english = 2;
+  string vietnamese = 3;
+  string pos = 4;
+  string word = 5;
+  string definition = 6;
+}

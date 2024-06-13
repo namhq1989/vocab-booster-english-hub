@@ -8,6 +8,10 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/namhq1989/vocab-booster-english-hub/internal/tts"
+
+	"github.com/namhq1989/vocab-booster-english-hub/internal/ai"
+
 	"github.com/labstack/echo/v4"
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/caching"
@@ -33,6 +37,8 @@ type app struct {
 	monitoring *monitoring.Monitoring
 	queue      *queue.Queue
 	scraper    *scraper.Scraper
+	tts        *tts.TTS
+	ai         *ai.AI
 	waiter     waiter.Waiter
 	modules    []monolith.Module
 }
@@ -75,6 +81,14 @@ func (a *app) Queue() *queue.Queue {
 
 func (a *app) Scraper() *scraper.Scraper {
 	return a.scraper
+}
+
+func (a *app) TTS() *tts.TTS {
+	return a.tts
+}
+
+func (a *app) AI() *ai.AI {
+	return a.ai
 }
 
 func (a *app) startupModules() error {

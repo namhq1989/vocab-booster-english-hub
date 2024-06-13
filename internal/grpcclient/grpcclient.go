@@ -1,19 +1,17 @@
 package grpcclient
 
-// func NewStaffClient(_ *appcontext.AppContext, addr string) (staffpb.StaffServiceClient, error) {
-// 	conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-// 	if err != nil {
-// 		return nil, err
-// 	}
-//
-// 	return staffpb.NewStaffServiceClient(conn), nil
-// }
+import (
+	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/vocabularypb"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+)
 
-// func NewAuthClient(ctx *appcontext.AppContext, addr string) (authpb.AuthServiceClient, error) {
-// 	conn, err := grpc.DialContext(ctx.Context(), addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-// 	if err != nil {
-// 		return nil, err
-// 	}
-//
-// 	return authpb.NewAuthServiceClient(conn), nil
-// }
+func NewVocabularyClient(_ *appcontext.AppContext, addr string) (vocabularypb.VocabularyServiceClient, error) {
+	conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return nil, err
+	}
+
+	return vocabularypb.NewVocabularyServiceClient(conn), nil
+}
