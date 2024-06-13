@@ -19,7 +19,6 @@ func (t TTS) GenerateVocabularyPronunciationSound(ctx *appcontext.AppContext, vo
 		voice    = t.randomVoice()
 	)
 
-	// testing
 	output, err := t.polly.SynthesizeSpeech(ctx.Context(), &polly.SynthesizeSpeechInput{
 		OutputFormat: types.OutputFormatOggVorbis,
 		Text:         aws.String(vocabulary),
@@ -28,6 +27,10 @@ func (t TTS) GenerateVocabularyPronunciationSound(ctx *appcontext.AppContext, vo
 		LanguageCode: types.LanguageCodeEnUs,
 		TextType:     types.TextTypeText,
 	})
+	if err != nil {
+		ctx.Logger().Error("failed to synthesize speech from Polly", err, appcontext.Fields{})
+		return "", err
+	}
 	defer func() { _ = output.AudioStream.Close() }()
 
 	file, err := os.Create(t.generatePronunciationFilePath(fileName))

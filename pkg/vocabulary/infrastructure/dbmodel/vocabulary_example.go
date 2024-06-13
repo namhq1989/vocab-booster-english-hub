@@ -33,7 +33,7 @@ func (m VocabularyExample) ToDomain() domain.VocabularyExample {
 	}
 }
 
-func (m VocabularyExample) FromDomain(example domain.VocabularyExample) (*VocabularyExample, error) {
+func (VocabularyExample) FromDomain(example domain.VocabularyExample) (*VocabularyExample, error) {
 	id, err := database.ObjectIDFromString(example.ID)
 	if err != nil {
 		return nil, apperrors.Common.InvalidID

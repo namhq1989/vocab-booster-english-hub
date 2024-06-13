@@ -54,7 +54,7 @@ func (m Vocabulary) ToDomain() domain.Vocabulary {
 	}
 }
 
-func (m Vocabulary) FromDomain(vocabulary domain.Vocabulary) (*Vocabulary, error) {
+func (Vocabulary) FromDomain(vocabulary domain.Vocabulary) (*Vocabulary, error) {
 	id, err := database.ObjectIDFromString(vocabulary.ID)
 	if err != nil {
 		return nil, apperrors.Common.InvalidID
