@@ -7,33 +7,15 @@ bad_request = "Yêu cầu không hợp lệ"
 not_found = "Không tìm thấy"
 unauthorized = "Không được ủy quyền"
 forbidden = "Bị cấm"
-already_existed = "Tài nguyên đã tồn tại"
-email_already_existed = "Email đã tồn tại"
 invalid_id = "ID không hợp lệ"
-invalid_name = "Tên không hợp lệ"
-invalid_code = "Mã không hợp lệ"
-invalid_email = "Email không hợp lệ"
-invalid_status = "Trạng thái không hợp lệ"
-invalid_role = "Vai trò không hợp lệ"
-invalid_file = "Tập tin không hợp lệ"
 
-# auth
-auth_invalid_auth_token = "Token xác thực không hợp lệ"
-auth_invalid_google_token = "Token Google không hợp lệ"
-auth_invalid_refresh_token = "Token xác thực không hợp lệ"
-auth_invalid_expiry = "Thời gian xác thực không hợp lệ"
-auth_not_allowed = "Không được phép"
-
-# audit
-audit_not_found = "Không tìm thấy Audit log"
-audit_invalid_actor = "Người thực hiện không hợp lệ"
-audit_invalid_entity = "Đối tượng không hợp lệ"
-audit_invalid_action = "Thao tác không hợp lệ"
-
-# user
-user_invalid_id = "ID người dùng không hợp lệ"
-user_not_found = "Không tìm thấy người dùng"
-
-# staff
-staff_invalid_id = "ID nhân viên không hợp lệ"
-staff_not_found = "Không tìm thấy nhân viên"
+# vocabulary
+vocabulary_invalid_id = "Từ vựng không hợp lệ"
+vocabulary_not_found = "Không tìm thấy từ vựng"
+vocabulary_invalid_term = "Từ không hợp lệ"
+vocabulary_invalid_authority = "Tác giả không hợp lệ"
+vocabulary_invalid_definition = "Định nghĩa không hợp lệ"
+vocabulary_invalid_part_of_speech = "Từ loại thể hợp lệ"
+vocabulary_invalid_ipa = "IPA không hợp lệ"
+vocabulary_invalid_audio_name = "Tên file audio không hợp lệ"
+vocabulary_invalid_example_language = "Ngôn ngữ câu ví dụ không hợp lệ"

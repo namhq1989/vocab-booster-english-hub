@@ -4,10 +4,15 @@ import (
 	"crypto/subtle"
 	"fmt"
 
+	"github.com/namhq1989/vocab-booster-english-hub/internal/tts"
+
+	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
 	"github.com/namhq1989/vocab-booster-english-hub/core/logger"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/ai"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/caching"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/config"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
@@ -68,11 +73,19 @@ func main() {
 	// scraper
 	a.scraper = scraper.NewScraper()
 
+	// tts
+	a.tts = tts.NewTTSClient(cfg.AWSAccessKey, cfg.AWSSecretKey, cfg.AWSRegion)
+
+	// ai
+	a.ai = ai.NewAIClient(cfg.OpenAIAPIKey)
+
 	// waiter
 	a.waiter = waiter.New(waiter.CatchSignals())
 
 	// modules
-	a.modules = []monolith.Module{}
+	a.modules = []monolith.Module{
+		&vocabulary.Module{},
+	}
 
 	// start
 	if err = a.startupModules(); err != nil {

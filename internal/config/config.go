@@ -35,6 +35,11 @@ type (
 
 		// OpenAI
 		OpenAIAPIKey string
+
+		// AWS
+		AWSAccessKey string
+		AWSSecretKey string
+		AWSRegion    string
 	}
 )
 
@@ -60,10 +65,14 @@ func Init() Server {
 		QueuePassword:    getEnvStr("QUEUE_PASSWORD"),
 		QueueConcurrency: getEnvInt("QUEUE_CONCURRENCY"),
 
-		SentryDSN:     getEnvStr("SENTRY_DSN"),
+		SentryDSN:     getEnvStr("SENTRY_ENGLISH_HUB_DSN"),
 		SentryMachine: getEnvStr("SENTRY_MACHINE"),
 
 		OpenAIAPIKey: getEnvStr("OPENAI_API_KEY"),
+
+		AWSAccessKey: getEnvStr("AWS_ACCESS_KEY_ID"),
+		AWSSecretKey: getEnvStr("AWS_SECRET_ACCESS_KEY"),
+		AWSRegion:    getEnvStr("AWS_REGION"),
 	}
 	cfg.IsEnvRelease = cfg.Environment == "release"
 
@@ -99,6 +108,16 @@ func Init() Server {
 
 	if cfg.OpenAIAPIKey == "" {
 		panic(errors.New("missing OPENAI_API_KEY"))
+	}
+
+	if cfg.AWSAccessKey == "" {
+		panic(errors.New("missing AWS_ACCESS_KEY"))
+	}
+	if cfg.AWSSecretKey == "" {
+		panic(errors.New("missing AWS_SECRET_KEY"))
+	}
+	if cfg.AWSRegion == "" {
+		panic(errors.New("missing AWS_REGION"))
 	}
 
 	return cfg

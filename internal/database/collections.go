@@ -3,11 +3,13 @@ package database
 import "go.mongodb.org/mongo-driver/mongo"
 
 var Collections = struct {
-	Vocabulary string
-	Sentence   string
+	Vocabulary        string
+	VocabularyExample string
+	Sentence          string
 }{
-	Vocabulary: "englishHub.vocabulary",
-	Sentence:   "englishHub.sentences",
+	Vocabulary:        "englishHub.vocabulary",
+	VocabularyExample: "englishHub.vocabularyExamples",
+	Sentence:          "englishHub.sentences",
 }
 
 func (db Database) GetCollection(table string) *mongo.Collection {
