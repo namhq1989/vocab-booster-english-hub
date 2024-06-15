@@ -16,6 +16,8 @@ type SearchVocabularyHandler struct {
 	aiRepository                domain.AIRepository
 	scraperRepository           domain.ScraperRepository
 	ttsRepository               domain.TTSRepository
+	nlpRepository               domain.NlpRepository
+	queueRepository             domain.QueueRepository
 }
 
 func NewSearchVocabularyHandler(
@@ -24,6 +26,8 @@ func NewSearchVocabularyHandler(
 	aiRepository domain.AIRepository,
 	scraperRepository domain.ScraperRepository,
 	ttsRepository domain.TTSRepository,
+	nlpRepository domain.NlpRepository,
+	queueRepository domain.QueueRepository,
 ) SearchVocabularyHandler {
 	return SearchVocabularyHandler{
 		vocabularyRepository:        vocabularyRepository,
@@ -31,6 +35,8 @@ func NewSearchVocabularyHandler(
 		aiRepository:                aiRepository,
 		scraperRepository:           scraperRepository,
 		ttsRepository:               ttsRepository,
+		nlpRepository:               nlpRepository,
+		queueRepository:             queueRepository,
 	}
 }
 
@@ -81,71 +87,31 @@ func (h SearchVocabularyHandler) SearchVocabulary(ctx *appcontext.AppContext, re
 		return nil, err
 	}
 
-	ctx.Logger().Text("fetch data from internet")
-	var (
-		vocabularyData        *domain.VocabularyData
-		vocabularyExamples    []domain.VocabularyExample
-		soundGenerationResult *domain.TTSGenerateVocabularyPronunciationSoundResult
-		wg                    sync.WaitGroup
-	)
-	wg.Add(3)
-
-	go func() {
-		defer wg.Done()
-
-		ctx.Logger().Text("call OpenAI's api to fetch vocabulary data")
-		vocabularyData, err = h.aiRepository.GetVocabularyData(ctx, req.GetTerm())
-		if err != nil {
-			ctx.Logger().Error("failed to get vocabulary data", err, appcontext.Fields{})
-		}
-	}()
-
-	go func() {
-		defer wg.Done()
-
-		ctx.Logger().Text("call OpenAI's api to fetch vocabulary examples")
-		vocabularyExamples, err = h.aiRepository.GetVocabularyExamples(ctx, vocabulary.ID, req.GetTerm())
-		if err != nil {
-			ctx.Logger().Error("failed to get vocabulary examples", err, appcontext.Fields{})
-		}
-	}()
-
-	go func() {
-		defer wg.Done()
-
-		ctx.Logger().Text("call AWS Polly to generate pronunciation audio")
-		soundGenerationResult, err = h.ttsRepository.GenerateVocabularyPronunciationSound(ctx, req.GetTerm())
-	}()
-
-	wg.Wait()
-
-	if vocabularyData == nil {
-		ctx.Logger().ErrorText("vocabulary data is null, respond")
+	ctx.Logger().Text("fetch vocabulary data with GPT")
+	aiVocabularyData, err := h.aiRepository.GetVocabularyData(ctx, req.GetTerm())
+	if err != nil {
+		ctx.Logger().Error("failed to fetch vocabulary data with GPT", err, appcontext.Fields{})
+		return nil, err
+	}
+	if aiVocabularyData == nil {
+		ctx.Logger().ErrorText("aiVocabularyData is null, respond")
 		return nil, apperrors.Common.BadRequest
 	}
 
+	ctx.Logger().Text("translate and analyze the examples")
+	examples, err := h.analyzeExamples(ctx, *vocabulary, aiVocabularyData.Examples)
+	if err != nil {
+		ctx.Logger().Error("failed to analyze examples", err, appcontext.Fields{})
+		return nil, err
+	}
+
+	ctx.Logger().Text("generate sound for the vocabulary")
+	soundGenerationResult, err := h.ttsRepository.GenerateVocabularySound(ctx, req.GetTerm())
+
 	ctx.Logger().Text("set vocabulary data")
-	if err = vocabulary.SetIPA(vocabularyData.IPA); err != nil {
-		ctx.Logger().Error("failed to set vocabulary's ipa", err, appcontext.Fields{})
+	if err = h.setVocabularyData(ctx, vocabulary, aiVocabularyData, soundGenerationResult); err != nil {
+		ctx.Logger().Error("failed to set vocabulary data", err, appcontext.Fields{})
 		return nil, err
-	}
-	if err = vocabulary.SetLexicalRelations(vocabularyData.Synonyms, vocabularyData.Antonyms); err != nil {
-		ctx.Logger().Error("failed to set vocabulary's lexical relations", err, appcontext.Fields{})
-		return nil, err
-	}
-	partsOfSpeech := make([]string, 0)
-	for _, example := range vocabularyExamples {
-		partsOfSpeech = append(partsOfSpeech, example.POS.String())
-	}
-	if err = vocabulary.SetPartsOfSpeech(partsOfSpeech); err != nil {
-		ctx.Logger().Error("failed to set vocabulary's parts of speech", err, appcontext.Fields{})
-		return nil, err
-	}
-	if soundGenerationResult != nil {
-		if err = vocabulary.SetAudioName(soundGenerationResult.FileName); err != nil {
-			ctx.Logger().Error("failed to set vocabulary's audio name", err, appcontext.Fields{})
-			return nil, err
-		}
 	}
 
 	ctx.Logger().Text("persist vocabulary data to db")
@@ -155,12 +121,119 @@ func (h SearchVocabularyHandler) SearchVocabulary(ctx *appcontext.AppContext, re
 	}
 
 	ctx.Logger().Text("persist vocabulary examples to db")
-	if err = h.vocabularyExampleRepository.CreateVocabularyExamples(ctx, vocabularyExamples); err != nil {
+	if err = h.vocabularyExampleRepository.CreateVocabularyExamples(ctx, examples); err != nil {
 		ctx.Logger().Error("failed to insert vocabulary examples", err, appcontext.Fields{})
 	}
 
 	ctx.Logger().Text("done search vocabulary request")
 	result.Found = true
-	result.Vocabulary = dto.ConvertVocabularyFromDomainToGrpc(*vocabulary, vocabularyExamples)
+	result.Vocabulary = dto.ConvertVocabularyFromDomainToGrpc(*vocabulary, examples)
 	return result, nil
+}
+
+func (SearchVocabularyHandler) setVocabularyData(ctx *appcontext.AppContext, vocabulary *domain.Vocabulary, aiVocabularyData *domain.AIVocabularyData, soundGenerationResult *domain.TTSGenerateSoundResult) error {
+	if err := vocabulary.SetIPA(aiVocabularyData.IPA); err != nil {
+		ctx.Logger().Error("failed to set vocabulary's ipa", err, appcontext.Fields{"ipa": aiVocabularyData.IPA})
+		return err
+	}
+
+	if err := vocabulary.SetLexicalRelations(aiVocabularyData.Synonyms, aiVocabularyData.Antonyms); err != nil {
+		ctx.Logger().Error("failed to set vocabulary's lexical relations", err, appcontext.Fields{"synonyms": aiVocabularyData.Synonyms, "antonyms": aiVocabularyData.Antonyms})
+		return err
+	}
+
+	if err := vocabulary.SetPartsOfSpeech(aiVocabularyData.PosTags); err != nil {
+		ctx.Logger().Error("failed to set vocabulary's parts of speech", err, appcontext.Fields{"posTags": aiVocabularyData.PosTags})
+		return err
+	}
+
+	if soundGenerationResult != nil {
+		if err := vocabulary.SetAudio(soundGenerationResult.FileName); err != nil {
+			ctx.Logger().Error("failed to set vocabulary's audio name", err, appcontext.Fields{"audio": soundGenerationResult.FileName})
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (h SearchVocabularyHandler) analyzeExamples(ctx *appcontext.AppContext, vocabulary domain.Vocabulary, aiExamples []domain.AIVocabularyExample) ([]domain.VocabularyExample, error) {
+	var (
+		wg     sync.WaitGroup
+		result = make([]domain.VocabularyExample, len(aiExamples))
+	)
+
+	wg.Add(len(aiExamples))
+
+	for i, aiExample := range aiExamples {
+		go func(i int, e domain.AIVocabularyExample) {
+			defer wg.Done()
+
+			analysisResult, err := h.nlpRepository.AnalyzeSentence(ctx, e.Example)
+			if err != nil {
+				ctx.Logger().Error("failed to analyze sentence", err, appcontext.Fields{"sentence": e.Example})
+				return
+			}
+
+			example, err := domain.NewVocabularyExample(vocabulary.ID)
+			if err != nil {
+				ctx.Logger().Error("failed to create vocabulary example", err, appcontext.Fields{})
+				return
+			}
+
+			if err = example.SetContent(e.Example, analysisResult.Translated); err != nil {
+				ctx.Logger().Error("failed to set vocabulary example's content", err, appcontext.Fields{})
+				return
+			}
+
+			if err = example.SetPosTags(analysisResult.PosTags); err != nil {
+				ctx.Logger().Error("failed to set vocabulary example's pos tags", err, appcontext.Fields{})
+				return
+			}
+
+			if err = example.SetDependencies(analysisResult.Dependencies); err != nil {
+				ctx.Logger().Error("failed to set vocabulary example's dependencies", err, appcontext.Fields{})
+				return
+			}
+
+			if err = example.SetSentiment(analysisResult.Sentiment.Polarity, analysisResult.Sentiment.Subjectivity); err != nil {
+				ctx.Logger().Error("failed to set vocabulary example's sentiment", err, appcontext.Fields{})
+				return
+			}
+
+			if err = example.SetVerbs(analysisResult.Verbs); err != nil {
+				ctx.Logger().Error("failed to set vocabulary example's verbs", err, appcontext.Fields{})
+				return
+			}
+
+			if err = example.SetWordData(e.Word, e.Definition, e.Pos); err != nil {
+				ctx.Logger().Error("failed to set vocabulary example's word data", err, appcontext.Fields{})
+				return
+			}
+
+			result[i] = *example
+		}(i, aiExample)
+	}
+
+	wg.Wait()
+
+	return result, nil
+}
+
+func (h SearchVocabularyHandler) enqueueTasks(ctx *appcontext.AppContext, vocabulary *domain.Vocabulary) error {
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	go func() {
+		defer wg.Done()
+
+		ctx.Logger().Text("add task newVocabularyCreated")
+		if err := h.queueRepository.NewVocabularyCreated(ctx, domain.QueueNewVocabularyCreatedPayload{
+			Vocabulary: *vocabulary,
+		}); err != nil {
+			ctx.Logger().Error("failed to enqueue task", err, appcontext.Fields{})
+		}
+	}()
+
+	return nil
 }

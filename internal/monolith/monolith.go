@@ -8,6 +8,7 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/internal/config"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/monitoring"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/nlp"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/queue"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/scraper"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/searching"
@@ -29,6 +30,7 @@ type Monolith interface {
 	Scraper() *scraper.Scraper
 	TTS() *tts.TTS
 	AI() *ai.AI
+	NLP() *nlp.NLP
 }
 
 type Module interface {

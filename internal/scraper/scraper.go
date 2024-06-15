@@ -14,6 +14,7 @@ type Operations interface {
 type Scraper struct {
 	cambridgeCollector  *colly.Collector
 	dictionaryCollector *colly.Collector
+	wiktionaryCollector *colly.Collector
 }
 
 func NewScraper() *Scraper {

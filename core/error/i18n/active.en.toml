@@ -19,4 +19,5 @@ vocabulary_invalid_part_of_speech = "Invalid part of speech"
 vocabulary_invalid_ipa = "Invalid IPA"
 vocabulary_invalid_audio_name = "Invalid audio name"
 vocabulary_invalid_example_language = "Invalid example language"
+vocabulary_invalid_example_pos_tags = "Invalid example POS tags"
 

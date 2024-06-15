@@ -40,6 +40,9 @@ type (
 		AWSAccessKey string
 		AWSSecretKey string
 		AWSRegion    string
+
+		// NLP
+		EndpointNLP string
 	}
 )
 
@@ -73,6 +76,8 @@ func Init() Server {
 		AWSAccessKey: getEnvStr("AWS_ACCESS_KEY_ID"),
 		AWSSecretKey: getEnvStr("AWS_SECRET_ACCESS_KEY"),
 		AWSRegion:    getEnvStr("AWS_REGION"),
+
+		EndpointNLP: getEnvStr("ENDPOINT_NLP"),
 	}
 	cfg.IsEnvRelease = cfg.Environment == "release"
 
@@ -118,6 +123,10 @@ func Init() Server {
 	}
 	if cfg.AWSRegion == "" {
 		panic(errors.New("missing AWS_REGION"))
+	}
+
+	if cfg.EndpointNLP == "" {
+		panic(errors.New("missing ENDPOINT_NLP"))
 	}
 
 	return cfg

@@ -4,10 +4,6 @@ import (
 	"crypto/subtle"
 	"fmt"
 
-	"github.com/namhq1989/vocab-booster-english-hub/internal/tts"
-
-	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary"
-
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
@@ -18,10 +14,13 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/monitoring"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/monolith"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/nlp"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/queue"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/scraper"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/searching"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/tts"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/waiter"
+	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary"
 )
 
 func main() {
@@ -78,6 +77,9 @@ func main() {
 
 	// ai
 	a.ai = ai.NewAIClient(cfg.OpenAIAPIKey)
+
+	// nlp
+	a.nlp = nlp.NewNLPClient(cfg.EndpointNLP)
 
 	// waiter
 	a.waiter = waiter.New(waiter.CatchSignals())

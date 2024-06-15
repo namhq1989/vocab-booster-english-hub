@@ -10,7 +10,6 @@ import (
 
 type Operations interface {
 	VocabularyData(ctx *appcontext.AppContext, payload VocabularyDataPayload) (*VocabularyDataResult, error)
-	VocabularyExamples(ctx *appcontext.AppContext, payload VocabularyExamplesPayload) (*VocabularyExamplesResult, error)
 }
 
 type AI struct {

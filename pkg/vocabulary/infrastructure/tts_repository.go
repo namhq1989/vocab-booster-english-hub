@@ -16,13 +16,24 @@ func NewTTSRepository(tts tts.Operations) TTSRepository {
 	}
 }
 
-func (r TTSRepository) GenerateVocabularyPronunciationSound(ctx *appcontext.AppContext, vocabulary string) (*domain.TTSGenerateVocabularyPronunciationSoundResult, error) {
-	fileName, err := r.tts.GenerateVocabularyPronunciationSound(ctx, vocabulary)
+func (r TTSRepository) GenerateVocabularySound(ctx *appcontext.AppContext, vocabulary string) (*domain.TTSGenerateSoundResult, error) {
+	fileName, err := r.tts.GenerateVocabularySound(ctx, vocabulary)
 	if err != nil {
 		return nil, err
 	}
 
-	return &domain.TTSGenerateVocabularyPronunciationSoundResult{
+	return &domain.TTSGenerateSoundResult{
+		FileName: fileName,
+	}, nil
+}
+
+func (r TTSRepository) GenerateVocabularyExampleSound(ctx *appcontext.AppContext, exampleID, exampleContent string) (*domain.TTSGenerateSoundResult, error) {
+	fileName, err := r.tts.GenerateVocabularyExampleSound(ctx, exampleID, exampleContent)
+	if err != nil {
+		return nil, err
+	}
+
+	return &domain.TTSGenerateSoundResult{
 		FileName: fileName,
 	}, nil
 }

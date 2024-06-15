@@ -16,7 +16,8 @@ import (
 )
 
 type Operations interface {
-	GenerateVocabularyPronunciationSound(ctx *appcontext.AppContext, vocabulary string) (string, error)
+	GenerateVocabularySound(ctx *appcontext.AppContext, vocabulary string) (string, error)
+	GenerateVocabularyExampleSound(ctx *appcontext.AppContext, exampleID, exampleContent string) (string, error)
 }
 
 type TTS struct {
@@ -65,16 +66,29 @@ func (t TTS) randomVoice() types.Voice {
 }
 
 func (t TTS) initDirectories() {
-	if err := os.MkdirAll(t.getPronunciationsPath(), 0755); err != nil {
-		panic(fmt.Errorf("failed to create pronunciation files directory %s: %s", t.getPronunciationsPath(), err.Error()))
+	if err := os.MkdirAll(t.getVocabularyPath(), 0755); err != nil {
+		panic(fmt.Errorf("failed to create vocabulary files directory %s: %s", t.getVocabularyPath(), err.Error()))
+	}
+
+	if err := os.MkdirAll(t.getExamplePath(), 0755); err != nil {
+		panic(fmt.Errorf("failed to create example files directory %s: %s", t.getExamplePath(), err.Error()))
 	}
 }
 
-func (TTS) getPronunciationsPath() string {
+func (TTS) getVocabularyPath() string {
 	dir, _ := os.Getwd()
-	return path.Join(dir, "files/pronunciations")
+	return path.Join(dir, "files/tts/vocabulary")
 }
 
-func (t TTS) generatePronunciationFilePath(fileName string) string {
-	return fmt.Sprintf("%s/%s", t.getPronunciationsPath(), fileName)
+func (TTS) getExamplePath() string {
+	dir, _ := os.Getwd()
+	return path.Join(dir, "files/tts/example")
+}
+
+func (t TTS) generateVocabularyFilePath(fileName string) string {
+	return fmt.Sprintf("%s/%s", t.getVocabularyPath(), fileName)
+}
+
+func (t TTS) generateExampleFilePath(fileName string) string {
+	return fmt.Sprintf("%s/%s", t.getExamplePath(), fileName)
 }

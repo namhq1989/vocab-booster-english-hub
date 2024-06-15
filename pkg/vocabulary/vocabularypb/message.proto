@@ -13,16 +13,46 @@ message Vocabulary {
 message VocabularyData {
   repeated string partsOfSpeech = 1;
   string ipa = 2;
-  string audio_name = 3;
+  string audio = 3;
   repeated string synonyms = 4;
   repeated string antonyms = 5;
 }
 
 message VocabularyExample {
   string id = 1;
-  string english = 2;
-  string vietnamese = 3;
-  string pos = 4;
-  string word = 5;
-  string definition = 6;
+  string vocabularyId = 2;
+  string fromLang = 3;
+  string toLang = 4;
+  string pos = 5;
+  string toDefinition = 6;
+  string word = 7;
+  repeated PosTag posTags = 8;
+  Sentiment sentiment = 9;
+  repeated Dependency dependencies = 10;
+  repeated Verb verbs = 11;
+}
+
+message PosTag {
+  string word = 1;
+  string value = 2;
+}
+
+message Sentiment {
+  double polarity = 1;
+  double subjectivity = 2;
+}
+
+message Dependency {
+  string word = 1;
+  string depRel = 2;
+  string head = 3;
+}
+
+message Verb {
+  string base = 1;
+  string present = 2;
+  string past = 3;
+  string pastParticiple = 4;
+  string gerund = 5;
+  string thirdPersonSingular = 6;
 }

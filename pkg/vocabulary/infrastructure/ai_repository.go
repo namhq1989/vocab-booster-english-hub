@@ -16,41 +16,34 @@ func NewAIRepository(ai ai.Operations) AIRepository {
 	}
 }
 
-func (r AIRepository) GetVocabularyData(ctx *appcontext.AppContext, term string) (*domain.VocabularyData, error) {
+func (r AIRepository) GetVocabularyData(ctx *appcontext.AppContext, vocabulary string) (*domain.AIVocabularyData, error) {
 	result, err := r.ai.VocabularyData(ctx, ai.VocabularyDataPayload{
-		ToLanguage: domain.LanguageVietnamese.String(),
-		Vocabulary: term,
+		Vocabulary: vocabulary,
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	return &domain.VocabularyData{
+	posTags := make([]string, 0)
+	for _, pos := range result.PosTags {
+		posTags = append(posTags, pos)
+	}
+
+	examples := make([]domain.AIVocabularyExample, 0)
+	for _, example := range result.Examples {
+		examples = append(examples, domain.AIVocabularyExample{
+			Example:    example.Example,
+			Word:       example.Word,
+			Pos:        example.Pos,
+			Definition: example.Definition,
+		})
+	}
+
+	return &domain.AIVocabularyData{
+		PosTags:  posTags,
 		IPA:      result.IPA,
 		Synonyms: result.Synonyms,
 		Antonyms: result.Antonyms,
+		Examples: examples,
 	}, nil
-}
-
-func (r AIRepository) GetVocabularyExamples(ctx *appcontext.AppContext, vocabularyID, term string) ([]domain.VocabularyExample, error) {
-	result, err := r.ai.VocabularyExamples(ctx, ai.VocabularyExamplesPayload{
-		Vocabulary: term,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	examples := make([]domain.VocabularyExample, 0)
-	for _, example := range result.Examples {
-		var e *domain.VocabularyExample
-		e, err = domain.NewVocabularyExample(vocabularyID, example.English, example.Vietnamese, example.POS, example.Definition, example.Word)
-		if err != nil {
-			ctx.Logger().Error("failed to create vocabulary example", err, appcontext.Fields{
-				"english": example.English, "vietnamese": example.Vietnamese, "pos": example.POS, "definition": example.Definition,
-			})
-		} else {
-			examples = append(examples, *e)
-		}
-	}
-	return examples, nil
 }

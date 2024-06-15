@@ -31,10 +31,12 @@ func New(
 	aiRepository domain.AIRepository,
 	scraperRepository domain.ScraperRepository,
 	ttsRepository domain.TTSRepository,
+	nlpRepository domain.NlpRepository,
+	queueRepository domain.QueueRepository,
 ) *Application {
 	return &Application{
 		appHubHandler: appHubHandler{
-			hub.NewSearchVocabularyHandler(vocabularyRepository, vocabularyExampleRepository, aiRepository, scraperRepository, ttsRepository),
+			hub.NewSearchVocabularyHandler(vocabularyRepository, vocabularyExampleRepository, aiRepository, scraperRepository, ttsRepository, nlpRepository, queueRepository),
 		},
 	}
 }

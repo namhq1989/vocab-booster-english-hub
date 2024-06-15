@@ -7,6 +7,16 @@ import (
 	"github.com/hibiken/asynq"
 )
 
+type Operations interface {
+	GetServer() *asynq.ServeMux
+	GetScheduler() *asynq.Scheduler
+
+	GenerateTypename(name string) string
+	RunTask(queue string, payload interface{}, retryTimes int) (*asynq.TaskInfo, error)
+	ScheduleTask(typename string, payload interface{}, cronSpec string, retryTimes int) (string, error)
+	RemoveScheduler(id string) error
+}
+
 type Queue struct {
 	Client    *asynq.Client
 	Server    *asynq.ServeMux
@@ -89,4 +99,12 @@ func initClient(redisConn asynq.RedisClientOpt) *asynq.Client {
 		panic("error when initializing queue CLIENT")
 	}
 	return client
+}
+
+func (q Queue) GetServer() *asynq.ServeMux {
+	return q.Server
+}
+
+func (q Queue) GetScheduler() *asynq.Scheduler {
+	return q.Scheduler
 }

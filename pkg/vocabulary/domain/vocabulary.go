@@ -27,15 +27,9 @@ type Vocabulary struct {
 type VocabularyData struct {
 	PartsOfSpeech []PartOfSpeech
 	IPA           string
-	AudioName     string
+	Audio         string
 	Synonyms      []string
 	Antonyms      []string
-}
-
-type VocabularyDefinition struct {
-	POS        PartOfSpeech
-	English    string
-	Vietnamese string
 }
 
 func NewVocabulary(authorID, term string) (*Vocabulary, error) {
@@ -80,11 +74,11 @@ func (d *Vocabulary) SetIPA(ipa string) error {
 	return nil
 }
 
-func (d *Vocabulary) SetAudioName(audioName string) error {
-	if audioName == "" {
+func (d *Vocabulary) SetAudio(audio string) error {
+	if audio == "" {
 		return apperrors.Vocabulary.InvalidAudioName
 	}
-	d.Data.AudioName = audioName
+	d.Data.Audio = audio
 	return nil
 }
 
