@@ -17,7 +17,7 @@ func NewNewVocabularyCreatedHandler(
 	}
 }
 
-func (w NewVocabularyCreatedHandler) NewVocabularyCreated(ctx *appcontext.AppContext, payload domain.QueueNewVocabularyCreatedPayload) error {
+func (NewVocabularyCreatedHandler) NewVocabularyCreated(ctx *appcontext.AppContext, _ domain.QueueNewVocabularyCreatedPayload) error {
 	ctx.Logger().Text("** DO NOTHING **")
 	return nil
 }

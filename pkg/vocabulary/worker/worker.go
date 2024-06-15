@@ -31,8 +31,6 @@ var _ Instance = (*Worker)(nil)
 func New(
 	queue queue.Operations,
 	vocabularyRepository domain.VocabularyRepository,
-	vocabularyExampleRepository domain.VocabularyExampleRepository,
-	ttsRepository domain.TTSRepository,
 ) Worker {
 	return Worker{
 		queue: queue,

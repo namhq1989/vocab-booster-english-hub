@@ -107,6 +107,10 @@ func (h SearchVocabularyHandler) SearchVocabulary(ctx *appcontext.AppContext, re
 
 	ctx.Logger().Text("generate sound for the vocabulary")
 	soundGenerationResult, err := h.ttsRepository.GenerateVocabularySound(ctx, req.GetTerm())
+	if err != nil {
+		ctx.Logger().Error("failed to generate sound for the vocabulary", err, appcontext.Fields{})
+		return nil, err
+	}
 
 	ctx.Logger().Text("set vocabulary data")
 	if err = h.setVocabularyData(ctx, vocabulary, aiVocabularyData, soundGenerationResult); err != nil {
@@ -123,6 +127,11 @@ func (h SearchVocabularyHandler) SearchVocabulary(ctx *appcontext.AppContext, re
 	ctx.Logger().Text("persist vocabulary examples to db")
 	if err = h.vocabularyExampleRepository.CreateVocabularyExamples(ctx, examples); err != nil {
 		ctx.Logger().Error("failed to insert vocabulary examples", err, appcontext.Fields{})
+	}
+
+	ctx.Logger().Text("enqueue tasks")
+	if err = h.enqueueTasks(ctx, vocabulary); err != nil {
+		ctx.Logger().Error("failed to enqueue tasks", err, appcontext.Fields{})
 	}
 
 	ctx.Logger().Text("done search vocabulary request")

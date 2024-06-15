@@ -25,9 +25,7 @@ func (r AIRepository) GetVocabularyData(ctx *appcontext.AppContext, vocabulary s
 	}
 
 	posTags := make([]string, 0)
-	for _, pos := range result.PosTags {
-		posTags = append(posTags, pos)
-	}
+	posTags = append(posTags, result.PosTags...)
 
 	examples := make([]domain.AIVocabularyExample, 0)
 	for _, example := range result.Examples {
