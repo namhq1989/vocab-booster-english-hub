@@ -1,7 +1,7 @@
 package queue
 
 var TypeNames = struct {
-	AuditNewStaffCreated string
+	NewVocabularyCreated string
 }{
-	AuditNewStaffCreated: "audit.newStaffCreated",
+	NewVocabularyCreated: "vocabulary.newVocabularyCreated",
 }

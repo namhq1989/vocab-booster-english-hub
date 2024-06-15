@@ -5,6 +5,20 @@ import (
 )
 
 type AIRepository interface {
-	GetVocabularyData(ctx *appcontext.AppContext, term string) (*VocabularyData, error)
-	GetVocabularyExamples(ctx *appcontext.AppContext, vocabularyID, term string) ([]VocabularyExample, error)
+	GetVocabularyData(ctx *appcontext.AppContext, vocabulary string) (*AIVocabularyData, error)
+}
+
+type AIVocabularyData struct {
+	PosTags  []string
+	IPA      string
+	Synonyms []string
+	Antonyms []string
+	Examples []AIVocabularyExample
+}
+
+type AIVocabularyExample struct {
+	Example    string
+	Word       string
+	Pos        string
+	Definition string
 }

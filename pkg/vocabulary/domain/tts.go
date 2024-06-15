@@ -3,9 +3,10 @@ package domain
 import "github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 
 type TTSRepository interface {
-	GenerateVocabularyPronunciationSound(ctx *appcontext.AppContext, vocabulary string) (*TTSGenerateVocabularyPronunciationSoundResult, error)
+	GenerateVocabularySound(ctx *appcontext.AppContext, vocabulary string) (*TTSGenerateSoundResult, error)
+	GenerateVocabularyExampleSound(ctx *appcontext.AppContext, exampleID, exampleContent string) (*TTSGenerateSoundResult, error)
 }
 
-type TTSGenerateVocabularyPronunciationSoundResult struct {
+type TTSGenerateSoundResult struct {
 	FileName string
 }

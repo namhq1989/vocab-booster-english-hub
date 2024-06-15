@@ -16,36 +16,82 @@ type VocabularyExampleRepository interface {
 type VocabularyExample struct {
 	ID           string
 	VocabularyID string
-	English      string
-	Vietnamese   string
-	POS          PartOfSpeech
-	Definition   string
+	FromLang     string
+	ToLang       string
+	Pos          PartOfSpeech
+	ToDefinition string
 	Word         string
 	CreatedAt    time.Time
+	PosTags      []PosTag
+	Sentiment    Sentiment
+	Dependencies []Dependency
+	Verbs        []Verb
 }
 
-func NewVocabularyExample(vocabularyID, english, vietnamese, pos, definition, word string) (*VocabularyExample, error) {
+func NewVocabularyExample(vocabularyID string) (*VocabularyExample, error) {
 	if vocabularyID == "" {
 		return nil, apperrors.Vocabulary.InvalidVocabularyID
-	}
-
-	if english == "" || vietnamese == "" {
-		return nil, apperrors.Vocabulary.InvalidExampleLanguage
-	}
-
-	dPOS := ToPartOfSpeech(pos)
-	if !dPOS.IsValid() {
-		return nil, apperrors.Vocabulary.InvalidPartOfSpeech
 	}
 
 	return &VocabularyExample{
 		ID:           database.NewStringID(),
 		VocabularyID: vocabularyID,
-		English:      english,
-		Vietnamese:   vietnamese,
-		POS:          dPOS,
-		Definition:   definition,
-		Word:         word,
 		CreatedAt:    time.Now(),
 	}, nil
+}
+
+func (d *VocabularyExample) SetContent(fromLang, toLang string) error {
+	if fromLang == "" || toLang == "" {
+		return apperrors.Vocabulary.InvalidExampleLanguage
+	}
+
+	d.FromLang = fromLang
+	d.ToLang = toLang
+	return nil
+}
+
+func (d *VocabularyExample) SetWordData(word, toDefinition, pos string) error {
+
+	dPos := ToPartOfSpeech(pos)
+	if !dPos.IsValid() {
+		return apperrors.Vocabulary.InvalidPartOfSpeech
+	}
+
+	if word == "" {
+		return apperrors.Vocabulary.InvalidTerm
+	}
+
+	if toDefinition == "" {
+		return apperrors.Vocabulary.InvalidDefinition
+	}
+
+	d.Pos = dPos
+	d.ToDefinition = toDefinition
+	d.Word = word
+	return nil
+}
+
+func (d *VocabularyExample) SetPosTags(posTags []PosTag) error {
+	if len(posTags) == 0 {
+		return apperrors.Vocabulary.InvalidExamplePosTags
+	}
+
+	d.PosTags = posTags
+	return nil
+}
+
+func (d *VocabularyExample) SetSentiment(polarity, subjectivity float64) error {
+	d.Sentiment.Polarity = polarity
+	d.Sentiment.Subjectivity = subjectivity
+	return nil
+}
+
+func (d *VocabularyExample) SetDependencies(deps []Dependency) error {
+	d.Dependencies = deps
+	return nil
+}
+
+func (d *VocabularyExample) SetVerbs(verbs []Verb) error {
+	d.Verbs = verbs
+	return nil
 }

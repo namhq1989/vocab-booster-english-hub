@@ -42,3 +42,15 @@ func ProcessTask[T any](bgCtx context.Context, t *asynq.Task, parse func(*appcon
 	ctx.Logger().Info("[worker] done task", appcontext.Fields{"type": t.Type()})
 	return nil
 }
+
+func EnqueueTask[T any](ctx *appcontext.AppContext, q Operations, typename string, payload T, retryTimes int) error {
+	n := q.GenerateTypename(typename)
+	t, err := q.RunTask(n, payload, retryTimes)
+	if err != nil {
+		ctx.Logger().Error("failed to enqueue task", err, appcontext.Fields{"typename": typename, "payload": payload})
+		return err
+	}
+
+	ctx.Logger().Info("enqueued task", appcontext.Fields{"taskId": t.ID, "typename": typename})
+	return nil
+}

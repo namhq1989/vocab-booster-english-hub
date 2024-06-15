@@ -6,6 +6,7 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/application"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/grpc"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/infrastructure"
+	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/worker"
 )
 
 type Module struct{}
@@ -21,15 +22,21 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 		aiRepository                = infrastructure.NewAIRepository(mono.AI())
 		scraperRepository           = infrastructure.NewScraperRepository(mono.Scraper())
 		ttsRepository               = infrastructure.NewTTSRepository(mono.TTS())
+		nlpRepository               = infrastructure.NewNlpRepository(mono.NLP())
+		queueRepository             = infrastructure.NewQueueRepository(mono.Queue())
 
 		// app
-		app = application.New(vocabularyRepository, vocabularyExampleRepository, aiRepository, scraperRepository, ttsRepository)
+		app = application.New(vocabularyRepository, vocabularyExampleRepository, aiRepository, scraperRepository, ttsRepository, nlpRepository, queueRepository)
 	)
 
 	// grpc server
 	if err := grpc.RegisterServer(ctx, app, mono.RPC()); err != nil {
 		return err
 	}
+
+	// worker
+	w := worker.New(mono.Queue(), vocabularyRepository, vocabularyExampleRepository, ttsRepository)
+	w.Start()
 
 	return nil
 }

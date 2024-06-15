@@ -1,31 +1,40 @@
 package domain
 
-import "strings"
+import (
+	"strings"
+)
 
 type PartOfSpeech string
 
 const (
-	// Parts of speech from ChatGPT
-
-	PartOfSpeechUnknown      PartOfSpeech = ""
-	PartOfSpeechNoun         PartOfSpeech = "noun"
-	PartOfSpeechPronoun      PartOfSpeech = "pronoun"
-	PartOfSpeechVerb         PartOfSpeech = "verb"
-	PartOfSpeechAdjective    PartOfSpeech = "adjective"
-	PartOfSpeechAdverb       PartOfSpeech = "adverb"
-	PartOfSpeechConjunction  PartOfSpeech = "conjunction"
-	PartOfSpeechInterjection PartOfSpeech = "interjection"
-	PartOfSpeechPreposition  PartOfSpeech = "preposition"
-	PartOfSpeechDeterminer   PartOfSpeech = "determiner"
-	PartOfSpeechArticle      PartOfSpeech = "article"
-	PartOfSpeechNumeral      PartOfSpeech = "numeral"
+	PartOfSpeechAdjective                PartOfSpeech = "adj"   // Tính từ
+	PartOfSpeechAdposition               PartOfSpeech = "adp"   // Giới từ
+	PartOfSpeechAdverb                   PartOfSpeech = "adv"   // Trạng từ
+	PartOfSpeechAuxiliary                PartOfSpeech = "aux"   // Trợ động từ
+	PartOfSpeechConjunction              PartOfSpeech = "conj"  // Liên từ
+	PartOfSpeechDeterminer               PartOfSpeech = "det"   // Mạo từ
+	PartOfSpeechInterjection             PartOfSpeech = "intj"  // Thán từ
+	PartOfSpeechNoun                     PartOfSpeech = "noun"  // Danh từ
+	PartOfSpeechNumeral                  PartOfSpeech = "num"   // Số từ
+	PartOfSpeechParticle                 PartOfSpeech = "part"  // Tiểu từ
+	PartOfSpeechPronoun                  PartOfSpeech = "pron"  // Đại từ
+	PartOfSpeechProperNoun               PartOfSpeech = "propn" // Danh từ riêng
+	PartOfSpeechPunctuation              PartOfSpeech = "punct" // Dấu câu
+	PartOfSpeechSubordinatingConjunction PartOfSpeech = "sconj" // Liên từ phụ thuộc
+	PartOfSpeechSymbol                   PartOfSpeech = "sym"   // Ký hiệu
+	PartOfSpeechVerb                     PartOfSpeech = "verb"  // Động từ
+	PartOfSpeechOther                    PartOfSpeech = "x"     // Khác
+	PartOfSpeechUnknown                  PartOfSpeech = ""
 )
 
 func (s PartOfSpeech) String() string {
 	switch s {
-	case PartOfSpeechNoun, PartOfSpeechPronoun, PartOfSpeechVerb, PartOfSpeechAdjective, PartOfSpeechAdverb,
-		PartOfSpeechConjunction, PartOfSpeechInterjection, PartOfSpeechPreposition,
-		PartOfSpeechDeterminer, PartOfSpeechArticle, PartOfSpeechNumeral:
+	case PartOfSpeechAdjective, PartOfSpeechAdposition, PartOfSpeechAdverb,
+		PartOfSpeechAuxiliary, PartOfSpeechConjunction, PartOfSpeechDeterminer,
+		PartOfSpeechInterjection, PartOfSpeechNoun, PartOfSpeechNumeral,
+		PartOfSpeechParticle, PartOfSpeechPronoun, PartOfSpeechProperNoun,
+		PartOfSpeechPunctuation, PartOfSpeechSubordinatingConjunction,
+		PartOfSpeechSymbol, PartOfSpeechVerb, PartOfSpeechOther:
 		return string(s)
 	default:
 		return ""
@@ -38,28 +47,40 @@ func (s PartOfSpeech) IsValid() bool {
 
 func ToPartOfSpeech(value string) PartOfSpeech {
 	switch strings.ToLower(value) {
-	case PartOfSpeechNoun.String():
-		return PartOfSpeechNoun
-	case PartOfSpeechPronoun.String():
-		return PartOfSpeechPronoun
-	case PartOfSpeechVerb.String():
-		return PartOfSpeechVerb
 	case PartOfSpeechAdjective.String():
 		return PartOfSpeechAdjective
+	case PartOfSpeechAdposition.String():
+		return PartOfSpeechAdposition
 	case PartOfSpeechAdverb.String():
 		return PartOfSpeechAdverb
+	case PartOfSpeechAuxiliary.String():
+		return PartOfSpeechAuxiliary
 	case PartOfSpeechConjunction.String():
 		return PartOfSpeechConjunction
-	case PartOfSpeechInterjection.String():
-		return PartOfSpeechInterjection
-	case PartOfSpeechPreposition.String():
-		return PartOfSpeechPreposition
 	case PartOfSpeechDeterminer.String():
 		return PartOfSpeechDeterminer
-	case PartOfSpeechArticle.String():
-		return PartOfSpeechArticle
+	case PartOfSpeechInterjection.String():
+		return PartOfSpeechInterjection
+	case PartOfSpeechNoun.String():
+		return PartOfSpeechNoun
 	case PartOfSpeechNumeral.String():
 		return PartOfSpeechNumeral
+	case PartOfSpeechParticle.String():
+		return PartOfSpeechParticle
+	case PartOfSpeechPronoun.String():
+		return PartOfSpeechPronoun
+	case PartOfSpeechProperNoun.String():
+		return PartOfSpeechProperNoun
+	case PartOfSpeechPunctuation.String():
+		return PartOfSpeechPunctuation
+	case PartOfSpeechSubordinatingConjunction.String():
+		return PartOfSpeechSubordinatingConjunction
+	case PartOfSpeechSymbol.String():
+		return PartOfSpeechSymbol
+	case PartOfSpeechVerb.String():
+		return PartOfSpeechVerb
+	case PartOfSpeechOther.String():
+		return PartOfSpeechOther
 	default:
 		return PartOfSpeechUnknown
 	}

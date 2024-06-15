@@ -12,34 +12,53 @@ import (
 )
 
 type VocabularyDataPayload struct {
-	ToLanguage string `json:"toLanguage"`
 	Vocabulary string `json:"vocabulary"`
 }
 
 type VocabularyDataResult struct {
-	IPA      string   `json:"ipa"`
-	Synonyms []string `json:"synonyms"`
-	Antonyms []string `json:"antonyms"`
+	PosTags  []string            `json:"posTags"`
+	IPA      string              `json:"ipa"`
+	Synonyms []string            `json:"synonyms"`
+	Antonyms []string            `json:"antonyms"`
+	Examples []VocabularyExample `json:"examples"`
+}
+
+type VocabularyExample struct {
+	Example    string `json:"example"`
+	Word       string `json:"word"`
+	Pos        string `json:"pos"`
+	Definition string `json:"definition"`
 }
 
 const vocabularyDataPrompt = `
 	{{timestamp}}
 	Generate a JSON structure for "{{vocabulary}}" with:
-	- IPA transcription
-	- Up to 3 strong matches synonyms
-	- Up to 3 strong matches antonyms
+	- An array of possible parts of speech (POS) in spaCy's format and lowercase.
+	- IPA transcription with periods to indicate syllable breaks
+	- Random 3-5 strong matches synonyms
+	- Random 3-5 strong matches antonyms
+    - For each POS, provide 2 examples in random tense and their Vietnamese translations of the form of "{{vocabulary}}" used in the example.
+      Ensure the "definition" field contains only the Vietnamese translation of the word form, not the entire sentence
 	The output should be only in JSON format without any markdown tags. Here is the required structure:
 
 	{
+      "posTags": "<list POS in spaCy's format>",
       "ipa": "<ipa>",
 	  "synonyms": <list synonyms>,
-      "antonyms": <list antonyms>
+      "antonyms": <list antonyms>,
+	  "examples": [
+        {
+		  "example": "<English example>",
+          "word": "<form of '{{vocabulary}}' in example>"
+		  "pos": "<part of speech>",
+		  "definition": "<Vietnamese translation of the word form>"
+        }
+      ]
 	}
 `
 
 func (ai *AI) VocabularyData(ctx *appcontext.AppContext, payload VocabularyDataPayload) (*VocabularyDataResult, error) {
 	prompt := strings.ReplaceAll(vocabularyDataPrompt, "{{vocabulary}}", payload.Vocabulary)
-	prompt = strings.ReplaceAll(prompt, "{{toLanguage}}", payload.ToLanguage)
 	prompt = strings.ReplaceAll(prompt, "{{timestamp}}", fmt.Sprintf("%d", time.Now().Unix()))
 
 	// random int number
@@ -47,10 +66,11 @@ func (ai *AI) VocabularyData(ctx *appcontext.AppContext, payload VocabularyDataP
 	seed := randSource.Intn(10000)
 
 	resp, err := ai.openai.CreateChatCompletion(ctx.Context(), openai.ChatCompletionRequest{
+		// Model:       openai.GPT4o,
 		Model:       openai.GPT3Dot5Turbo1106,
 		Messages:    []openai.ChatCompletionMessage{{Role: openai.ChatMessageRoleUser, Content: prompt}},
-		MaxTokens:   400,
-		Temperature: 0.5,
+		MaxTokens:   700,
+		Temperature: 0.4,
 		Seed:        &seed,
 	})
 

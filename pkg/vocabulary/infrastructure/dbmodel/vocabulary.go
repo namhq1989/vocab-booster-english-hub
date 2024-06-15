@@ -21,15 +21,9 @@ type Vocabulary struct {
 type VocabularyData struct {
 	PartsOfSpeech []string `bson:"partsOfSpeech"`
 	IPA           string   `bson:"ipa"`
-	AudioName     string   `bson:"audioName"`
+	Audio         string   `bson:"audio"`
 	Synonyms      []string `bson:"synonyms"`
 	Antonyms      []string `bson:"antonyms"`
-}
-
-type VocabularyDefinition struct {
-	POS        string
-	English    string
-	Vietnamese string
 }
 
 func (m Vocabulary) ToDomain() domain.Vocabulary {
@@ -45,7 +39,7 @@ func (m Vocabulary) ToDomain() domain.Vocabulary {
 		Data: domain.VocabularyData{
 			PartsOfSpeech: partsOfSpeech,
 			IPA:           m.Data.IPA,
-			AudioName:     m.Data.AudioName,
+			Audio:         m.Data.Audio,
 			Synonyms:      m.Data.Synonyms,
 			Antonyms:      m.Data.Antonyms,
 		},
@@ -72,7 +66,7 @@ func (Vocabulary) FromDomain(vocabulary domain.Vocabulary) (*Vocabulary, error) 
 		Data: VocabularyData{
 			PartsOfSpeech: partsOfSpeech,
 			IPA:           vocabulary.Data.IPA,
-			AudioName:     vocabulary.Data.AudioName,
+			Audio:         vocabulary.Data.Audio,
 			Synonyms:      vocabulary.Data.Synonyms,
 			Antonyms:      vocabulary.Data.Antonyms,
 		},

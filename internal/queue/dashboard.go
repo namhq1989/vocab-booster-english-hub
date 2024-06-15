@@ -1,6 +1,8 @@
 package queue
 
-import "github.com/hibiken/asynqmon"
+import (
+	"github.com/hibiken/asynqmon"
+)
 
 const DashboardPath = "/q"
 

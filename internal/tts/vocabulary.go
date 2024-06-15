@@ -12,7 +12,7 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/manipulation"
 )
 
-func (t TTS) GenerateVocabularyPronunciationSound(ctx *appcontext.AppContext, vocabulary string) (string, error) {
+func (t TTS) GenerateVocabularySound(ctx *appcontext.AppContext, vocabulary string) (string, error) {
 	var (
 		slug     = manipulation.Slugify(vocabulary)
 		fileName = fmt.Sprintf("%s.ogg", slug)
@@ -33,7 +33,7 @@ func (t TTS) GenerateVocabularyPronunciationSound(ctx *appcontext.AppContext, vo
 	}
 	defer func() { _ = output.AudioStream.Close() }()
 
-	file, err := os.Create(t.generatePronunciationFilePath(fileName))
+	file, err := os.Create(t.generateVocabularyFilePath(fileName))
 	if err != nil {
 		ctx.Logger().Error("failed to create file from Polly response", err, appcontext.Fields{})
 		return "", err

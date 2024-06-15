@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/namhq1989/vocab-booster-english-hub/internal/nlp"
+
 	"github.com/namhq1989/vocab-booster-english-hub/internal/tts"
 
 	"github.com/namhq1989/vocab-booster-english-hub/internal/ai"
@@ -39,6 +41,7 @@ type app struct {
 	scraper    *scraper.Scraper
 	tts        *tts.TTS
 	ai         *ai.AI
+	nlp        *nlp.NLP
 	waiter     waiter.Waiter
 	modules    []monolith.Module
 }
@@ -89,6 +92,10 @@ func (a *app) TTS() *tts.TTS {
 
 func (a *app) AI() *ai.AI {
 	return a.ai
+}
+
+func (a *app) NLP() *nlp.NLP {
+	return a.nlp
 }
 
 func (a *app) startupModules() error {
