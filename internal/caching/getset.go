@@ -31,5 +31,5 @@ func (c Caching) Del(ctx *appcontext.AppContext, key string) (int64, error) {
 }
 
 func (Caching) GenerateKey(domain, key string) string {
-	return fmt.Sprintf("english_hub:caching:%s:%s", domain, key)
+	return fmt.Sprintf("eh:caching:%s:%s", domain, key)
 }

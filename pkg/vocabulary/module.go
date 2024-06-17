@@ -26,6 +26,7 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 		ttsRepository                  = infrastructure.NewTTSRepository(mono.TTS())
 		nlpRepository                  = infrastructure.NewNlpRepository(mono.NLP())
 		queueRepository                = infrastructure.NewQueueRepository(mono.Queue())
+		cachingRepository              = infrastructure.NewCachingRepository(mono.Caching())
 
 		// app
 		app = application.New(
@@ -36,6 +37,7 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 			ttsRepository,
 			nlpRepository,
 			queueRepository,
+			cachingRepository,
 		)
 	)
 
