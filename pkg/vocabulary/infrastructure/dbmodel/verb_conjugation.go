@@ -25,7 +25,7 @@ func (m VerbConjugation) ToDomain() domain.VerbConjugation {
 	}
 }
 
-func (m VerbConjugation) FromDomain(verb domain.VerbConjugation) (*VerbConjugation, error) {
+func (VerbConjugation) FromDomain(verb domain.VerbConjugation) (*VerbConjugation, error) {
 	id, err := database.ObjectIDFromString(verb.ID)
 	if err != nil {
 		return nil, apperrors.Common.InvalidID
