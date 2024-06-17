@@ -53,6 +53,9 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 		verbConjugationRepository,
 		queueRepository,
 		ttsRepository,
+		aiRepository,
+		scraperRepository,
+		nlpRepository,
 	)
 	w.Start()
 

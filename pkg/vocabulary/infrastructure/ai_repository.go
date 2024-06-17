@@ -3,6 +3,7 @@ package infrastructure
 import (
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/ai"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/manipulation"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 )
 
@@ -32,7 +33,7 @@ func (r AIRepository) GetVocabularyData(ctx *appcontext.AppContext, vocabulary s
 	examples := make([]domain.AIVocabularyExample, 0)
 	for _, example := range result.Examples {
 		examples = append(examples, domain.AIVocabularyExample{
-			Example:    example.Example,
+			Example:    manipulation.RemoveSuffix(example.Example, "."),
 			Word:       example.Word,
 			Pos:        domain.MappingAIPos(example.Pos),
 			Definition: example.Definition,

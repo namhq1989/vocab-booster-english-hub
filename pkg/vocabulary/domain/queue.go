@@ -29,3 +29,5 @@ type QueueCreateVerbConjugationPayload struct {
 type QueueAddOtherVocabularyToScrapeQueuePayload struct {
 	Example VocabularyExample
 }
+
+type QueueAutoScrapingVocabularyPayload struct{}

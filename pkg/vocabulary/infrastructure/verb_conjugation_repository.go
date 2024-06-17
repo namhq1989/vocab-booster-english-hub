@@ -38,9 +38,6 @@ func (r VerbConjugationRepository) ensureIndexes() {
 		indexes           = []mongo.IndexModel{
 			{
 				Keys: bson.D{{Key: "value", Value: 1}, {Key: "form", Value: 1}},
-			},
-			{
-				Keys: bson.D{{Key: "value", Value: 1}},
 				Options: &options.IndexOptions{
 					Unique: &isVerbValueUnique,
 				},

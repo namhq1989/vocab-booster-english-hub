@@ -94,3 +94,27 @@ func (r VocabularyScrapeItemRepository) DeleteVocabularyScrapeItemByTerm(ctx *ap
 	_, err := r.collection().DeleteOne(ctx.Context(), bson.M{"term": term}, nil)
 	return err
 }
+
+func (r VocabularyScrapeItemRepository) RandomPickVocabularyScrapeItem(ctx *appcontext.AppContext) (*domain.VocabularyScrapeItem, error) {
+	pipeline := mongo.Pipeline{
+		bson.D{{Key: "$sample", Value: bson.D{{Key: "size", Value: 1}}}},
+	}
+
+	cursor, err := r.collection().Aggregate(ctx.Context(), pipeline)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = cursor.Close(ctx.Context()) }()
+
+	var results []dbmodel.VocabularyScrapeItem
+	if err = cursor.All(ctx.Context(), &results); err != nil {
+		return nil, err
+	}
+
+	if len(results) > 0 {
+		result := results[0].ToDomain()
+		return &result, nil
+	}
+
+	return nil, nil
+}
