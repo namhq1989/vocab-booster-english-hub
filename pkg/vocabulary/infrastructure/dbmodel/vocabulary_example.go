@@ -12,6 +12,7 @@ import (
 type VocabularyExample struct {
 	ID           primitive.ObjectID `bson:"_id"`
 	VocabularyID primitive.ObjectID `bson:"vocabularyId"`
+	Audio        string             `bson:"audio"`
 	FromLang     string             `bson:"fromLang"`
 	ToLang       string             `bson:"toLang"`
 	Pos          string             `bson:"pos"`
@@ -46,7 +47,6 @@ func (m VocabularyExample) ToDomain() domain.VocabularyExample {
 	for _, verb := range m.Verbs {
 		verbs = append(verbs, domain.Verb{
 			Base:                verb.Base,
-			Present:             verb.Present,
 			Past:                verb.Past,
 			PastParticiple:      verb.PastParticiple,
 			Gerund:              verb.Gerund,
@@ -57,6 +57,7 @@ func (m VocabularyExample) ToDomain() domain.VocabularyExample {
 	return domain.VocabularyExample{
 		ID:           m.ID.Hex(),
 		VocabularyID: m.VocabularyID.Hex(),
+		Audio:        m.Audio,
 		FromLang:     m.FromLang,
 		ToLang:       m.ToLang,
 		Pos:          domain.ToPartOfSpeech(m.Pos),
@@ -105,7 +106,6 @@ func (VocabularyExample) FromDomain(example domain.VocabularyExample) (*Vocabula
 	for _, verb := range example.Verbs {
 		verbs = append(verbs, Verb{
 			Base:                verb.Base,
-			Present:             verb.Present,
 			Past:                verb.Past,
 			PastParticiple:      verb.PastParticiple,
 			Gerund:              verb.Gerund,
@@ -118,6 +118,7 @@ func (VocabularyExample) FromDomain(example domain.VocabularyExample) (*Vocabula
 		VocabularyID: vid,
 		FromLang:     example.FromLang,
 		ToLang:       example.ToLang,
+		Audio:        example.Audio,
 		Pos:          example.Pos.String(),
 		ToDefinition: example.ToDefinition,
 		Word:         example.Word,

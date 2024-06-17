@@ -6,16 +6,19 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/manipulation"
 )
 
 type VocabularyExampleRepository interface {
 	FindVocabularyExamplesByVocabularyID(ctx *appcontext.AppContext, vocabularyID string) ([]VocabularyExample, error)
 	CreateVocabularyExamples(ctx *appcontext.AppContext, examples []VocabularyExample) error
+	UpdateVocabularyExample(ctx *appcontext.AppContext, example VocabularyExample) error
 }
 
 type VocabularyExample struct {
 	ID           string
 	VocabularyID string
+	Audio        string
 	FromLang     string
 	ToLang       string
 	Pos          PartOfSpeech
@@ -40,10 +43,22 @@ func NewVocabularyExample(vocabularyID string) (*VocabularyExample, error) {
 	}, nil
 }
 
+func (d *VocabularyExample) SetAudio(audio string) error {
+	if audio == "" {
+		return apperrors.Vocabulary.InvalidAudioName
+	}
+	d.Audio = audio
+	return nil
+}
+
 func (d *VocabularyExample) SetContent(fromLang, toLang string) error {
 	if fromLang == "" || toLang == "" {
 		return apperrors.Vocabulary.InvalidExampleLanguage
 	}
+
+	// remove dot at the end of sentence
+	fromLang = manipulation.RemoveSuffix(fromLang, ".")
+	toLang = manipulation.RemoveSuffix(toLang, ".")
 
 	d.FromLang = fromLang
 	d.ToLang = toLang

@@ -50,9 +50,8 @@ message Dependency {
 
 message Verb {
   string base = 1;
-  string present = 2;
-  string past = 3;
-  string pastParticiple = 4;
-  string gerund = 5;
-  string thirdPersonSingular = 6;
+  string past = 2;
+  string pastParticiple = 3;
+  string gerund = 4;
+  string thirdPersonSingular = 5;
 }

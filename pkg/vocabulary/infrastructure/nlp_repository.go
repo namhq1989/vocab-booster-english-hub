@@ -44,7 +44,6 @@ func (r NlpRepository) AnalyzeSentence(ctx *appcontext.AppContext, sentence stri
 	for _, verb := range result.Verbs {
 		verbs = append(verbs, domain.Verb{
 			Base:                verb.Base,
-			Present:             verb.Present,
 			Past:                verb.Past,
 			PastParticiple:      verb.PastParticiple,
 			Gerund:              verb.Gerund,

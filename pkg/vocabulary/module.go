@@ -17,16 +17,26 @@ func (Module) Name() string {
 
 func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error {
 	var (
-		vocabularyRepository        = infrastructure.NewVocabularyRepository(mono.Database())
-		vocabularyExampleRepository = infrastructure.NewVocabularyExampleRepository(mono.Database())
-		aiRepository                = infrastructure.NewAIRepository(mono.AI())
-		scraperRepository           = infrastructure.NewScraperRepository(mono.Scraper())
-		ttsRepository               = infrastructure.NewTTSRepository(mono.TTS())
-		nlpRepository               = infrastructure.NewNlpRepository(mono.NLP())
-		queueRepository             = infrastructure.NewQueueRepository(mono.Queue())
+		vocabularyRepository           = infrastructure.NewVocabularyRepository(mono.Database())
+		vocabularyExampleRepository    = infrastructure.NewVocabularyExampleRepository(mono.Database())
+		vocabularyScrapeItemRepository = infrastructure.NewVocabularyScrapeItemRepository(mono.Database())
+		verbConjugationRepository      = infrastructure.NewVerbConjugationRepository(mono.Database())
+		aiRepository                   = infrastructure.NewAIRepository(mono.AI())
+		scraperRepository              = infrastructure.NewScraperRepository(mono.Scraper())
+		ttsRepository                  = infrastructure.NewTTSRepository(mono.TTS())
+		nlpRepository                  = infrastructure.NewNlpRepository(mono.NLP())
+		queueRepository                = infrastructure.NewQueueRepository(mono.Queue())
 
 		// app
-		app = application.New(vocabularyRepository, vocabularyExampleRepository, aiRepository, scraperRepository, ttsRepository, nlpRepository, queueRepository)
+		app = application.New(
+			vocabularyRepository,
+			vocabularyExampleRepository,
+			aiRepository,
+			scraperRepository,
+			ttsRepository,
+			nlpRepository,
+			queueRepository,
+		)
 	)
 
 	// grpc server
@@ -35,7 +45,15 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 	}
 
 	// worker
-	w := worker.New(mono.Queue(), vocabularyRepository, vocabularyExampleRepository, ttsRepository)
+	w := worker.New(
+		mono.Queue(),
+		vocabularyRepository,
+		vocabularyExampleRepository,
+		vocabularyScrapeItemRepository,
+		verbConjugationRepository,
+		queueRepository,
+		ttsRepository,
+	)
 	w.Start()
 
 	return nil

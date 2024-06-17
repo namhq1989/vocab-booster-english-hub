@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	typenamePrefix = "app"
+	typenamePrefix = "eh"
 	queueDefault   = "default"
 	queueCronjob   = "cronjob"
 

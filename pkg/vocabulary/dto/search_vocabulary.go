@@ -34,7 +34,6 @@ func ConvertVocabularyFromDomainToGrpc(vocabulary domain.Vocabulary, examples []
 		for _, verb := range example.Verbs {
 			verbs = append(verbs, &vocabularypb.Verb{
 				Base:                verb.Base,
-				Present:             verb.Present,
 				Past:                verb.Past,
 				PastParticiple:      verb.PastParticiple,
 				Gerund:              verb.Gerund,

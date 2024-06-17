@@ -20,3 +20,10 @@ func CountTotalWords(text string) int {
 	words := strings.Fields(text)
 	return len(words)
 }
+
+func RemoveSuffix(text string, suffix string) string {
+	if strings.HasSuffix(text, suffix) {
+		return text[:len(text)-1]
+	}
+	return text
+}

@@ -30,7 +30,6 @@ type Dependency struct {
 
 type Verb struct {
 	Base                string `json:"base"`
-	Present             string `json:"present"`
 	Past                string `json:"past"`
 	PastParticiple      string `json:"past_participle"`
 	Gerund              string `json:"gerund"`

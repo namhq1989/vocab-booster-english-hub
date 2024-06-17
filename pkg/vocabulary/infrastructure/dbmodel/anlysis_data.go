@@ -1,26 +1,25 @@
 package dbmodel
 
 type PosTag struct {
-	Word  string `json:"word"`
-	Value string `json:"value"`
+	Word  string `bson:"word"`
+	Value string `bson:"value"`
 }
 
 type Sentiment struct {
-	Polarity     float64 `json:"polarity"`
-	Subjectivity float64 `json:"subjectivity"`
+	Polarity     float64 `bson:"polarity"`
+	Subjectivity float64 `bson:"subjectivity"`
 }
 
 type Dependency struct {
-	Word   string `json:"word"`
-	DepRel string `json:"depRel"`
-	Head   string `json:"head"`
+	Word   string `bson:"word"`
+	DepRel string `bson:"depRel"`
+	Head   string `bson:"head"`
 }
 
 type Verb struct {
-	Base                string `json:"base"`
-	Present             string `json:"present"`
-	Past                string `json:"past"`
-	PastParticiple      string `json:"pastParticiple"`
-	Gerund              string `json:"gerund"`
-	ThirdPersonSingular string `json:"thirdPersonSingular"`
+	Base                string `bson:"base"`
+	Past                string `bson:"past"`
+	PastParticiple      string `bson:"pastParticiple"`
+	Gerund              string `bson:"gerund"`
+	ThirdPersonSingular string `bson:"thirdPersonSingular"`
 }

@@ -18,7 +18,6 @@ type Dependency struct {
 
 type Verb struct {
 	Base                string
-	Present             string
 	Past                string
 	PastParticiple      string
 	Gerund              string
