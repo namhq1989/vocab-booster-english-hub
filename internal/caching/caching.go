@@ -3,9 +3,21 @@ package caching
 import (
 	"context"
 	"fmt"
+	"time"
+
+	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 
 	"github.com/redis/go-redis/v9"
 )
+
+type Operations interface {
+	GenerateKey(domain, key string) string
+
+	Get(ctx *appcontext.AppContext, key string) (string, error)
+	Set(ctx *appcontext.AppContext, key string, value interface{})
+	SetTTL(ctx *appcontext.AppContext, key string, value interface{}, expiration time.Duration)
+	Del(ctx *appcontext.AppContext, key string) (int64, error)
+}
 
 type Caching struct {
 	redis *redis.Client
