@@ -12,6 +12,7 @@ type VocabularyScrapeItemRepository interface {
 	FindVocabularyScrapeItemByTerm(ctx *appcontext.AppContext, term string) (*VocabularyScrapeItem, error)
 	CreateVocabularyScrapeItems(ctx *appcontext.AppContext, items []VocabularyScrapeItem) error
 	DeleteVocabularyScrapeItemByTerm(ctx *appcontext.AppContext, term string) error
+	RandomPickVocabularyScrapeItem(ctx *appcontext.AppContext) (*VocabularyScrapeItem, error)
 }
 
 type VocabularyScrapeItem struct {

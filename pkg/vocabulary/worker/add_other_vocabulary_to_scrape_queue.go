@@ -86,5 +86,4 @@ func (w AddOtherVocabularyToScrapeQueueHandler) checkAndInsertItem(ctx *appconte
 
 	ctx.Logger().Text("add items to bulk documents")
 	*scrapeItems = append(*scrapeItems, *item)
-	return
 }

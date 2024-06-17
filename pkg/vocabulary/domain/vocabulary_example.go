@@ -6,7 +6,6 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
-	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/manipulation"
 )
 
 type VocabularyExampleRepository interface {
@@ -55,10 +54,6 @@ func (d *VocabularyExample) SetContent(fromLang, toLang string) error {
 	if fromLang == "" || toLang == "" {
 		return apperrors.Vocabulary.InvalidExampleLanguage
 	}
-
-	// remove dot at the end of sentence
-	fromLang = manipulation.RemoveSuffix(fromLang, ".")
-	toLang = manipulation.RemoveSuffix(toLang, ".")
 
 	d.FromLang = fromLang
 	d.ToLang = toLang
