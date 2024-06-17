@@ -13,6 +13,8 @@ var Vocabulary = struct {
 	InvalidAudioName       error
 	InvalidExampleLanguage error
 	InvalidExamplePosTags  error
+	InvalidVerbConjugation error
+	InvalidVerbForm        error
 }{
 	VocabularyNotFound:     errors.New("vocabulary_not_found"),
 	InvalidVocabularyID:    errors.New("vocabulary_invalid_id"),
@@ -24,4 +26,6 @@ var Vocabulary = struct {
 	InvalidAudioName:       errors.New("vocabulary_invalid_audio_name"),
 	InvalidExampleLanguage: errors.New("vocabulary_invalid_example_language"),
 	InvalidExamplePosTags:  errors.New("vocabulary_invalid_example_pos_tags"),
+	InvalidVerbConjugation: errors.New("vocabulary_invalid_verb_conjugation"),
+	InvalidVerbForm:        errors.New("vocabulary_invalid_verb_form"),
 }

@@ -95,3 +95,13 @@ func (r VocabularyExampleRepository) CreateVocabularyExamples(ctx *appcontext.Ap
 	_, err := r.collection().BulkWrite(ctx.Context(), writeModels, bulkOptions)
 	return err
 }
+
+func (r VocabularyExampleRepository) UpdateVocabularyExample(ctx *appcontext.AppContext, example domain.VocabularyExample) error {
+	doc, err := dbmodel.VocabularyExample{}.FromDomain(example)
+	if err != nil {
+		return err
+	}
+
+	_, err = r.collection().UpdateByID(ctx.Context(), doc.ID, bson.M{"$set": doc})
+	return err
+}

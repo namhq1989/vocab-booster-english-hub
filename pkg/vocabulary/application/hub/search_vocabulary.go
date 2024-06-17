@@ -130,7 +130,7 @@ func (h SearchVocabularyHandler) SearchVocabulary(ctx *appcontext.AppContext, re
 	}
 
 	ctx.Logger().Text("enqueue tasks")
-	if err = h.enqueueTasks(ctx, vocabulary); err != nil {
+	if err = h.enqueueTasks(ctx, vocabulary, examples); err != nil {
 		ctx.Logger().Error("failed to enqueue tasks", err, appcontext.Fields{})
 	}
 
@@ -158,7 +158,7 @@ func (SearchVocabularyHandler) setVocabularyData(ctx *appcontext.AppContext, voc
 
 	if soundGenerationResult != nil {
 		if err := vocabulary.SetAudio(soundGenerationResult.FileName); err != nil {
-			ctx.Logger().Error("failed to set vocabulary's audio name", err, appcontext.Fields{"audio": soundGenerationResult.FileName})
+			ctx.Logger().Error("failed to set vocabulary's audio", err, appcontext.Fields{"audio": soundGenerationResult.FileName})
 			return err
 		}
 	}
@@ -186,37 +186,37 @@ func (h SearchVocabularyHandler) analyzeExamples(ctx *appcontext.AppContext, voc
 
 			example, err := domain.NewVocabularyExample(vocabulary.ID)
 			if err != nil {
-				ctx.Logger().Error("failed to create vocabulary example", err, appcontext.Fields{})
+				ctx.Logger().Error("failed to create vocabulary example", err, appcontext.Fields{"vocabularyID": vocabulary.ID})
 				return
 			}
 
 			if err = example.SetContent(e.Example, analysisResult.Translated); err != nil {
-				ctx.Logger().Error("failed to set vocabulary example's content", err, appcontext.Fields{})
+				ctx.Logger().Error("failed to set vocabulary example's content", err, appcontext.Fields{"content": e.Example, "translated": analysisResult.Translated})
 				return
 			}
 
 			if err = example.SetPosTags(analysisResult.PosTags); err != nil {
-				ctx.Logger().Error("failed to set vocabulary example's pos tags", err, appcontext.Fields{})
+				ctx.Logger().Error("failed to set vocabulary example's pos tags", err, appcontext.Fields{"posTags": analysisResult.PosTags})
 				return
 			}
 
 			if err = example.SetDependencies(analysisResult.Dependencies); err != nil {
-				ctx.Logger().Error("failed to set vocabulary example's dependencies", err, appcontext.Fields{})
+				ctx.Logger().Error("failed to set vocabulary example's dependencies", err, appcontext.Fields{"dependencies": analysisResult.Dependencies})
 				return
 			}
 
 			if err = example.SetSentiment(analysisResult.Sentiment.Polarity, analysisResult.Sentiment.Subjectivity); err != nil {
-				ctx.Logger().Error("failed to set vocabulary example's sentiment", err, appcontext.Fields{})
+				ctx.Logger().Error("failed to set vocabulary example's sentiment", err, appcontext.Fields{"polarity": analysisResult.Sentiment.Polarity, "subjectivity": analysisResult.Sentiment.Subjectivity})
 				return
 			}
 
 			if err = example.SetVerbs(analysisResult.Verbs); err != nil {
-				ctx.Logger().Error("failed to set vocabulary example's verbs", err, appcontext.Fields{})
+				ctx.Logger().Error("failed to set vocabulary example's verbs", err, appcontext.Fields{"verbs": analysisResult.Verbs})
 				return
 			}
 
 			if err = example.SetWordData(e.Word, e.Definition, e.Pos); err != nil {
-				ctx.Logger().Error("failed to set vocabulary example's word data", err, appcontext.Fields{})
+				ctx.Logger().Error("failed to set vocabulary example's word data", err, appcontext.Fields{"word": e.Word, "definition": e.Definition, "pos": e.Pos})
 				return
 			}
 
@@ -229,9 +229,12 @@ func (h SearchVocabularyHandler) analyzeExamples(ctx *appcontext.AppContext, voc
 	return result, nil
 }
 
-func (h SearchVocabularyHandler) enqueueTasks(ctx *appcontext.AppContext, vocabulary *domain.Vocabulary) error {
-	var wg sync.WaitGroup
-	wg.Add(1)
+func (h SearchVocabularyHandler) enqueueTasks(ctx *appcontext.AppContext, vocabulary *domain.Vocabulary, examples []domain.VocabularyExample) error {
+	var (
+		wg         sync.WaitGroup
+		totalTasks = 1 + len(examples)
+	)
+	wg.Add(totalTasks)
 
 	go func() {
 		defer wg.Done()
@@ -243,6 +246,21 @@ func (h SearchVocabularyHandler) enqueueTasks(ctx *appcontext.AppContext, vocabu
 			ctx.Logger().Error("failed to enqueue task", err, appcontext.Fields{})
 		}
 	}()
+
+	for _, e := range examples {
+		go func(example domain.VocabularyExample) {
+			defer wg.Done()
+
+			ctx.Logger().Info("add task newVocabularyExampleCreated", appcontext.Fields{"exampleID": example.ID})
+			if err := h.queueRepository.NewVocabularyExampleCreated(ctx, domain.QueueNewVocabularyExampleCreatedPayload{
+				Example: example,
+			}); err != nil {
+				ctx.Logger().Error("failed to enqueue task", err, appcontext.Fields{})
+			}
+		}(e)
+	}
+
+	defer wg.Wait()
 
 	return nil
 }

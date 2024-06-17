@@ -1,7 +1,15 @@
 package queue
 
 var TypeNames = struct {
-	NewVocabularyCreated string
+	NewVocabularyCreated            string
+	NewVocabularyExampleCreated     string
+	CreateVocabularyExampleAudio    string
+	CreateVerbConjugation           string
+	AddOtherVocabularyToScrapeQueue string
 }{
-	NewVocabularyCreated: "vocabulary.newVocabularyCreated",
+	NewVocabularyCreated:            "vocabulary.newVocabularyCreated",
+	NewVocabularyExampleCreated:     "vocabulary.newVocabularyExampleCreated",
+	CreateVocabularyExampleAudio:    "vocabulary.createVocabularyExampleAudio",
+	CreateVerbConjugation:           "vocabulary.createVerbConjugation",
+	AddOtherVocabularyToScrapeQueue: "vocabulary.addOtherVocabularyToScrapeQueue",
 }

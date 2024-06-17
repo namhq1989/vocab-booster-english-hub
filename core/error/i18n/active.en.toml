@@ -20,4 +20,6 @@ vocabulary_invalid_ipa = "Invalid IPA"
 vocabulary_invalid_audio_name = "Invalid audio name"
 vocabulary_invalid_example_language = "Invalid example language"
 vocabulary_invalid_example_pos_tags = "Invalid example POS tags"
+vocabulary_invalid_verb_conjugation = "Invalid verb conjugation"
+vocabulary_invalid_verb_form = "Invalid verb form"
 
