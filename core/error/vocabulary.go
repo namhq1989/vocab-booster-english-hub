@@ -3,29 +3,31 @@ package apperrors
 import "errors"
 
 var Vocabulary = struct {
-	VocabularyNotFound     error
-	InvalidVocabularyID    error
-	InvalidTerm            error
-	InvalidAuthor          error
-	InvalidDefinition      error
-	InvalidPartOfSpeech    error
-	InvalidIPA             error
-	InvalidAudioName       error
-	InvalidExampleLanguage error
-	InvalidExamplePosTags  error
-	InvalidVerbConjugation error
-	InvalidVerbForm        error
+	VocabularyNotFound                error
+	InvalidVocabularyID               error
+	InvalidTerm                       error
+	InvalidAuthor                     error
+	InvalidDefinition                 error
+	InvalidPartOfSpeech               error
+	InvalidIPA                        error
+	InvalidAudioName                  error
+	InvalidExampleContent             error
+	InvalidExampleTranslatedLanguages error
+	InvalidExamplePosTags             error
+	InvalidVerbConjugation            error
+	InvalidVerbForm                   error
 }{
-	VocabularyNotFound:     errors.New("vocabulary_not_found"),
-	InvalidVocabularyID:    errors.New("vocabulary_invalid_id"),
-	InvalidTerm:            errors.New("vocabulary_invalid_term"),
-	InvalidAuthor:          errors.New("vocabulary_invalid_author"),
-	InvalidDefinition:      errors.New("vocabulary_invalid_definition"),
-	InvalidPartOfSpeech:    errors.New("vocabulary_invalid_part_of_speech"),
-	InvalidIPA:             errors.New("vocabulary_invalid_ipa"),
-	InvalidAudioName:       errors.New("vocabulary_invalid_audio_name"),
-	InvalidExampleLanguage: errors.New("vocabulary_invalid_example_language"),
-	InvalidExamplePosTags:  errors.New("vocabulary_invalid_example_pos_tags"),
-	InvalidVerbConjugation: errors.New("vocabulary_invalid_verb_conjugation"),
-	InvalidVerbForm:        errors.New("vocabulary_invalid_verb_form"),
+	VocabularyNotFound:                errors.New("vocabulary_not_found"),
+	InvalidVocabularyID:               errors.New("vocabulary_invalid_id"),
+	InvalidTerm:                       errors.New("vocabulary_invalid_term"),
+	InvalidAuthor:                     errors.New("vocabulary_invalid_author"),
+	InvalidDefinition:                 errors.New("vocabulary_invalid_definition"),
+	InvalidPartOfSpeech:               errors.New("vocabulary_invalid_part_of_speech"),
+	InvalidIPA:                        errors.New("vocabulary_invalid_ipa"),
+	InvalidAudioName:                  errors.New("vocabulary_invalid_audio_name"),
+	InvalidExampleContent:             errors.New("vocabulary_invalid_example_content"),
+	InvalidExampleTranslatedLanguages: errors.New("vocabulary_invalid_example_translated_languages"),
+	InvalidExamplePosTags:             errors.New("vocabulary_invalid_example_pos_tags"),
+	InvalidVerbConjugation:            errors.New("vocabulary_invalid_verb_conjugation"),
+	InvalidVerbForm:                   errors.New("vocabulary_invalid_verb_form"),
 }

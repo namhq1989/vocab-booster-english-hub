@@ -56,14 +56,17 @@ func New(
 	aiRepository domain.AIRepository,
 	scraperRepository domain.ScraperRepository,
 	nlpRepository domain.NlpRepository,
+	exerciseHub domain.ExerciseHub,
 ) Worker {
 	return Worker{
 		queue: queue,
 		workerHandlers: workerHandlers{
 			NewVocabularyCreatedHandler: NewNewVocabularyCreatedHandler(vocabularyRepository),
 			NewVocabularyExampleCreatedHandler: NewNewVocabularyExampleCreatedHandler(
+				vocabularyRepository,
 				vocabularyExampleRepository,
 				queueRepository,
+				exerciseHub,
 			),
 			CreateVocabularyExampleAudioHandler: NewCreateVocabularyExampleAudioHandler(
 				vocabularyExampleRepository,
@@ -133,7 +136,7 @@ func (w Worker) addCronjob() {
 		jobs = []cronjobData{
 			{
 				Task:       w.queue.GenerateTypename(queue.TypeNames.AutoScrapingVocabulary),
-				CronSpec:   "@every 1m",
+				CronSpec:   "@every 10m",
 				Payload:    domain.QueueAutoScrapingVocabularyPayload{},
 				RetryTimes: 1,
 			},

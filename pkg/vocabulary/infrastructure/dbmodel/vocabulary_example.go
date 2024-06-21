@@ -4,25 +4,32 @@ import (
 	"time"
 
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
+	"github.com/namhq1989/vocab-booster-english-hub/core/language"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type VocabularyExample struct {
-	ID           primitive.ObjectID `bson:"_id"`
-	VocabularyID primitive.ObjectID `bson:"vocabularyId"`
-	Audio        string             `bson:"audio"`
-	FromLang     string             `bson:"fromLang"`
-	ToLang       string             `bson:"toLang"`
-	Pos          string             `bson:"pos"`
-	ToDefinition string             `bson:"toDefinition"`
-	Word         string             `bson:"word"`
-	CreatedAt    time.Time          `bson:"createdAt"`
-	PosTags      []PosTag           `bson:"posTags"`
-	Sentiment    Sentiment          `bson:"sentiment"`
-	Dependencies []Dependency       `bson:"dependencies"`
-	Verbs        []Verb             `bson:"verbs"`
+	ID           primitive.ObjectID           `bson:"_id"`
+	VocabularyID primitive.ObjectID           `bson:"vocabularyId"`
+	Audio        string                       `bson:"audio"`
+	Content      string                       `bson:"content"`
+	Translated   language.TranslatedLanguages `bson:"translated"`
+	MainWord     VocabularyMainWord           `bson:"mainWord"`
+	CreatedAt    time.Time                    `bson:"createdAt"`
+	PosTags      []PosTag                     `bson:"posTags"`
+	Sentiment    Sentiment                    `bson:"sentiment"`
+	Dependencies []Dependency                 `bson:"dependencies"`
+	Verbs        []Verb                       `bson:"verbs"`
+}
+
+type VocabularyMainWord struct {
+	Word       string
+	Base       string
+	Pos        string
+	Definition string
+	Translated language.TranslatedLanguages
 }
 
 func (m VocabularyExample) ToDomain() domain.VocabularyExample {
@@ -58,13 +65,17 @@ func (m VocabularyExample) ToDomain() domain.VocabularyExample {
 		ID:           m.ID.Hex(),
 		VocabularyID: m.VocabularyID.Hex(),
 		Audio:        m.Audio,
-		FromLang:     m.FromLang,
-		ToLang:       m.ToLang,
-		Pos:          domain.ToPartOfSpeech(m.Pos),
-		ToDefinition: m.ToDefinition,
-		Word:         m.Word,
-		CreatedAt:    m.CreatedAt,
-		PosTags:      posTags,
+		Content:      m.Content,
+		Translated:   m.Translated,
+		MainWord: domain.VocabularyMainWord{
+			Word:       m.MainWord.Word,
+			Base:       m.MainWord.Base,
+			Pos:        domain.ToPartOfSpeech(m.MainWord.Pos),
+			Definition: m.MainWord.Definition,
+			Translated: m.MainWord.Translated,
+		},
+		CreatedAt: m.CreatedAt,
+		PosTags:   posTags,
 		Sentiment: domain.Sentiment{
 			Polarity:     m.Sentiment.Polarity,
 			Subjectivity: m.Sentiment.Subjectivity,
@@ -116,14 +127,18 @@ func (VocabularyExample) FromDomain(example domain.VocabularyExample) (*Vocabula
 	return &VocabularyExample{
 		ID:           id,
 		VocabularyID: vid,
-		FromLang:     example.FromLang,
-		ToLang:       example.ToLang,
 		Audio:        example.Audio,
-		Pos:          example.Pos.String(),
-		ToDefinition: example.ToDefinition,
-		Word:         example.Word,
-		CreatedAt:    example.CreatedAt,
-		PosTags:      posTags,
+		Content:      example.Content,
+		Translated:   example.Translated,
+		MainWord: VocabularyMainWord{
+			Word:       example.MainWord.Word,
+			Base:       example.MainWord.Base,
+			Pos:        example.MainWord.Pos.String(),
+			Definition: example.MainWord.Definition,
+			Translated: example.MainWord.Translated,
+		},
+		CreatedAt: example.CreatedAt,
+		PosTags:   posTags,
 		Sentiment: Sentiment{
 			Polarity:     example.Sentiment.Polarity,
 			Subjectivity: example.Sentiment.Subjectivity,

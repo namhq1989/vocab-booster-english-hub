@@ -18,8 +18,20 @@ vocabulary_invalid_definition = "Invalid vocabulary's definition"
 vocabulary_invalid_part_of_speech = "Invalid part of speech"
 vocabulary_invalid_ipa = "Invalid IPA"
 vocabulary_invalid_audio_name = "Invalid audio name"
-vocabulary_invalid_example_language = "Invalid example language"
+vocabulary_invalid_example_content = "Invalid example content"
+vocabulary_invalid_example_translated_languages = "Invalid example translated languages"
 vocabulary_invalid_example_pos_tags = "Invalid example POS tags"
 vocabulary_invalid_verb_conjugation = "Invalid verb conjugation"
 vocabulary_invalid_verb_form = "Invalid verb form"
+
+# exercise
+exercise_not_found = "Exercise not found"
+exercise_invalid_id = "Invalid exercise id"
+exercise_invalid_vocabulary_example_id = "Invalid vocabulary example id"
+exercise_invalid_content = "Invalid content"
+exercise_invalid_vocabulary_id = "Invalid vocabulary"
+exercise_invalid_correct_answer = "Invalid exercise correct answer"
+exercise_invalid_options = "Invalid exercise options"
+
+
 

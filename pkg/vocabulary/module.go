@@ -2,6 +2,7 @@ package vocabulary
 
 import (
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/grpcclient"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/monolith"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/application"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/grpc"
@@ -16,17 +17,25 @@ func (Module) Name() string {
 }
 
 func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error {
+	exerciseGRPCClient, err := grpcclient.NewExerciseClient(ctx, mono.Config().GRPCPort)
+	if err != nil {
+		return err
+	}
+
 	var (
 		vocabularyRepository           = infrastructure.NewVocabularyRepository(mono.Database())
 		vocabularyExampleRepository    = infrastructure.NewVocabularyExampleRepository(mono.Database())
 		vocabularyScrapeItemRepository = infrastructure.NewVocabularyScrapeItemRepository(mono.Database())
 		verbConjugationRepository      = infrastructure.NewVerbConjugationRepository(mono.Database())
-		aiRepository                   = infrastructure.NewAIRepository(mono.AI())
-		scraperRepository              = infrastructure.NewScraperRepository(mono.Scraper())
-		ttsRepository                  = infrastructure.NewTTSRepository(mono.TTS())
-		nlpRepository                  = infrastructure.NewNlpRepository(mono.NLP())
-		queueRepository                = infrastructure.NewQueueRepository(mono.Queue())
-		cachingRepository              = infrastructure.NewCachingRepository(mono.Caching())
+
+		aiRepository      = infrastructure.NewAIRepository(mono.AI())
+		scraperRepository = infrastructure.NewScraperRepository(mono.Scraper())
+		ttsRepository     = infrastructure.NewTTSRepository(mono.TTS())
+		nlpRepository     = infrastructure.NewNlpRepository(mono.NLP())
+		queueRepository   = infrastructure.NewQueueRepository(mono.Queue())
+		cachingRepository = infrastructure.NewCachingRepository(mono.Caching())
+
+		exerciseHub = infrastructure.NewExerciseHub(exerciseGRPCClient)
 
 		// app
 		app = application.New(
@@ -42,7 +51,7 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 	)
 
 	// grpc server
-	if err := grpc.RegisterServer(ctx, app, mono.RPC()); err != nil {
+	if err = grpc.RegisterServer(ctx, mono.RPC(), app); err != nil {
 		return err
 	}
 
@@ -58,6 +67,7 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 		aiRepository,
 		scraperRepository,
 		nlpRepository,
+		exerciseHub,
 	)
 	w.Start()
 

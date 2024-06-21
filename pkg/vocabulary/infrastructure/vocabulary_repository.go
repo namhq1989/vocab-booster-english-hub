@@ -105,3 +105,27 @@ func (r VocabularyRepository) UpdateVocabulary(ctx *appcontext.AppContext, vocab
 	_, err = r.collection().UpdateByID(ctx.Context(), doc.ID, bson.M{"$set": doc})
 	return err
 }
+
+func (r VocabularyRepository) RandomPickVocabularyForExercise(ctx *appcontext.AppContext, numOfVocabulary int) ([]domain.Vocabulary, error) {
+	pipeline := mongo.Pipeline{
+		bson.D{{Key: "$sample", Value: bson.D{{Key: "size", Value: numOfVocabulary}}}},
+	}
+
+	cursor, err := r.collection().Aggregate(ctx.Context(), pipeline)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = cursor.Close(ctx.Context()) }()
+
+	var result []dbmodel.Vocabulary
+	if err = cursor.All(ctx.Context(), &result); err != nil {
+		return nil, err
+	}
+
+	var vocabulary = make([]domain.Vocabulary, len(result))
+	for index, doc := range result {
+		vocabulary[index] = doc.ToDomain()
+	}
+
+	return vocabulary, nil
+}

@@ -3,6 +3,8 @@ package hub
 import (
 	"sync"
 
+	"github.com/namhq1989/vocab-booster-english-hub/core/language"
+
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/vocabularypb"
@@ -239,7 +241,15 @@ func (h SearchVocabularyHandler) analyzeExamples(ctx *appcontext.AppContext, voc
 				return
 			}
 
-			if err = example.SetWordData(e.Word, e.Definition, e.Pos); err != nil {
+			translatedDefinition := language.TranslatedLanguages{}
+			mainWordDefinitionTranslated, err := h.nlpRepository.TranslateDefinition(ctx, e.Definition)
+			if err != nil {
+				ctx.Logger().Error("failed to translate main word definition", err, appcontext.Fields{"definition": e.Definition})
+			} else {
+				translatedDefinition = *mainWordDefinitionTranslated
+			}
+
+			if err = example.SetMainWordData(e.Word, vocabulary.Term, e.Definition, e.Pos, translatedDefinition); err != nil {
 				ctx.Logger().Error("failed to set vocabulary example's word data", err, appcontext.Fields{"word": e.Word, "definition": e.Definition, "pos": e.Pos})
 				return
 			}
@@ -277,7 +287,8 @@ func (h SearchVocabularyHandler) enqueueTasks(ctx *appcontext.AppContext, vocabu
 
 			ctx.Logger().Info("add task newVocabularyExampleCreated", appcontext.Fields{"exampleID": example.ID})
 			if err := h.queueRepository.NewVocabularyExampleCreated(ctx, domain.QueueNewVocabularyExampleCreatedPayload{
-				Example: example,
+				Vocabulary: *vocabulary,
+				Example:    example,
 			}); err != nil {
 				ctx.Logger().Error("failed to enqueue task", err, appcontext.Fields{})
 			}

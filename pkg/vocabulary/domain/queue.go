@@ -15,7 +15,8 @@ type QueueNewVocabularyCreatedPayload struct {
 }
 
 type QueueNewVocabularyExampleCreatedPayload struct {
-	Example VocabularyExample
+	Vocabulary Vocabulary
+	Example    VocabularyExample
 }
 
 type QueueCreateVocabularyExampleAudioPayload struct {

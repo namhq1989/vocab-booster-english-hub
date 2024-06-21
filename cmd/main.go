@@ -20,6 +20,7 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/internal/searching"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/tts"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/waiter"
+	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary"
 )
 
@@ -87,6 +88,7 @@ func main() {
 	// modules
 	a.modules = []monolith.Module{
 		&vocabulary.Module{},
+		&exercise.Module{},
 	}
 
 	// start

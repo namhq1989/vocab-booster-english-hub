@@ -2,6 +2,10 @@ syntax = "proto3";
 
 package vocabularypb;
 
+message TranslatedLanguages {
+  string vi = 1;
+}
+
 message Vocabulary {
   string id = 1;
   string authorId = 2;
@@ -21,15 +25,21 @@ message VocabularyData {
 message VocabularyExample {
   string id = 1;
   string vocabularyId = 2;
-  string fromLang = 3;
-  string toLang = 4;
-  string pos = 5;
-  string toDefinition = 6;
-  string word = 7;
-  repeated PosTag posTags = 8;
-  Sentiment sentiment = 9;
-  repeated Dependency dependencies = 10;
-  repeated Verb verbs = 11;
+  string content = 3;
+  TranslatedLanguages translated = 4;
+  VocabularyMainWord mainWord = 5;
+  repeated PosTag posTags = 6;
+  Sentiment sentiment = 7;
+  repeated Dependency dependencies = 8;
+  repeated Verb verbs = 9;
+}
+
+message VocabularyMainWord {
+  string word = 1;
+  string base = 2;
+  string pos = 3;
+  string definition = 4;
+  TranslatedLanguages translated = 5;
 }
 
 message PosTag {
