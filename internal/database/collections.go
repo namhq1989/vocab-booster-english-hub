@@ -15,7 +15,7 @@ var Collections = struct {
 	VocabularyScrapeItem: "englishHub.vocabularyScrapeItems",
 	VerbConjugation:      "englishHub.verbConjugations",
 
-	Exercise: "englishHub.exercise",
+	Exercise: "englishHub.exercises",
 }
 
 func (db Database) GetCollection(table string) *mongo.Collection {
