@@ -16,7 +16,7 @@ type server struct {
 
 var _ vocabularypb.VocabularyServiceServer = (*server)(nil)
 
-func RegisterServer(_ *appcontext.AppContext, app application.App, registrar grpc.ServiceRegistrar) error {
+func RegisterServer(_ *appcontext.AppContext, registrar grpc.ServiceRegistrar, app application.App) error {
 	vocabularypb.RegisterVocabularyServiceServer(registrar, server{app: app})
 	return nil
 }

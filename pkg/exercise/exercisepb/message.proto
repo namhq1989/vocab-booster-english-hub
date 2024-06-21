@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package exercisepb;
+
+message TranslatedLanguages {
+  string vi = 1;
+}

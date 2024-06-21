@@ -11,6 +11,7 @@ import (
 
 type Operations interface {
 	AnalyzeSentence(ctx *appcontext.AppContext, sentence string) (*SentenceAnalysisResult, error)
+	TranslateDefinition(_ *appcontext.AppContext, definition string) (result *DefinitionTranslationResult, err error)
 }
 
 type NLP struct {

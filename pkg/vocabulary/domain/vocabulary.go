@@ -13,6 +13,7 @@ type VocabularyRepository interface {
 	FindVocabularyByTerm(ctx *appcontext.AppContext, term string) (*Vocabulary, error)
 	CreateVocabulary(ctx *appcontext.AppContext, vocabulary Vocabulary) error
 	UpdateVocabulary(ctx *appcontext.AppContext, vocabulary Vocabulary) error
+	RandomPickVocabularyForExercise(ctx *appcontext.AppContext, numOfVocabulary int) ([]Vocabulary, error)
 }
 
 type Vocabulary struct {

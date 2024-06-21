@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
+	"github.com/namhq1989/vocab-booster-english-hub/core/language"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/nlp"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 )
@@ -60,5 +61,16 @@ func (r NlpRepository) AnalyzeSentence(ctx *appcontext.AppContext, sentence stri
 		},
 		Dependencies: dependencies,
 		Verbs:        verbs,
+	}, nil
+}
+
+func (r NlpRepository) TranslateDefinition(ctx *appcontext.AppContext, definition string) (*language.TranslatedLanguages, error) {
+	result, err := r.nlp.TranslateDefinition(ctx, definition)
+	if err != nil {
+		return nil, err
+	}
+
+	return &language.TranslatedLanguages{
+		Vi: result.Vi,
 	}, nil
 }

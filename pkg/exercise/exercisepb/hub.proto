@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package exercisepb;
+
+import "exercisepb/message.proto";
+
+service ExerciseService {
+  rpc NewExercise(NewExerciseRequest) returns (NewExerciseResponse) {}
+}
+
+// NEW EXERCISE
+
+message NewExerciseRequest {
+  string vocabularyExampleId = 1;
+  string content = 2;
+  TranslatedLanguages translated = 3;
+  string vocabulary = 4;
+  string correctAnswer = 5;
+  repeated string options = 6;
+}
+
+message NewExerciseResponse {
+  string id = 1;
+}

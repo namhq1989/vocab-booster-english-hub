@@ -7,11 +7,15 @@ var Collections = struct {
 	VocabularyExample    string
 	VocabularyScrapeItem string
 	VerbConjugation      string
+
+	Exercise string
 }{
 	Vocabulary:           "englishHub.vocabulary",
 	VocabularyExample:    "englishHub.vocabularyExamples",
 	VocabularyScrapeItem: "englishHub.vocabularyScrapeItems",
 	VerbConjugation:      "englishHub.verbConjugations",
+
+	Exercise: "englishHub.exercise",
 }
 
 func (db Database) GetCollection(table string) *mongo.Collection {

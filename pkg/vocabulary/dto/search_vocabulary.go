@@ -44,12 +44,20 @@ func ConvertVocabularyFromDomainToGrpc(vocabulary domain.Vocabulary, examples []
 		exampleList = append(exampleList, &vocabularypb.VocabularyExample{
 			Id:           example.ID,
 			VocabularyId: example.VocabularyID,
-			FromLang:     example.FromLang,
-			ToLang:       example.ToLang,
-			Pos:          example.Pos.String(),
-			ToDefinition: example.ToDefinition,
-			Word:         example.Word,
-			PosTags:      posTags,
+			Content:      example.Content,
+			Translated: &vocabularypb.TranslatedLanguages{
+				Vi: example.Translated.Vi,
+			},
+			MainWord: &vocabularypb.VocabularyMainWord{
+				Word:       example.MainWord.Word,
+				Base:       example.MainWord.Base,
+				Pos:        example.MainWord.Pos.String(),
+				Definition: example.MainWord.Definition,
+				Translated: &vocabularypb.TranslatedLanguages{
+					Vi: example.MainWord.Translated.Vi,
+				},
+			},
+			PosTags: posTags,
 			Sentiment: &vocabularypb.Sentiment{
 				Polarity:     example.Sentiment.Polarity,
 				Subjectivity: example.Sentiment.Subjectivity,

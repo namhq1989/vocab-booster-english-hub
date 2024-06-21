@@ -1,10 +1,12 @@
 package domain
 
 import (
+	"reflect"
 	"time"
 
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
+	"github.com/namhq1989/vocab-booster-english-hub/core/language"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 )
 
@@ -18,16 +20,22 @@ type VocabularyExample struct {
 	ID           string
 	VocabularyID string
 	Audio        string
-	FromLang     string
-	ToLang       string
-	Pos          PartOfSpeech
-	ToDefinition string
-	Word         string
+	Content      string
+	Translated   language.TranslatedLanguages
+	MainWord     VocabularyMainWord
 	CreatedAt    time.Time
 	PosTags      []PosTag
 	Sentiment    Sentiment
 	Dependencies []Dependency
 	Verbs        []Verb
+}
+
+type VocabularyMainWord struct {
+	Word       string
+	Base       string
+	Pos        PartOfSpeech
+	Definition string
+	Translated language.TranslatedLanguages
 }
 
 func NewVocabularyExample(vocabularyID string) (*VocabularyExample, error) {
@@ -50,34 +58,55 @@ func (d *VocabularyExample) SetAudio(audio string) error {
 	return nil
 }
 
-func (d *VocabularyExample) SetContent(fromLang, toLang string) error {
-	if fromLang == "" || toLang == "" {
-		return apperrors.Vocabulary.InvalidExampleLanguage
+func (d *VocabularyExample) SetContent(content string, translated language.TranslatedLanguages) error {
+	if content == "" {
+		return apperrors.Vocabulary.InvalidExampleContent
 	}
 
-	d.FromLang = fromLang
-	d.ToLang = toLang
+	// check for each translated language
+	val := reflect.ValueOf(translated)
+	for i := 0; i < val.NumField(); i++ {
+		if val.Field(i).String() == "" {
+			return apperrors.Vocabulary.InvalidExampleTranslatedLanguages
+		}
+	}
+
+	d.Content = content
+	d.Translated = translated
 	return nil
 }
 
-func (d *VocabularyExample) SetWordData(word, toDefinition, pos string) error {
-
+func (d *VocabularyExample) SetMainWordData(word, base, definition, pos string, translated language.TranslatedLanguages) error {
 	dPos := ToPartOfSpeech(pos)
 	if !dPos.IsValid() {
 		return apperrors.Vocabulary.InvalidPartOfSpeech
+	}
+
+	if base == "" {
+		return apperrors.Vocabulary.InvalidTerm
 	}
 
 	if word == "" {
 		return apperrors.Vocabulary.InvalidTerm
 	}
 
-	if toDefinition == "" {
+	if definition == "" {
 		return apperrors.Vocabulary.InvalidDefinition
 	}
 
-	d.Pos = dPos
-	d.ToDefinition = toDefinition
-	d.Word = word
+	// check for each translated language
+	val := reflect.ValueOf(translated)
+	for i := 0; i < val.NumField(); i++ {
+		if val.Field(i).String() == "" {
+			return apperrors.Vocabulary.InvalidExampleTranslatedLanguages
+		}
+	}
+
+	d.MainWord.Pos = dPos
+	d.MainWord.Base = base
+	d.MainWord.Definition = definition
+	d.MainWord.Word = word
+	d.MainWord.Translated = translated
 	return nil
 }
 

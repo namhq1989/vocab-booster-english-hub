@@ -2,14 +2,15 @@ package nlp
 
 import (
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
+	"github.com/namhq1989/vocab-booster-english-hub/core/language"
 )
 
 type SentenceAnalysisResult struct {
-	Translated   string       `json:"translated"`
-	PosTags      []PosTag     `json:"pos_tags"`
-	Sentiment    Sentiment    `json:"sentiment"`
-	Dependencies []Dependency `json:"dependencies"`
-	Verbs        []Verb       `json:"verbs"`
+	Translated   language.TranslatedLanguages `json:"translated"`
+	PosTags      []PosTag                     `json:"pos_tags"`
+	Sentiment    Sentiment                    `json:"sentiment"`
+	Dependencies []Dependency                 `json:"dependencies"`
+	Verbs        []Verb                       `json:"verbs"`
 }
 
 type PosTag struct {
