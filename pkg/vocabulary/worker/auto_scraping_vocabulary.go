@@ -188,9 +188,15 @@ func (w AutoScrapingVocabularyHandler) analyzeExamples(ctx *appcontext.AppContex
 				return
 			}
 
-			if err = example.SetMainWordData(e.Word, vocabulary.Term, e.Definition, e.Pos, language.TranslatedLanguages{
-				Vi: "TODO", // TODO
-			}); err != nil {
+			translatedDefinition := language.TranslatedLanguages{}
+			mainWordDefinitionTranslated, err := w.nlpRepository.TranslateDefinition(ctx, e.Definition)
+			if err != nil {
+				ctx.Logger().Error("failed to translate main word definition", err, appcontext.Fields{"definition": e.Definition})
+			} else {
+				translatedDefinition = *mainWordDefinitionTranslated
+			}
+
+			if err = example.SetMainWordData(e.Word, vocabulary.Term, e.Definition, e.Pos, translatedDefinition); err != nil {
 				ctx.Logger().Error("failed to set vocabulary example's word data", err, appcontext.Fields{"word": e.Word, "definition": e.Definition, "pos": e.Pos})
 				return
 			}

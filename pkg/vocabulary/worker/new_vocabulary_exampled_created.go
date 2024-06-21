@@ -131,7 +131,7 @@ func (w NewVocabularyExampleCreatedHandler) NewVocabularyExampleCreated(ctx *app
 	return nil
 }
 
-func (w NewVocabularyExampleCreatedHandler) randomVocabularyFromBank(ctx *appcontext.AppContext) []string {
+func (w NewVocabularyExampleCreatedHandler) randomVocabularyFromBank(_ *appcontext.AppContext) []string {
 	var (
 		randomVocabulary = make([]string, 0)
 		total            = len(w.vocabularyBank)
