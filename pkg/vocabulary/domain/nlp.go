@@ -16,4 +16,5 @@ type NlpSentenceAnalysisResult struct {
 	Sentiment    Sentiment
 	Dependencies []Dependency
 	Verbs        []Verb
+	Level        SentenceLevel
 }

@@ -14,6 +14,7 @@ var Vocabulary = struct {
 	InvalidExampleContent             error
 	InvalidExampleTranslatedLanguages error
 	InvalidExamplePosTags             error
+	InvalidExampleLevel               error
 	InvalidVerbConjugation            error
 	InvalidVerbForm                   error
 }{
@@ -28,6 +29,7 @@ var Vocabulary = struct {
 	InvalidExampleContent:             errors.New("vocabulary_invalid_example_content"),
 	InvalidExampleTranslatedLanguages: errors.New("vocabulary_invalid_example_translated_languages"),
 	InvalidExamplePosTags:             errors.New("vocabulary_invalid_example_pos_tags"),
+	InvalidExampleLevel:               errors.New("vocabulary_invalid_example_level"),
 	InvalidVerbConjugation:            errors.New("vocabulary_invalid_verb_conjugation"),
 	InvalidVerbForm:                   errors.New("vocabulary_invalid_verb_form"),
 }

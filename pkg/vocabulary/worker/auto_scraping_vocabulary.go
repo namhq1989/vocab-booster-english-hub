@@ -188,6 +188,11 @@ func (w AutoScrapingVocabularyHandler) analyzeExamples(ctx *appcontext.AppContex
 				return
 			}
 
+			if err = example.SetLevel(analysisResult.Level.String()); err != nil {
+				ctx.Logger().Error("failed to set vocabulary example's level", err, appcontext.Fields{"level": analysisResult.Level.String()})
+				return
+			}
+
 			translatedDefinition := language.TranslatedLanguages{}
 			mainWordDefinitionTranslated, err := w.nlpRepository.TranslateDefinition(ctx, e.Definition)
 			if err != nil {

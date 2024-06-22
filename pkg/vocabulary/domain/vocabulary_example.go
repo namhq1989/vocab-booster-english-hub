@@ -28,6 +28,7 @@ type VocabularyExample struct {
 	Sentiment    Sentiment
 	Dependencies []Dependency
 	Verbs        []Verb
+	Level        SentenceLevel
 }
 
 type VocabularyMainWord struct {
@@ -132,5 +133,15 @@ func (d *VocabularyExample) SetDependencies(deps []Dependency) error {
 
 func (d *VocabularyExample) SetVerbs(verbs []Verb) error {
 	d.Verbs = verbs
+	return nil
+}
+
+func (d *VocabularyExample) SetLevel(level string) error {
+	dLevel := ToSentenceLevel(level)
+	if !dLevel.IsValid() {
+		return apperrors.Vocabulary.InvalidExampleLevel
+	}
+
+	d.Level = dLevel
 	return nil
 }

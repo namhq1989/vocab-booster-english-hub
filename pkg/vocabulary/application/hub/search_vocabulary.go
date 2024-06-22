@@ -241,6 +241,11 @@ func (h SearchVocabularyHandler) analyzeExamples(ctx *appcontext.AppContext, voc
 				return
 			}
 
+			if err = example.SetLevel(analysisResult.Level.String()); err != nil {
+				ctx.Logger().Error("failed to set vocabulary example's level", err, appcontext.Fields{"level": analysisResult.Level.String()})
+				return
+			}
+
 			translatedDefinition := language.TranslatedLanguages{}
 			mainWordDefinitionTranslated, err := h.nlpRepository.TranslateDefinition(ctx, e.Definition)
 			if err != nil {

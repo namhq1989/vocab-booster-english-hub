@@ -22,6 +22,7 @@ vocabulary_invalid_example_content = "Nội dung câu ví dụ không hợp lệ
 vocabulary_invalid_example_translated_languages = "Ngôn ngữ dịch thuật không hợp lệ"
 vocabulary_invalid_example_language = "Ngôn ngữ câu ví dụ không hợp lệ"
 vocabulary_invalid_example_pos_tags = "Tag POS câu ví dụ không hợp lệ"
+vocabulary_invalid_example_level = "Cấp độ câu ví dụ không hợp lệ"
 vocabulary_invalid_verb_conjugation = "Chia động từ không hợp lệ"
 vocabulary_invalid_verb_form = "Dạng động từ không hợp lệ"
 

@@ -61,6 +61,7 @@ func (r NlpRepository) AnalyzeSentence(ctx *appcontext.AppContext, sentence stri
 		},
 		Dependencies: dependencies,
 		Verbs:        verbs,
+		Level:        domain.ToSentenceLevel(result.Level),
 	}, nil
 }
 
