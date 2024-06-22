@@ -10,6 +10,7 @@ import (
 type (
 	Hubs interface {
 		NewExercise(ctx *appcontext.AppContext, req *exercisepb.NewExerciseRequest) (*exercisepb.NewExerciseResponse, error)
+		UpdateExerciseAudio(ctx *appcontext.AppContext, req *exercisepb.UpdateExerciseAudioRequest) (*exercisepb.UpdateExerciseAudioResponse, error)
 		AnswerExercise(ctx *appcontext.AppContext, req *exercisepb.AnswerExerciseRequest) (*exercisepb.AnswerExerciseResponse, error)
 	}
 	App interface {
@@ -18,6 +19,7 @@ type (
 
 	appHubHandler struct {
 		hub.NewExerciseHandler
+		hub.UpdateExerciseAudioHandler
 		hub.AnswerExerciseHandler
 	}
 	Application struct {
@@ -34,6 +36,9 @@ func New(
 	return &Application{
 		appHubHandler: appHubHandler{
 			NewExerciseHandler: hub.NewNewExerciseHandler(exerciseRepository),
+			UpdateExerciseAudioHandler: hub.NewUpdateExerciseAudioHandler(
+				exerciseRepository,
+			),
 			AnswerExerciseHandler: hub.NewAnswerExerciseHandler(
 				exerciseRepository,
 				userExerciseStatusRepository,

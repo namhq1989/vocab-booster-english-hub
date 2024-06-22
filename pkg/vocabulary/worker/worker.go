@@ -71,6 +71,7 @@ func New(
 			CreateVocabularyExampleAudioHandler: NewCreateVocabularyExampleAudioHandler(
 				vocabularyExampleRepository,
 				ttsRepository,
+				exerciseHub,
 			),
 			CreateVerbConjugationHandler: NewCreateVerbConjugationHandler(verbConjugationRepository),
 			AddOtherVocabularyToScrapeQueueHandler: NewAddOtherVocabularyToScrapeQueueHandler(
@@ -136,7 +137,7 @@ func (w Worker) addCronjob() {
 		jobs = []cronjobData{
 			{
 				Task:       w.queue.GenerateTypename(queue.TypeNames.AutoScrapingVocabulary),
-				CronSpec:   "@every 10m",
+				CronSpec:   "@every 1m",
 				Payload:    domain.QueueAutoScrapingVocabularyPayload{},
 				RetryTimes: 1,
 			},

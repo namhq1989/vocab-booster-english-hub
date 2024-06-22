@@ -102,7 +102,7 @@ func (w NewVocabularyExampleCreatedHandler) NewVocabularyExampleCreated(ctx *app
 	}()
 
 	go func() {
-		ctx.Logger().Text("create exercise")
+		ctx.Logger().Text("create respective exercise")
 
 		defer wg.Done()
 
@@ -120,9 +120,9 @@ func (w NewVocabularyExampleCreatedHandler) NewVocabularyExampleCreated(ctx *app
 		// set answer into options
 		options[0] = example.MainWord.Word
 
-		ctx.Logger().Text("create new exercise")
-		if err = w.exerciseHub.CreateExercise(ctx, example.ID, example.Content, example.MainWord.Base, example.MainWord.Word, example.Translated, options); err != nil {
-			ctx.Logger().Error("failed to create new exercise", err, appcontext.Fields{})
+		ctx.Logger().Text("create new exercise via grpc")
+		if err = w.exerciseHub.CreateExercise(ctx, example.ID, example.Level.String(), example.Content, example.MainWord.Base, example.MainWord.Word, example.Translated, options); err != nil {
+			ctx.Logger().Error("failed to create new exercise via grpc", err, appcontext.Fields{})
 		}
 	}()
 

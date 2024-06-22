@@ -12,12 +12,16 @@ import (
 
 type ExerciseRepository interface {
 	FindExerciseByID(ctx *appcontext.AppContext, exerciseID string) (*Exercise, error)
+	FindExerciseByVocabularyExampleID(ctx *appcontext.AppContext, exampleID string) (*Exercise, error)
 	CreateExercise(ctx *appcontext.AppContext, exercise Exercise) error
+	UpdateExercise(ctx *appcontext.AppContext, exercise Exercise) error
 }
 
 type Exercise struct {
 	ID                  string
 	VocabularyExampleID string
+	Level               ExerciseLevel
+	Audio               string
 	Vocabulary          string
 	Content             string
 	Translated          language.TranslatedLanguages
@@ -26,9 +30,14 @@ type Exercise struct {
 	CreatedAt           time.Time
 }
 
-func NewExercise(vocabularyExampleID, content, vocabulary, correctAnswer string, translated language.TranslatedLanguages, options []string) (*Exercise, error) {
+func NewExercise(vocabularyExampleID, level, content, vocabulary, correctAnswer string, translated language.TranslatedLanguages, options []string) (*Exercise, error) {
 	if vocabularyExampleID == "" {
 		return nil, apperrors.Exercise.InvalidExerciseID
+	}
+
+	dLevel := ToExerciseLevel(level)
+	if !dLevel.IsValid() {
+		return nil, apperrors.Exercise.InvalidLevel
 	}
 
 	if content == "" {
@@ -54,6 +63,8 @@ func NewExercise(vocabularyExampleID, content, vocabulary, correctAnswer string,
 	return &Exercise{
 		ID:                  database.NewStringID(),
 		VocabularyExampleID: vocabularyExampleID,
+		Level:               dLevel,
+		Audio:               "",
 		Content:             content,
 		Translated:          translated,
 		Vocabulary:          vocabulary,
@@ -61,4 +72,13 @@ func NewExercise(vocabularyExampleID, content, vocabulary, correctAnswer string,
 		Options:             options,
 		CreatedAt:           time.Now(),
 	}, nil
+}
+
+func (e *Exercise) SetAudio(audio string) error {
+	if audio == "" {
+		return apperrors.Exercise.InvalidAudio
+	}
+
+	e.Audio = audio
+	return nil
 }

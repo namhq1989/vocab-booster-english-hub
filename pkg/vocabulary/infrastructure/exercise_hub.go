@@ -16,9 +16,10 @@ func NewExerciseHub(client exercisepb.ExerciseServiceClient) ExerciseHub {
 	}
 }
 
-func (r ExerciseHub) CreateExercise(ctx *appcontext.AppContext, vocabularyExampleID, content, vocabulary, correctAnswer string, translated language.TranslatedLanguages, options []string) error {
+func (r ExerciseHub) CreateExercise(ctx *appcontext.AppContext, vocabularyExampleID, level, content, vocabulary, correctAnswer string, translated language.TranslatedLanguages, options []string) error {
 	_, err := r.client.NewExercise(ctx.Context(), &exercisepb.NewExerciseRequest{
 		VocabularyExampleId: vocabularyExampleID,
+		Level:               level,
 		Content:             content,
 		Translated: &exercisepb.TranslatedLanguages{
 			Vi: translated.Vi,
@@ -26,6 +27,15 @@ func (r ExerciseHub) CreateExercise(ctx *appcontext.AppContext, vocabularyExampl
 		Vocabulary:    vocabulary,
 		CorrectAnswer: correctAnswer,
 		Options:       options,
+	})
+
+	return err
+}
+
+func (r ExerciseHub) UpdateExerciseAudio(ctx *appcontext.AppContext, vocabularyExampleID, audio string) error {
+	_, err := r.client.UpdateExerciseAudio(ctx.Context(), &exercisepb.UpdateExerciseAudioRequest{
+		VocabularyExampleId: vocabularyExampleID,
+		Audio:               audio,
 	})
 
 	return err

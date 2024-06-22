@@ -37,7 +37,7 @@ const vocabularyDataPrompt = `
 	- IPA transcription with periods to indicate syllable breaks
 	- Random 3-5 strong matches synonyms
 	- Random 3-5 strong matches antonyms
-    - For each POS, provide 2 examples in random tense and their Vietnamese translations of the form of "{{vocabulary}}" used in the example.
+    - For each POS, provide 2 examples in random tense and random difficulty (beginner, intermediate, advanced) and their Vietnamese translations of the form of "{{vocabulary}}" used in the example.
       Ensure the "definition" field contains only the English translation of the word form, not the entire sentence.
       The "word" field should contain the exact form of "{{vocabulary}}" as used in the example, including any multi-word phrases.
 	The output should be only in JSON format without any markdown tags. Here is the required structure:

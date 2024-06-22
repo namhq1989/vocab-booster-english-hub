@@ -41,6 +41,9 @@ func (r ExerciseRepository) ensureIndexes() {
 			{
 				Keys: bson.D{{Key: "createdAt", Value: -1}},
 			},
+			{
+				Keys: bson.D{{Key: "vocabularyExampleId", Value: 1}},
+			},
 		}
 	)
 
@@ -72,6 +75,25 @@ func (r ExerciseRepository) FindExerciseByID(ctx *appcontext.AppContext, exercis
 	return &result, nil
 }
 
+func (r ExerciseRepository) FindExerciseByVocabularyExampleID(ctx *appcontext.AppContext, exampleID string) (*domain.Exercise, error) {
+	eid, err := database.ObjectIDFromString(exampleID)
+	if err != nil {
+		return nil, apperrors.Exercise.InvalidExerciseID
+	}
+
+	var doc dbmodel.Exercise
+	if err = r.collection().FindOne(ctx.Context(), bson.M{
+		"vocabularyExampleId": eid,
+	}).Decode(&doc); err != nil && !errors.Is(err, mongo.ErrNoDocuments) {
+		return nil, err
+	} else if errors.Is(err, mongo.ErrNoDocuments) {
+		return nil, nil
+	}
+
+	result := doc.ToDomain()
+	return &result, nil
+}
+
 func (r ExerciseRepository) CreateExercise(ctx *appcontext.AppContext, exercise domain.Exercise) error {
 	doc, err := dbmodel.Exercise{}.FromDomain(exercise)
 	if err != nil {
@@ -79,5 +101,15 @@ func (r ExerciseRepository) CreateExercise(ctx *appcontext.AppContext, exercise 
 	}
 
 	_, err = r.collection().InsertOne(ctx.Context(), &doc)
+	return err
+}
+
+func (r ExerciseRepository) UpdateExercise(ctx *appcontext.AppContext, exercise domain.Exercise) error {
+	doc, err := dbmodel.Exercise{}.FromDomain(exercise)
+	if err != nil {
+		return err
+	}
+
+	_, err = r.collection().UpdateOne(ctx.Context(), bson.M{"_id": doc.ID}, bson.M{"$set": doc})
 	return err
 }
