@@ -33,3 +33,7 @@ exercise_invalid_content = "Nội dung bài tập không hợp lệ"
 exercise_invalid_vocabulary = "Từ vựng không hợp lệ"
 exercise_invalid_correct_answer = "Câu trả lời không hợp lệ"
 exercise_invalid_options = "Các lựa chọn không hợp lệ"
+
+# user
+user_invalid_id = "ID người dùng không hợp lệ"
+user_not_found = "Không tìm thấy người dùng"

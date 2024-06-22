@@ -24,3 +24,7 @@ func RegisterServer(_ *appcontext.AppContext, registrar grpc.ServiceRegistrar, a
 func (s server) NewExercise(bgCtx context.Context, req *exercisepb.NewExerciseRequest) (*exercisepb.NewExerciseResponse, error) {
 	return s.app.NewExercise(appcontext.NewGRPC(bgCtx), req)
 }
+
+func (s server) AnswerExercise(bgCtx context.Context, req *exercisepb.AnswerExerciseRequest) (*exercisepb.AnswerExerciseResponse, error) {
+	return s.app.AnswerExercise(appcontext.NewGRPC(bgCtx), req)
+}

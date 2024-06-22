@@ -13,6 +13,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/polly v1.40.5
 	github.com/brianvoe/gofakeit/v7 v7.0.3
 	github.com/getsentry/sentry-go v0.28.0
+	github.com/go-resty/resty/v2 v2.13.1
 	github.com/goccy/go-json v0.10.3
 	github.com/gocolly/colly/v2 v2.1.0
 	github.com/google/uuid v1.6.0
@@ -23,6 +24,7 @@ require (
 	github.com/labstack/echo/v4 v4.10.0
 	github.com/meilisearch/meilisearch-go v0.26.3
 	github.com/nicksnyder/go-i18n/v2 v2.4.0
+	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.5.3
 	github.com/sashabaranov/go-openai v1.24.1
 	github.com/sirupsen/logrus v1.9.3
@@ -52,8 +54,6 @@ require (
 	github.com/aws/smithy-go v1.20.2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/go-redis/redis/v8 v8.11.5 // indirect
-	github.com/go-resty/resty/v2 v2.13.1 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect

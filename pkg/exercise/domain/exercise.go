@@ -4,14 +4,14 @@ import (
 	"slices"
 	"time"
 
-	"github.com/namhq1989/vocab-booster-english-hub/core/language"
-
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
+	"github.com/namhq1989/vocab-booster-english-hub/core/language"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 )
 
 type ExerciseRepository interface {
+	FindExerciseByID(ctx *appcontext.AppContext, exerciseID string) (*Exercise, error)
 	CreateExercise(ctx *appcontext.AppContext, exercise Exercise) error
 }
 
