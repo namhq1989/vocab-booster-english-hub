@@ -21,6 +21,7 @@ vocabulary_invalid_audio_name = "Invalid audio name"
 vocabulary_invalid_example_content = "Invalid example content"
 vocabulary_invalid_example_translated_languages = "Invalid example translated languages"
 vocabulary_invalid_example_pos_tags = "Invalid example POS tags"
+vocabulary_invalid_example_level = "Invalid example level"
 vocabulary_invalid_verb_conjugation = "Invalid verb conjugation"
 vocabulary_invalid_verb_form = "Invalid verb form"
 

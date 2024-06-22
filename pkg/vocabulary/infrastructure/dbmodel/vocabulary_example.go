@@ -22,6 +22,7 @@ type VocabularyExample struct {
 	Sentiment    Sentiment                    `bson:"sentiment"`
 	Dependencies []Dependency                 `bson:"dependencies"`
 	Verbs        []Verb                       `bson:"verbs"`
+	Level        string                       `bson:"level"`
 }
 
 type VocabularyMainWord struct {
@@ -82,6 +83,7 @@ func (m VocabularyExample) ToDomain() domain.VocabularyExample {
 		},
 		Dependencies: dependencies,
 		Verbs:        verbs,
+		Level:        domain.ToSentenceLevel(m.Level),
 	}
 }
 
@@ -145,5 +147,6 @@ func (VocabularyExample) FromDomain(example domain.VocabularyExample) (*Vocabula
 		},
 		Dependencies: dependencies,
 		Verbs:        verbs,
+		Level:        example.Level.String(),
 	}, nil
 }

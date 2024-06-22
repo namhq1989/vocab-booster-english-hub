@@ -11,6 +11,7 @@ type SentenceAnalysisResult struct {
 	Sentiment    Sentiment                    `json:"sentiment"`
 	Dependencies []Dependency                 `json:"dependencies"`
 	Verbs        []Verb                       `json:"verbs"`
+	Level        string                       `json:"level"`
 }
 
 type PosTag struct {
