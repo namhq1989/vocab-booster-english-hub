@@ -7,22 +7,33 @@ import "exercisepb/message.proto";
 service ExerciseService {
   rpc NewExercise(NewExerciseRequest) returns (NewExerciseResponse) {}
   rpc AnswerExercise(AnswerExerciseRequest) returns (AnswerExerciseResponse) {}
+  rpc UpdateExerciseAudio(UpdateExerciseAudioRequest) returns (UpdateExerciseAudioResponse) {}
 }
 
 // NEW EXERCISE
 
 message NewExerciseRequest {
   string vocabularyExampleId = 1;
-  string content = 2;
-  TranslatedLanguages translated = 3;
-  string vocabulary = 4;
-  string correctAnswer = 5;
-  repeated string options = 6;
+  string level = 2;
+  string content = 3;
+  TranslatedLanguages translated = 4;
+  string vocabulary = 5;
+  string correctAnswer = 6;
+  repeated string options = 7;
 }
 
 message NewExerciseResponse {
   string id = 1;
 }
+
+// UPDATE EXERCISE AUDIO
+
+message UpdateExerciseAudioRequest {
+  string vocabularyExampleId = 1;
+  string audio = 2;
+}
+
+message UpdateExerciseAudioResponse {}
 
 
 // ANSWER EXERCISE

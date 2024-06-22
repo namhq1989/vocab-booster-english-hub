@@ -19,12 +19,13 @@ func NewNewExerciseHandler(exerciseRepository domain.ExerciseRepository) NewExer
 
 func (h NewExerciseHandler) NewExercise(ctx *appcontext.AppContext, req *exercisepb.NewExerciseRequest) (*exercisepb.NewExerciseResponse, error) {
 	ctx.Logger().Info("[hub] new new exercise request", appcontext.Fields{
-		"exampleID": req.GetVocabularyExampleId(), "content": req.GetContent(),
+		"exampleID": req.GetVocabularyExampleId(),
+		"level":     req.GetLevel(), "content": req.GetContent(),
 		"correctAnswer": req.GetCorrectAnswer(), "options": req.GetOptions(),
 	})
 
 	ctx.Logger().Text("create new exercise model")
-	exercise, err := domain.NewExercise(req.GetVocabularyExampleId(), req.GetContent(), req.GetVocabulary(), req.GetCorrectAnswer(), language.TranslatedLanguages{
+	exercise, err := domain.NewExercise(req.GetVocabularyExampleId(), req.GetLevel(), req.GetContent(), req.GetVocabulary(), req.GetCorrectAnswer(), language.TranslatedLanguages{
 		Vi: req.GetTranslated().GetVi(),
 	}, req.GetOptions())
 	if err != nil {

@@ -13,6 +13,8 @@ import (
 type Exercise struct {
 	ID                  primitive.ObjectID           `bson:"_id"`
 	VocabularyExampleID primitive.ObjectID           `bson:"vocabularyExampleId"`
+	Audio               string                       `bson:"audio"`
+	Level               string                       `bson:"level"`
 	Content             string                       `bson:"content"`
 	Translated          language.TranslatedLanguages `bson:"translated"`
 	Vocabulary          string                       `bson:"vocabulary"`
@@ -25,6 +27,8 @@ func (m Exercise) ToDomain() domain.Exercise {
 	return domain.Exercise{
 		ID:                  m.ID.Hex(),
 		VocabularyExampleID: m.VocabularyExampleID.Hex(),
+		Audio:               m.Audio,
+		Level:               domain.ToExerciseLevel(m.Level),
 		Content:             m.Content,
 		Translated:          m.Translated,
 		Vocabulary:          m.Vocabulary,
@@ -48,6 +52,8 @@ func (Exercise) FromDomain(exercise domain.Exercise) (*Exercise, error) {
 	return &Exercise{
 		ID:                  id,
 		VocabularyExampleID: vid,
+		Audio:               exercise.Audio,
+		Level:               exercise.Level.String(),
 		Content:             exercise.Content,
 		Translated:          exercise.Translated,
 		Vocabulary:          exercise.Vocabulary,

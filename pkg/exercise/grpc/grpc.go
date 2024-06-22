@@ -25,6 +25,10 @@ func (s server) NewExercise(bgCtx context.Context, req *exercisepb.NewExerciseRe
 	return s.app.NewExercise(appcontext.NewGRPC(bgCtx), req)
 }
 
+func (s server) UpdateExerciseAudio(bgCtx context.Context, req *exercisepb.UpdateExerciseAudioRequest) (*exercisepb.UpdateExerciseAudioResponse, error) {
+	return s.app.UpdateExerciseAudio(appcontext.NewGRPC(bgCtx), req)
+}
+
 func (s server) AnswerExercise(bgCtx context.Context, req *exercisepb.AnswerExerciseRequest) (*exercisepb.AnswerExerciseResponse, error) {
 	return s.app.AnswerExercise(appcontext.NewGRPC(bgCtx), req)
 }
