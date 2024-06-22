@@ -6,6 +6,7 @@ import "exercisepb/message.proto";
 
 service ExerciseService {
   rpc NewExercise(NewExerciseRequest) returns (NewExerciseResponse) {}
+  rpc AnswerExercise(AnswerExerciseRequest) returns (AnswerExerciseResponse) {}
 }
 
 // NEW EXERCISE
@@ -22,3 +23,14 @@ message NewExerciseRequest {
 message NewExerciseResponse {
   string id = 1;
 }
+
+
+// ANSWER EXERCISE
+
+message AnswerExerciseRequest {
+  string exerciseId = 1;
+  string userId = 2;
+  bool isCorrect = 3;
+}
+
+message AnswerExerciseResponse {}

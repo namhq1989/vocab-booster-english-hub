@@ -10,6 +10,7 @@ import (
 type (
 	Hubs interface {
 		NewExercise(ctx *appcontext.AppContext, req *exercisepb.NewExerciseRequest) (*exercisepb.NewExerciseResponse, error)
+		AnswerExercise(ctx *appcontext.AppContext, req *exercisepb.AnswerExerciseRequest) (*exercisepb.AnswerExerciseResponse, error)
 	}
 	App interface {
 		Hubs
@@ -17,6 +18,7 @@ type (
 
 	appHubHandler struct {
 		hub.NewExerciseHandler
+		hub.AnswerExerciseHandler
 	}
 	Application struct {
 		appHubHandler
@@ -27,10 +29,15 @@ var _ App = (*Application)(nil)
 
 func New(
 	exerciseRepository domain.ExerciseRepository,
+	userExerciseStatusRepository domain.UserExerciseStatusRepository,
 ) *Application {
 	return &Application{
 		appHubHandler: appHubHandler{
 			NewExerciseHandler: hub.NewNewExerciseHandler(exerciseRepository),
+			AnswerExerciseHandler: hub.NewAnswerExerciseHandler(
+				exerciseRepository,
+				userExerciseStatusRepository,
+			),
 		},
 	}
 }

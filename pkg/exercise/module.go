@@ -16,10 +16,11 @@ func (Module) Name() string {
 
 func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error {
 	var (
-		exerciseRepository = infrastructure.NewExerciseRepository(mono.Database())
+		exerciseRepository           = infrastructure.NewExerciseRepository(mono.Database())
+		userExerciseStatusRepository = infrastructure.NewUserExerciseStatusRepository(mono.Database())
 
 		// app
-		app = application.New(exerciseRepository)
+		app = application.New(exerciseRepository, userExerciseStatusRepository)
 	)
 
 	// grpc server

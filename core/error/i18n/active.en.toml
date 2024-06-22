@@ -33,5 +33,7 @@ exercise_invalid_vocabulary_id = "Invalid vocabulary"
 exercise_invalid_correct_answer = "Invalid exercise correct answer"
 exercise_invalid_options = "Invalid exercise options"
 
-
+# user
+user_invalid_id = "Invalid user id"
+user_not_found = "User not found"
 

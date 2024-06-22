@@ -2,14 +2,15 @@ package infrastructure
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
+	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/domain"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/infrastructure/dbmodel"
-
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
-	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -50,6 +51,25 @@ func (r ExerciseRepository) ensureIndexes() {
 
 func (r ExerciseRepository) collection() *mongo.Collection {
 	return r.db.GetCollection(r.collectionName)
+}
+
+func (r ExerciseRepository) FindExerciseByID(ctx *appcontext.AppContext, exerciseID string) (*domain.Exercise, error) {
+	eid, err := database.ObjectIDFromString(exerciseID)
+	if err != nil {
+		return nil, apperrors.Exercise.InvalidExerciseID
+	}
+
+	var doc dbmodel.Exercise
+	if err = r.collection().FindOne(ctx.Context(), bson.M{
+		"_id": eid,
+	}).Decode(&doc); err != nil && !errors.Is(err, mongo.ErrNoDocuments) {
+		return nil, err
+	} else if errors.Is(err, mongo.ErrNoDocuments) {
+		return nil, nil
+	}
+
+	result := doc.ToDomain()
+	return &result, nil
 }
 
 func (r ExerciseRepository) CreateExercise(ctx *appcontext.AppContext, exercise domain.Exercise) error {
