@@ -2,37 +2,48 @@ package database
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
+	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"github.com/go-jet/jet/v2/qrm"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 type Database struct {
-	mongo *mongo.Database
+	pg *sql.DB
 }
 
-func NewDatabaseClient(url, dbName string) *Database {
-	var ctx = context.Background()
-
-	// use the SetServerAPIOptions() method to set the Stable API version to 1
-	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-
-	opts := options.Client().ApplyURI(url).SetServerAPIOptions(serverAPI)
-	client, err := mongo.Connect(ctx, opts)
+func NewDatabaseClient(conn string) *Database {
+	db, err := sql.Open("pgx", conn)
 	if err != nil {
 		panic(err)
 	}
 
-	// send a ping to confirm a successful connection
-	if err = client.Database("admin").RunCommand(ctx, bson.M{"ping": 1}).Err(); err != nil {
+	// config
+	db.SetMaxOpenConns(25)
+	db.SetMaxIdleConns(25)
+	db.SetConnMaxLifetime(5 * time.Minute)
+
+	// verify the connection
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err = db.PingContext(ctx); err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("⚡️ [mongodb]: connected \n")
+	fmt.Printf("⚡️ [postgresql]: connected \n")
 
 	return &Database{
-		mongo: client.Database(dbName),
+		pg: db,
 	}
+}
+
+func (d Database) GetDB() *sql.DB {
+	return d.pg
+}
+
+func (d Database) IsNoRowsError(err error) bool {
+	return errors.Is(err, qrm.ErrNoRows)
 }

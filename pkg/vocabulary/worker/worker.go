@@ -16,7 +16,7 @@ type (
 		NewVocabularyExampleCreated(ctx *appcontext.AppContext, payload domain.QueueNewVocabularyExampleCreatedPayload) error
 		CreateVocabularyExampleAudio(ctx *appcontext.AppContext, payload domain.QueueCreateVocabularyExampleAudioPayload) error
 		CreateVerbConjugation(ctx *appcontext.AppContext, payload domain.QueueCreateVerbConjugationPayload) error
-		AddOtherVocabularyToScrapeQueue(ctx *appcontext.AppContext, payload domain.QueueAddOtherVocabularyToScrapeQueuePayload) error
+		AddOtherVocabularyToScrapingQueue(ctx *appcontext.AppContext, payload domain.QueueAddOtherVocabularyToScrapingQueuePayload) error
 	}
 	Cronjob interface {
 		AutoScrapingVocabulary(ctx *appcontext.AppContext, payload domain.QueueAutoScrapingVocabularyPayload) error
@@ -31,7 +31,7 @@ type (
 		NewVocabularyExampleCreatedHandler
 		CreateVocabularyExampleAudioHandler
 		CreateVerbConjugationHandler
-		AddOtherVocabularyToScrapeQueueHandler
+		AddOtherVocabularyToScrapingQueueHandler
 	}
 	workerCronjob struct {
 		AutoScrapingVocabularyHandler
@@ -49,7 +49,7 @@ func New(
 	queue queue.Operations,
 	vocabularyRepository domain.VocabularyRepository,
 	vocabularyExampleRepository domain.VocabularyExampleRepository,
-	vocabularyScrapeItemRepository domain.VocabularyScrapeItemRepository,
+	vocabularyScrapingItemRepository domain.VocabularyScrapingItemRepository,
 	verbConjugationRepository domain.VerbConjugationRepository,
 	queueRepository domain.QueueRepository,
 	ttsRepository domain.TTSRepository,
@@ -74,16 +74,16 @@ func New(
 				exerciseHub,
 			),
 			CreateVerbConjugationHandler: NewCreateVerbConjugationHandler(verbConjugationRepository),
-			AddOtherVocabularyToScrapeQueueHandler: NewAddOtherVocabularyToScrapeQueueHandler(
+			AddOtherVocabularyToScrapingQueueHandler: NewAddOtherVocabularyToScrapingQueueHandler(
 				vocabularyRepository,
-				vocabularyScrapeItemRepository,
+				vocabularyScrapingItemRepository,
 			),
 		},
 		workerCronjob: workerCronjob{
 			AutoScrapingVocabularyHandler: NewAutoScrapingVocabularyHandler(
 				vocabularyRepository,
 				vocabularyExampleRepository,
-				vocabularyScrapeItemRepository,
+				vocabularyScrapingItemRepository,
 				aiRepository,
 				scraperRepository,
 				ttsRepository,
@@ -115,8 +115,8 @@ func (w Worker) Start() {
 		return queue.ProcessTask[domain.QueueCreateVerbConjugationPayload](bgCtx, t, queue.ParsePayload[domain.QueueCreateVerbConjugationPayload], w.CreateVerbConjugation)
 	})
 
-	server.HandleFunc(w.queue.GenerateTypename(queue.TypeNames.AddOtherVocabularyToScrapeQueue), func(bgCtx context.Context, t *asynq.Task) error {
-		return queue.ProcessTask[domain.QueueAddOtherVocabularyToScrapeQueuePayload](bgCtx, t, queue.ParsePayload[domain.QueueAddOtherVocabularyToScrapeQueuePayload], w.AddOtherVocabularyToScrapeQueue)
+	server.HandleFunc(w.queue.GenerateTypename(queue.TypeNames.AddOtherVocabularyToScrapingQueue), func(bgCtx context.Context, t *asynq.Task) error {
+		return queue.ProcessTask[domain.QueueAddOtherVocabularyToScrapingQueuePayload](bgCtx, t, queue.ParsePayload[domain.QueueAddOtherVocabularyToScrapingQueuePayload], w.AddOtherVocabularyToScrapingQueue)
 	})
 
 	server.HandleFunc(w.queue.GenerateTypename(queue.TypeNames.AutoScrapingVocabulary), func(bgCtx context.Context, t *asynq.Task) error {
@@ -137,7 +137,7 @@ func (w Worker) addCronjob() {
 		jobs = []cronjobData{
 			{
 				Task:       w.queue.GenerateTypename(queue.TypeNames.AutoScrapingVocabulary),
-				CronSpec:   "@every 1m",
+				CronSpec:   "@every 1h",
 				Payload:    domain.QueueAutoScrapingVocabularyPayload{},
 				RetryTimes: 1,
 			},

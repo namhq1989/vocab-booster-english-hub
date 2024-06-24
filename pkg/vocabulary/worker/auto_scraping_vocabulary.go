@@ -4,27 +4,26 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/namhq1989/vocab-booster-english-hub/core/language"
-
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
+	"github.com/namhq1989/vocab-booster-english-hub/core/language"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 )
 
 type AutoScrapingVocabularyHandler struct {
-	vocabularyRepository           domain.VocabularyRepository
-	vocabularyExampleRepository    domain.VocabularyExampleRepository
-	vocabularyScrapeItemRepository domain.VocabularyScrapeItemRepository
-	aiRepository                   domain.AIRepository
-	scraperRepository              domain.ScraperRepository
-	ttsRepository                  domain.TTSRepository
-	nlpRepository                  domain.NlpRepository
-	queueRepository                domain.QueueRepository
+	vocabularyRepository             domain.VocabularyRepository
+	vocabularyExampleRepository      domain.VocabularyExampleRepository
+	vocabularyScrapingItemRepository domain.VocabularyScrapingItemRepository
+	aiRepository                     domain.AIRepository
+	scraperRepository                domain.ScraperRepository
+	ttsRepository                    domain.TTSRepository
+	nlpRepository                    domain.NlpRepository
+	queueRepository                  domain.QueueRepository
 }
 
 func NewAutoScrapingVocabularyHandler(
 	vocabularyRepository domain.VocabularyRepository,
 	vocabularyExampleRepository domain.VocabularyExampleRepository,
-	vocabularyScrapeItemRepository domain.VocabularyScrapeItemRepository,
+	vocabularyScrapingItemRepository domain.VocabularyScrapingItemRepository,
 	aiRepository domain.AIRepository,
 	scraperRepository domain.ScraperRepository,
 	ttsRepository domain.TTSRepository,
@@ -32,20 +31,20 @@ func NewAutoScrapingVocabularyHandler(
 	queueRepository domain.QueueRepository,
 ) AutoScrapingVocabularyHandler {
 	return AutoScrapingVocabularyHandler{
-		vocabularyRepository:           vocabularyRepository,
-		vocabularyExampleRepository:    vocabularyExampleRepository,
-		vocabularyScrapeItemRepository: vocabularyScrapeItemRepository,
-		aiRepository:                   aiRepository,
-		scraperRepository:              scraperRepository,
-		ttsRepository:                  ttsRepository,
-		nlpRepository:                  nlpRepository,
-		queueRepository:                queueRepository,
+		vocabularyRepository:             vocabularyRepository,
+		vocabularyExampleRepository:      vocabularyExampleRepository,
+		vocabularyScrapingItemRepository: vocabularyScrapingItemRepository,
+		aiRepository:                     aiRepository,
+		scraperRepository:                scraperRepository,
+		ttsRepository:                    ttsRepository,
+		nlpRepository:                    nlpRepository,
+		queueRepository:                  queueRepository,
 	}
 }
 
 func (w AutoScrapingVocabularyHandler) AutoScrapingVocabulary(ctx *appcontext.AppContext, _ domain.QueueAutoScrapingVocabularyPayload) error {
 	ctx.Logger().Text("picking random scraping item in db")
-	scrapingItem, err := w.vocabularyScrapeItemRepository.RandomPickVocabularyScrapeItem(ctx)
+	scrapingItem, err := w.vocabularyScrapingItemRepository.RandomPickVocabularyScrapingItem(ctx)
 	if err != nil {
 		ctx.Logger().Error("failed to pick random vocabulary scrape item", err, appcontext.Fields{})
 		return err
@@ -106,7 +105,7 @@ func (w AutoScrapingVocabularyHandler) AutoScrapingVocabulary(ctx *appcontext.Ap
 	}
 
 	ctx.Logger().Text("delete scraping item")
-	if err = w.vocabularyScrapeItemRepository.DeleteVocabularyScrapeItemByTerm(ctx, scrapingItem.Term); err != nil {
+	if err = w.vocabularyScrapingItemRepository.DeleteVocabularyScrapingItemByTerm(ctx, scrapingItem.Term); err != nil {
 		ctx.Logger().Error("failed to delete scraping item", err, appcontext.Fields{})
 	}
 

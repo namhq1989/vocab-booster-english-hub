@@ -10,16 +10,12 @@ message Vocabulary {
   string id = 1;
   string authorId = 2;
   string term = 3;
-  VocabularyData data = 4;
-  repeated VocabularyExample examples = 5;
-}
-
-message VocabularyData {
-  repeated string partsOfSpeech = 1;
-  string ipa = 2;
-  string audio = 3;
-  repeated string synonyms = 4;
-  repeated string antonyms = 5;
+  repeated string partsOfSpeech = 4;
+  string ipa = 5;
+  string audio = 6;
+  repeated string synonyms = 7;
+  repeated string antonyms = 8;
+  repeated VocabularyExample examples = 9;
 }
 
 message VocabularyExample {

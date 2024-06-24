@@ -39,7 +39,9 @@ func (h UpdateExerciseAudioHandler) UpdateExerciseAudio(ctx *appcontext.AppConte
 
 	ctx.Logger().Text("update exercise in db")
 	if err = h.exerciseRepository.UpdateExercise(ctx, *exercise); err != nil {
-		ctx.Logger().Error("failed to update exercise in db", err, appcontext.Fields{})
+		ctx.Logger().Error("failed to update exercise in db", err, appcontext.Fields{
+			"exercise": exercise,
+		})
 		return nil, err
 	}
 

@@ -32,6 +32,6 @@ func (r QueueRepository) CreateVerbConjugation(ctx *appcontext.AppContext, paylo
 	return queue.EnqueueTask(ctx, r.queue, queue.TypeNames.CreateVerbConjugation, payload, -1)
 }
 
-func (r QueueRepository) AddOtherVocabularyToScrapeQueue(ctx *appcontext.AppContext, payload domain.QueueAddOtherVocabularyToScrapeQueuePayload) error {
-	return queue.EnqueueTask(ctx, r.queue, queue.TypeNames.AddOtherVocabularyToScrapeQueue, payload, -1)
+func (r QueueRepository) AddOtherVocabularyToScrapingQueue(ctx *appcontext.AppContext, payload domain.QueueAddOtherVocabularyToScrapingQueuePayload) error {
+	return queue.EnqueueTask(ctx, r.queue, queue.TypeNames.AddOtherVocabularyToScrapingQueue, payload, -1)
 }

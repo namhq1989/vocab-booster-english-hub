@@ -17,7 +17,6 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/internal/nlp"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/queue"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/scraper"
-	"github.com/namhq1989/vocab-booster-english-hub/internal/searching"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/tts"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/waiter"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise"
@@ -47,10 +46,7 @@ func main() {
 	a.rpc = initRPC()
 
 	// database
-	a.database = database.NewDatabaseClient(cfg.MongoURL, cfg.MongoDBName)
-
-	// searching
-	a.searching = searching.NewSearchingClient(cfg.MeilisearchHost, cfg.MeilisearchAPIKey)
+	a.database = database.NewDatabaseClient(cfg.PostgresConn)
 
 	// queue
 	a.queue = queue.Init(cfg.QueueRedisURL, cfg.QueueConcurrency)
