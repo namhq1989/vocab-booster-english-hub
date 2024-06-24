@@ -27,7 +27,7 @@ func (r VocabularyExampleRepository) getDB() *sql.DB {
 	return r.db.GetDB()
 }
 
-func (r VocabularyExampleRepository) getTable() *table.VocabularyExamplesTable {
+func (VocabularyExampleRepository) getTable() *table.VocabularyExamplesTable {
 	return table.VocabularyExamples
 }
 

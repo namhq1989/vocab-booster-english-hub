@@ -27,7 +27,7 @@ func (r ExerciseRepository) getDB() *sql.DB {
 	return r.db.GetDB()
 }
 
-func (r ExerciseRepository) getTable() *table.ExercisesTable {
+func (ExerciseRepository) getTable() *table.ExercisesTable {
 	return table.Exercises
 }
 

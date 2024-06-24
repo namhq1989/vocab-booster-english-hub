@@ -44,6 +44,6 @@ func (d Database) GetDB() *sql.DB {
 	return d.pg
 }
 
-func (d Database) IsNoRowsError(err error) bool {
+func (Database) IsNoRowsError(err error) bool {
 	return errors.Is(err, qrm.ErrNoRows)
 }

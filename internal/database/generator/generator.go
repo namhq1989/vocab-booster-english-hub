@@ -60,20 +60,12 @@ func vocabularies(field template.TableModelField, column metadata.Column) templa
 	return field
 }
 
-func vocabularyExamples(field template.TableModelField, column metadata.Column) template.TableModelField {
-	// switch column.Name {
-	// case "translated", "main_word", "pos_tags", "sentiment", "dependencies", "verbs":
-	// 	field.Type = template.NewType(pgtype.JSONBCodec{})
-	// }
-
+func vocabularyExamples(field template.TableModelField, _ metadata.Column) template.TableModelField {
 	return field
 }
 
 func exercises(field template.TableModelField, column metadata.Column) template.TableModelField {
-	switch column.Name {
-	// case "translated":
-	// 	field.Type = template.NewType(pgtype.JSONBCodec{})
-	case "options":
+	if column.Name == "options" {
 		field.Type = template.NewType(database.StringArray{})
 	}
 

@@ -27,7 +27,7 @@ func (r VocabularyScrapingItemRepository) getDB() *sql.DB {
 	return r.db.GetDB()
 }
 
-func (r VocabularyScrapingItemRepository) getTable() *table.VocabularyScrapingItemsTable {
+func (VocabularyScrapingItemRepository) getTable() *table.VocabularyScrapingItemsTable {
 	return table.VocabularyScrapingItems
 }
 

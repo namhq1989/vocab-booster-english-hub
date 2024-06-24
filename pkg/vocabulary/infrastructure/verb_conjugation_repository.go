@@ -27,7 +27,7 @@ func (r VerbConjugationRepository) getDB() *sql.DB {
 	return r.db.GetDB()
 }
 
-func (r VerbConjugationRepository) getTable() *table.VerbConjugationsTable {
+func (VerbConjugationRepository) getTable() *table.VerbConjugationsTable {
 	return table.VerbConjugations
 }
 

@@ -27,7 +27,7 @@ func (r UserExerciseStatusRepository) getDB() *sql.DB {
 	return r.db.GetDB()
 }
 
-func (r UserExerciseStatusRepository) getTable() *table.UserExerciseStatusesTable {
+func (UserExerciseStatusRepository) getTable() *table.UserExerciseStatusesTable {
 	return table.UserExerciseStatuses
 }
 
