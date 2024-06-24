@@ -6,9 +6,9 @@ const (
 	VerbFormUnknown             VerbForm = ""
 	VerbFormInfinitive          VerbForm = "infinitive"
 	VerbFormPast                VerbForm = "past"
-	VerbFormPastParticiple      VerbForm = "pastParticiple"
+	VerbFormPastParticiple      VerbForm = "past_participle"
 	VerbFormGerund              VerbForm = "gerund"
-	VerbFormThirdPersonSingular VerbForm = "thirdPersonSingular"
+	VerbFormThirdPersonSingular VerbForm = "third_person_singular"
 )
 
 func (s VerbForm) String() string {

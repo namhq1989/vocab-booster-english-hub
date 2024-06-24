@@ -29,6 +29,7 @@ func (r NlpRepository) AnalyzeSentence(ctx *appcontext.AppContext, sentence stri
 		posTags = append(posTags, domain.PosTag{
 			Word:  posTag.Word,
 			Value: domain.ToPartOfSpeech(posTag.Value),
+			Level: posTag.Level,
 		})
 	}
 

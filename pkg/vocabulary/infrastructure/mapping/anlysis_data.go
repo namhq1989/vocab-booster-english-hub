@@ -1,8 +1,11 @@
 package mapping
 
+import "github.com/namhq1989/vocab-booster-english-hub/core/language"
+
 type PosTag struct {
 	Word  string `json:"word"`
 	Value string `json:"value"`
+	Level int    `json:"level"`
 }
 
 type Sentiment struct {
@@ -22,4 +25,12 @@ type Verb struct {
 	PastParticiple      string `json:"past_participle"`
 	Gerund              string `json:"gerund"`
 	ThirdPersonSingular string `json:"third_person_singular"`
+}
+
+type VocabularyMainWord struct {
+	Word       string                       `json:"word"`
+	Base       string                       `json:"base"`
+	Pos        string                       `json:"pos"`
+	Definition string                       `json:"definition"`
+	Translated language.TranslatedLanguages `json:"translated"`
 }

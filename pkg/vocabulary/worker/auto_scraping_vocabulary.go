@@ -49,6 +49,10 @@ func (w AutoScrapingVocabularyHandler) AutoScrapingVocabulary(ctx *appcontext.Ap
 		ctx.Logger().Error("failed to pick random vocabulary scrape item", err, appcontext.Fields{})
 		return err
 	}
+	if scrapingItem == nil {
+		ctx.Logger().Text("no item for scraping, respond")
+		return nil
+	}
 
 	ctx.Logger().Info("item found, create new vocabulary model", appcontext.Fields{"term": scrapingItem.Term})
 	vocabulary, err := domain.NewVocabulary("system", scrapingItem.Term)

@@ -3,6 +3,7 @@ package domain
 type PosTag struct {
 	Word  string
 	Value PartOfSpeech
+	Level int
 }
 
 type Sentiment struct {
