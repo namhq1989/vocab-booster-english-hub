@@ -78,31 +78,68 @@ func (VocabularyExampleMapper) FromDomainToModel(example domain.VocabularyExampl
 		result.Translated = string(data)
 	}
 
-	if data, err := json.Marshal(example.MainWord); err != nil {
+	mainWord := VocabularyMainWord{
+		Word:       example.MainWord.Word,
+		Base:       example.MainWord.Base,
+		Pos:        example.MainWord.Pos.String(),
+		Definition: example.MainWord.Definition,
+		Translated: example.MainWord.Translated,
+	}
+	if data, err := json.Marshal(mainWord); err != nil {
 		return nil, err
 	} else {
 		result.MainWord = string(data)
 	}
 
-	if data, err := json.Marshal(example.PosTags); err != nil {
+	posTags := make([]PosTag, 0)
+	for _, posTag := range example.PosTags {
+		posTags = append(posTags, PosTag{
+			Word:  posTag.Word,
+			Value: posTag.Value.String(),
+			Level: posTag.Level,
+		})
+	}
+	if data, err := json.Marshal(posTags); err != nil {
 		return nil, err
 	} else {
 		result.PosTags = string(data)
 	}
 
-	if data, err := json.Marshal(example.Sentiment); err != nil {
+	sentiment := Sentiment{
+		Polarity:     example.Sentiment.Polarity,
+		Subjectivity: example.Sentiment.Subjectivity,
+	}
+	if data, err := json.Marshal(sentiment); err != nil {
 		return nil, err
 	} else {
 		result.Sentiment = string(data)
 	}
 
-	if data, err := json.Marshal(example.Dependencies); err != nil {
+	dependencies := make([]Dependency, 0)
+	for _, dependency := range example.Dependencies {
+		dependencies = append(dependencies, Dependency{
+			Word:   dependency.Word,
+			DepRel: dependency.DepRel,
+			Head:   dependency.Head,
+		})
+	}
+	if data, err := json.Marshal(dependencies); err != nil {
 		return nil, err
 	} else {
 		result.Dependencies = string(data)
 	}
 
-	if data, err := json.Marshal(example.Verbs); err != nil {
+	verbs := make([]Verb, 0)
+	for _, verb := range example.Verbs {
+		verbs = append(verbs, Verb{
+			Base:                verb.Base,
+			Past:                verb.Past,
+			PastParticiple:      verb.PastParticiple,
+			Gerund:              verb.Gerund,
+			ThirdPersonSingular: verb.ThirdPersonSingular,
+		})
+	}
+	if data, err := json.Marshal(verbs); err != nil {
 		return nil, err
 	} else {
 		result.Verbs = string(data)

@@ -32,7 +32,7 @@ func (w AddOtherVocabularyToScrapingQueueHandler) AddOtherVocabularyToScrapingQu
 
 	ctx.Logger().Text("collect vocabulary for scraping, focus on some basic POS tags only")
 	for _, p := range payload.Example.PosTags {
-		if slices.Contains(domain.ScrapingPosTagList, p.Value) {
+		if p.Level >= 3 && slices.Contains(domain.ScrapingPosTagList, p.Value) {
 			vocabulary = append(vocabulary, p.Word)
 		}
 	}
@@ -47,9 +47,14 @@ func (w AddOtherVocabularyToScrapingQueueHandler) AddOtherVocabularyToScrapingQu
 		w.checkAndInsertItem(ctx, &scrapeItems, v)
 	}
 
-	ctx.Logger().Text("insert scrape items to db")
+	if len(scrapeItems) == 0 {
+		ctx.Logger().Text("no vocabulary to scrape")
+		return nil
+	}
+
+	ctx.Logger().Text("insert scrape items in db")
 	if err := w.VocabularyScrapingItemRepository.CreateVocabularyScrapingItems(ctx, scrapeItems); err != nil {
-		ctx.Logger().Error("failed to insert scrape items to db", err, appcontext.Fields{"scrapeItems": scrapeItems})
+		ctx.Logger().Error("failed to insert scrape items in db", err, appcontext.Fields{"scrapeItems": scrapeItems})
 		return err
 	}
 

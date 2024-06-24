@@ -17,6 +17,7 @@ type SentenceAnalysisResult struct {
 type PosTag struct {
 	Word  string `json:"word"`
 	Value string `json:"value"`
+	Level int    `json:"level"`
 }
 
 type Sentiment struct {
