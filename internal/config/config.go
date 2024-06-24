@@ -12,13 +12,8 @@ type (
 		IsEnvRelease bool
 		Debug        bool
 
-		// MongoDB
-		MongoURL    string
-		MongoDBName string
-
-		// Meilisearch
-		MeilisearchHost   string
-		MeilisearchAPIKey string
+		// Postgres
+		PostgresConn string
 
 		// Redis
 		CachingRedisURL string
@@ -55,11 +50,7 @@ func Init() Server {
 		Environment: getEnvStr("ENVIRONMENT"),
 		Debug:       getEnvBool("DEBUG"),
 
-		MongoURL:    getEnvStr("MONGO_URL"),
-		MongoDBName: getEnvStr("MONGO_DB_NAME"),
-
-		MeilisearchHost:   getEnvStr("MEILISEARCH_HOST"),
-		MeilisearchAPIKey: getEnvStr("MEILISEARCH_API_KEY"),
+		PostgresConn: getEnvStr("POSTGRES_CONN"),
 
 		CachingRedisURL: getEnvStr("CACHING_REDIS_URL"),
 
@@ -86,21 +77,8 @@ func Init() Server {
 		panic(errors.New("missing ENVIRONMENT"))
 	}
 
-	if cfg.MongoURL == "" {
-		panic(errors.New("missing MONGO_URL"))
-	}
-	if cfg.MongoDBName == "" {
-		panic(errors.New("missing MONGO_DB_NAME"))
-	}
-	if cfg.MongoDBName == "" {
-		panic(errors.New("missing MONGO_DB_NAME"))
-	}
-
-	if cfg.MeilisearchHost == "" {
-		panic(errors.New("missing MEILISEARCH_HOST"))
-	}
-	if cfg.MeilisearchAPIKey == "" {
-		panic(errors.New("missing MEILISEARCH_API_KEY"))
+	if cfg.PostgresConn == "" {
+		panic(errors.New("missing POSTGRES_CONN"))
 	}
 
 	if cfg.CachingRedisURL == "" {

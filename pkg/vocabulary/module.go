@@ -23,10 +23,10 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 	}
 
 	var (
-		vocabularyRepository           = infrastructure.NewVocabularyRepository(mono.Database())
-		vocabularyExampleRepository    = infrastructure.NewVocabularyExampleRepository(mono.Database())
-		vocabularyScrapeItemRepository = infrastructure.NewVocabularyScrapeItemRepository(mono.Database())
-		verbConjugationRepository      = infrastructure.NewVerbConjugationRepository(mono.Database())
+		vocabularyRepository             = infrastructure.NewVocabularyRepository(mono.Database())
+		vocabularyExampleRepository      = infrastructure.NewVocabularyExampleRepository(mono.Database())
+		vocabularyScrapingItemRepository = infrastructure.NewVocabularyScrapingItemRepository(mono.Database())
+		verbConjugationRepository        = infrastructure.NewVerbConjugationRepository(mono.Database())
 
 		aiRepository      = infrastructure.NewAIRepository(mono.AI())
 		scraperRepository = infrastructure.NewScraperRepository(mono.Scraper())
@@ -60,7 +60,7 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 		mono.Queue(),
 		vocabularyRepository,
 		vocabularyExampleRepository,
-		vocabularyScrapeItemRepository,
+		vocabularyScrapingItemRepository,
 		verbConjugationRepository,
 		queueRepository,
 		ttsRepository,

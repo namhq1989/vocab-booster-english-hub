@@ -1,107 +1,104 @@
 package infrastructure
 
 import (
-	"context"
-	"fmt"
-	"time"
+	"database/sql"
 
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
-
+	"github.com/go-jet/jet/v2/postgres"
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/database/gen/vocab-booster/public/model"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/database/gen/vocab-booster/public/table"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
-	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/infrastructure/dbmodel"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/infrastructure/mapping"
 )
 
 type VocabularyExampleRepository struct {
-	db             *database.Database
-	collectionName string
+	db *database.Database
 }
 
 func NewVocabularyExampleRepository(db *database.Database) VocabularyExampleRepository {
 	r := VocabularyExampleRepository{
-		db:             db,
-		collectionName: database.Collections.VocabularyExample,
+		db: db,
 	}
-	r.ensureIndexes()
 	return r
 }
 
-func (r VocabularyExampleRepository) ensureIndexes() {
-	var (
-		ctx     = context.Background()
-		opts    = options.CreateIndexes().SetMaxTime(time.Minute * 30)
-		indexes = []mongo.IndexModel{
-			{
-				Keys: bson.D{{Key: "vocabularyId", Value: 1}, {Key: "createdAt", Value: -1}},
-			},
-		}
-	)
-
-	if _, err := r.collection().Indexes().CreateMany(ctx, indexes, opts); err != nil {
-		fmt.Printf("index collection %s err: %v \n", r.collectionName, err)
-	}
+func (r VocabularyExampleRepository) getDB() *sql.DB {
+	return r.db.GetDB()
 }
 
-func (r VocabularyExampleRepository) collection() *mongo.Collection {
-	return r.db.GetCollection(r.collectionName)
+func (VocabularyExampleRepository) getTable() *table.VocabularyExamplesTable {
+	return table.VocabularyExamples
 }
 
 func (r VocabularyExampleRepository) FindVocabularyExamplesByVocabularyID(ctx *appcontext.AppContext, vocabularyID string) ([]domain.VocabularyExample, error) {
-	vid, err := database.ObjectIDFromString(vocabularyID)
-	if err != nil {
-		return nil, apperrors.Vocabulary.InvalidVocabularyID
+	stmt := postgres.SELECT(
+		r.getTable().AllColumns,
+	).
+		FROM(r.getTable()).
+		WHERE(
+			r.getTable().VocabularyID.EQ(postgres.String(vocabularyID)),
+		).
+		ORDER_BY(r.getTable().CreatedAt.DESC())
+
+	var docs []model.VocabularyExamples
+	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &docs); err != nil {
+		if r.db.IsNoRowsError(err) {
+			return nil, nil
+		}
+		return nil, err
 	}
 
 	var (
-		condition = bson.M{"vocabularyId": vid}
-		result    = make([]domain.VocabularyExample, 0)
+		result = make([]domain.VocabularyExample, len(docs))
+		mapper = mapping.VocabularyExampleMapper{}
 	)
-
-	cursor, err := r.collection().Find(ctx.Context(), condition, &options.FindOptions{
-		Sort: bson.M{"createdAt": -1},
-	})
-	if err != nil {
-		return result, err
-	}
-	defer func() { _ = cursor.Close(ctx.Context()) }()
-
-	var docs []dbmodel.VocabularyExample
-	if err = cursor.All(ctx.Context(), &docs); err != nil {
-		return result, err
-	}
-
 	for _, doc := range docs {
-		result = append(result, doc.ToDomain())
+		verb, _ := mapper.FromModelToDomain(doc)
+		result = append(result, *verb)
 	}
 	return result, nil
 }
 
 func (r VocabularyExampleRepository) CreateVocabularyExamples(ctx *appcontext.AppContext, examples []domain.VocabularyExample) error {
-	writeModels := make([]mongo.WriteModel, 0, len(examples))
+	var (
+		docs   = make([]model.VocabularyExamples, 0)
+		mapper = mapping.VocabularyExampleMapper{}
+	)
 	for _, example := range examples {
-		doc, err := dbmodel.VocabularyExample{}.FromDomain(example)
-		if err != nil {
-			return err
+		doc, err := mapper.FromDomainToModel(example)
+		if err == nil {
+			docs = append(docs, *doc)
+		} else {
+			ctx.Logger().Error("failed to mapping vocabulary example", err, appcontext.Fields{"example": example})
 		}
-
-		writeModels = append(writeModels, mongo.NewInsertOneModel().SetDocument(*doc))
 	}
 
-	bulkOptions := options.BulkWrite().SetOrdered(false)
-	_, err := r.collection().BulkWrite(ctx.Context(), writeModels, bulkOptions)
+	stmt := r.getTable().INSERT(
+		r.getTable().AllColumns,
+	).
+		MODELS(docs).
+		ON_CONFLICT().DO_NOTHING()
+
+	_, err := stmt.ExecContext(ctx.Context(), r.getDB())
 	return err
 }
 
 func (r VocabularyExampleRepository) UpdateVocabularyExample(ctx *appcontext.AppContext, example domain.VocabularyExample) error {
-	doc, err := dbmodel.VocabularyExample{}.FromDomain(example)
+	mapper := mapping.VocabularyExampleMapper{}
+	doc, err := mapper.FromDomainToModel(example)
 	if err != nil {
 		return err
 	}
 
-	_, err = r.collection().UpdateByID(ctx.Context(), doc.ID, bson.M{"$set": doc})
+	stmt := r.getTable().UPDATE(
+		r.getTable().AllColumns,
+	).
+		MODEL(doc).
+		WHERE(
+			r.getTable().ID.EQ(postgres.String(doc.ID)),
+		)
+
+	_, err = stmt.ExecContext(ctx.Context(), r.getDB())
 	return err
 }

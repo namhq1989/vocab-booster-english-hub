@@ -11,7 +11,6 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/internal/nlp"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/queue"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/scraper"
-	"github.com/namhq1989/vocab-booster-english-hub/internal/searching"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/tts"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/waiter"
 	"google.golang.org/grpc"
@@ -20,7 +19,6 @@ import (
 type Monolith interface {
 	Config() config.Server
 	Database() *database.Database
-	Searching() *searching.Searching
 	Caching() *caching.Caching
 	Rest() *echo.Echo
 	RPC() *grpc.Server

@@ -3,10 +3,9 @@ package hub
 import (
 	"sync"
 
-	"github.com/namhq1989/vocab-booster-english-hub/core/language"
-
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
+	"github.com/namhq1989/vocab-booster-english-hub/core/language"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/vocabularypb"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/dto"
@@ -139,7 +138,7 @@ func (h SearchVocabularyHandler) SearchVocabulary(ctx *appcontext.AppContext, re
 		return nil, err
 	}
 
-	ctx.Logger().Text("persist vocabulary data to db")
+	ctx.Logger().Text("persist vocabulary in db")
 	if err = h.vocabularyRepository.CreateVocabulary(ctx, *vocabulary); err != nil {
 		ctx.Logger().Error("failed to insert vocabulary", err, appcontext.Fields{})
 		return nil, err

@@ -1,131 +1,142 @@
 package infrastructure
 
 import (
-	"context"
-	"errors"
-	"fmt"
-	"time"
+	"database/sql"
 
+	"github.com/go-jet/jet/v2/postgres"
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/database/gen/vocab-booster/public/model"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/database/gen/vocab-booster/public/table"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
-	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/infrastructure/dbmodel"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/infrastructure/mapping"
 )
 
 type VocabularyRepository struct {
-	db             *database.Database
-	collectionName string
+	db *database.Database
 }
 
 func NewVocabularyRepository(db *database.Database) VocabularyRepository {
 	r := VocabularyRepository{
-		db:             db,
-		collectionName: database.Collections.Vocabulary,
+		db: db,
 	}
-	r.ensureIndexes()
 	return r
 }
 
-func (r VocabularyRepository) ensureIndexes() {
-	var (
-		ctx     = context.Background()
-		opts    = options.CreateIndexes().SetMaxTime(time.Minute * 30)
-		indexes = []mongo.IndexModel{
-			{
-				Keys: bson.D{{Key: "term", Value: 1}, {Key: "createdAt", Value: -1}},
-			},
-		}
-	)
-
-	if _, err := r.collection().Indexes().CreateMany(ctx, indexes, opts); err != nil {
-		fmt.Printf("index collection %s err: %v \n", r.collectionName, err)
-	}
+func (r VocabularyRepository) getDB() *sql.DB {
+	return r.db.GetDB()
 }
 
-func (r VocabularyRepository) collection() *mongo.Collection {
-	return r.db.GetCollection(r.collectionName)
+func (VocabularyRepository) getTable() *table.VocabulariesTable {
+	return table.Vocabularies
 }
 
 func (r VocabularyRepository) FindVocabularyByID(ctx *appcontext.AppContext, vocabularyID string) (*domain.Vocabulary, error) {
-	id, err := database.ObjectIDFromString(vocabularyID)
-	if err != nil {
-		return nil, apperrors.Common.InvalidID
-	}
+	stmt := postgres.SELECT(
+		r.getTable().AllColumns,
+	).
+		FROM(r.getTable()).
+		WHERE(
+			r.getTable().ID.EQ(postgres.String(vocabularyID)),
+		)
 
-	// find
-	var doc dbmodel.Vocabulary
-	if err = r.collection().FindOne(ctx.Context(), bson.M{
-		"_id": id,
-	}).Decode(&doc); err != nil && !errors.Is(err, mongo.ErrNoDocuments) {
+	var doc model.Vocabularies
+	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &doc); err != nil {
+		if r.db.IsNoRowsError(err) {
+			return nil, nil
+		}
 		return nil, err
-	} else if errors.Is(err, mongo.ErrNoDocuments) {
-		return nil, nil
 	}
 
-	// respond
-	result := doc.ToDomain()
-	return &result, nil
+	var (
+		mapper    = mapping.VocabularyMapper{}
+		result, _ = mapper.FromModelToDomain(doc)
+	)
+	return result, nil
 }
 
 func (r VocabularyRepository) FindVocabularyByTerm(ctx *appcontext.AppContext, term string) (*domain.Vocabulary, error) {
-	var doc dbmodel.Vocabulary
-	if err := r.collection().FindOne(ctx.Context(), bson.M{
-		"term": term,
-	}).Decode(&doc); err != nil && !errors.Is(err, mongo.ErrNoDocuments) {
+	stmt := postgres.SELECT(
+		r.getTable().AllColumns,
+	).
+		FROM(r.getTable()).
+		WHERE(
+			r.getTable().Term.EQ(postgres.String(term)),
+		)
+
+	var doc model.Vocabularies
+	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &doc); err != nil {
+		if r.db.IsNoRowsError(err) {
+			return nil, nil
+		}
 		return nil, err
-	} else if errors.Is(err, mongo.ErrNoDocuments) {
-		return nil, nil
 	}
 
-	// respond
-	result := doc.ToDomain()
-	return &result, nil
+	var (
+		mapper    = mapping.VocabularyMapper{}
+		result, _ = mapper.FromModelToDomain(doc)
+	)
+	return result, nil
 }
 
 func (r VocabularyRepository) CreateVocabulary(ctx *appcontext.AppContext, vocabulary domain.Vocabulary) error {
-	doc, err := dbmodel.Vocabulary{}.FromDomain(vocabulary)
+	mapper := mapping.VocabularyMapper{}
+	doc, err := mapper.FromDomainToModel(vocabulary)
 	if err != nil {
 		return err
 	}
 
-	_, err = r.collection().InsertOne(ctx.Context(), &doc)
+	stmt := r.getTable().INSERT(
+		r.getTable().AllColumns,
+	).
+		MODEL(doc)
+
+	_, err = stmt.ExecContext(ctx.Context(), r.getDB())
 	return err
 }
 
 func (r VocabularyRepository) UpdateVocabulary(ctx *appcontext.AppContext, vocabulary domain.Vocabulary) error {
-	doc, err := dbmodel.Vocabulary{}.FromDomain(vocabulary)
+	mapper := mapping.VocabularyMapper{}
+	doc, err := mapper.FromDomainToModel(vocabulary)
 	if err != nil {
 		return err
 	}
 
-	_, err = r.collection().UpdateByID(ctx.Context(), doc.ID, bson.M{"$set": doc})
+	stmt := r.getTable().UPDATE(
+		r.getTable().AllColumns,
+	).
+		MODEL(doc).
+		WHERE(
+			r.getTable().ID.EQ(postgres.String(doc.ID)),
+		)
+
+	_, err = stmt.ExecContext(ctx.Context(), r.getDB())
 	return err
 }
 
-func (r VocabularyRepository) RandomPickVocabularyForExercise(ctx *appcontext.AppContext, numOfVocabulary int) ([]domain.Vocabulary, error) {
-	pipeline := mongo.Pipeline{
-		bson.D{{Key: "$sample", Value: bson.D{{Key: "size", Value: numOfVocabulary}}}},
-	}
+func (r VocabularyRepository) RandomPickVocabularyForExercise(ctx *appcontext.AppContext, numOfVocabulary int64) ([]domain.Vocabulary, error) {
+	stmt := postgres.SELECT(
+		r.getTable().AllColumns,
+	).
+		FROM(r.getTable()).
+		ORDER_BY(postgres.Raw("RANDOM()")).
+		LIMIT(numOfVocabulary)
 
-	cursor, err := r.collection().Aggregate(ctx.Context(), pipeline)
-	if err != nil {
+	var docs []model.Vocabularies
+	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &docs); err != nil {
+		if r.db.IsNoRowsError(err) {
+			return nil, nil
+		}
 		return nil, err
 	}
-	defer func() { _ = cursor.Close(ctx.Context()) }()
 
-	var result []dbmodel.Vocabulary
-	if err = cursor.All(ctx.Context(), &result); err != nil {
-		return nil, err
+	var (
+		result = make([]domain.Vocabulary, 0)
+		mapper = mapping.VocabularyMapper{}
+	)
+	for _, doc := range docs {
+		vocab, _ := mapper.FromModelToDomain(doc)
+		result = append(result, *vocab)
 	}
-
-	var vocabulary = make([]domain.Vocabulary, len(result))
-	for index, doc := range result {
-		vocabulary[index] = doc.ToDomain()
-	}
-
-	return vocabulary, nil
+	return result, nil
 }

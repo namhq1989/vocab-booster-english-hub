@@ -7,7 +7,7 @@ import (
 
 func ConvertVocabularyFromDomainToGrpc(vocabulary domain.Vocabulary, examples []domain.VocabularyExample) *vocabularypb.Vocabulary {
 	partsOfSpeech := make([]string, 0)
-	for _, pos := range vocabulary.Data.PartsOfSpeech {
+	for _, pos := range vocabulary.PartsOfSpeech {
 		partsOfSpeech = append(partsOfSpeech, pos.String())
 	}
 
@@ -68,17 +68,15 @@ func ConvertVocabularyFromDomainToGrpc(vocabulary domain.Vocabulary, examples []
 	}
 
 	result := &vocabularypb.Vocabulary{
-		Id:       vocabulary.ID,
-		AuthorId: vocabulary.AuthorID,
-		Term:     vocabulary.Term,
-		Data: &vocabularypb.VocabularyData{
-			PartsOfSpeech: partsOfSpeech,
-			Ipa:           vocabulary.Data.IPA,
-			Audio:         vocabulary.Data.Audio,
-			Synonyms:      vocabulary.Data.Synonyms,
-			Antonyms:      vocabulary.Data.Antonyms,
-		},
-		Examples: exampleList,
+		Id:            vocabulary.ID,
+		AuthorId:      vocabulary.AuthorID,
+		Term:          vocabulary.Term,
+		PartsOfSpeech: partsOfSpeech,
+		Ipa:           vocabulary.IPA,
+		Audio:         vocabulary.Audio,
+		Synonyms:      vocabulary.Synonyms,
+		Antonyms:      vocabulary.Antonyms,
+		Examples:      exampleList,
 	}
 
 	return result

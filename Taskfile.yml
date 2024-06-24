@@ -18,6 +18,15 @@ tasks:
     cmds:
       - doppler run -- go run cmd/*.go
 
+  db-gen:
+    cmds:
+      - rm -rf internal/database/gen
+      - doppler run -- go run internal/database/generator/*.go
+
+  db-migrate:
+    cmds:
+      - TERN_CONFIG=internal/database/migration/tern.conf TERN_MIGRATIONS=internal/database/migration tern migrate
+
   mock-gen:
     cmds:
       # grpc

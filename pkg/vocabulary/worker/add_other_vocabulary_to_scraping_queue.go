@@ -7,32 +7,32 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 )
 
-type AddOtherVocabularyToScrapeQueueHandler struct {
-	vocabularyRepository           domain.VocabularyRepository
-	vocabularyScrapeItemRepository domain.VocabularyScrapeItemRepository
+type AddOtherVocabularyToScrapingQueueHandler struct {
+	vocabularyRepository             domain.VocabularyRepository
+	VocabularyScrapingItemRepository domain.VocabularyScrapingItemRepository
 }
 
-func NewAddOtherVocabularyToScrapeQueueHandler(
+func NewAddOtherVocabularyToScrapingQueueHandler(
 	vocabularyRepository domain.VocabularyRepository,
-	vocabularyScrapeItemRepository domain.VocabularyScrapeItemRepository,
-) AddOtherVocabularyToScrapeQueueHandler {
-	return AddOtherVocabularyToScrapeQueueHandler{
-		vocabularyRepository:           vocabularyRepository,
-		vocabularyScrapeItemRepository: vocabularyScrapeItemRepository,
+	VocabularyScrapingItemRepository domain.VocabularyScrapingItemRepository,
+) AddOtherVocabularyToScrapingQueueHandler {
+	return AddOtherVocabularyToScrapingQueueHandler{
+		vocabularyRepository:             vocabularyRepository,
+		VocabularyScrapingItemRepository: VocabularyScrapingItemRepository,
 	}
 }
 
-func (w AddOtherVocabularyToScrapeQueueHandler) AddOtherVocabularyToScrapeQueue(ctx *appcontext.AppContext, payload domain.QueueAddOtherVocabularyToScrapeQueuePayload) error {
-	ctx.Logger().Info("add other vocabulary to scrape queue", appcontext.Fields{"exampleID": payload.Example.ID})
+func (w AddOtherVocabularyToScrapingQueueHandler) AddOtherVocabularyToScrapingQueue(ctx *appcontext.AppContext, payload domain.QueueAddOtherVocabularyToScrapingQueuePayload) error {
+	ctx.Logger().Info("add other vocabulary to scraping queue", appcontext.Fields{"exampleID": payload.Example.ID})
 
 	var (
 		vocabulary  = make([]string, 0)
-		scrapeItems = make([]domain.VocabularyScrapeItem, 0)
+		scrapeItems = make([]domain.VocabularyScrapingItem, 0)
 	)
 
 	ctx.Logger().Text("collect vocabulary for scraping, focus on some basic POS tags only")
 	for _, p := range payload.Example.PosTags {
-		if slices.Contains(domain.ScrapePosTagList, p.Value) {
+		if slices.Contains(domain.ScrapingPosTagList, p.Value) {
 			vocabulary = append(vocabulary, p.Word)
 		}
 	}
@@ -48,7 +48,7 @@ func (w AddOtherVocabularyToScrapeQueueHandler) AddOtherVocabularyToScrapeQueue(
 	}
 
 	ctx.Logger().Text("insert scrape items to db")
-	if err := w.vocabularyScrapeItemRepository.CreateVocabularyScrapeItems(ctx, scrapeItems); err != nil {
+	if err := w.VocabularyScrapingItemRepository.CreateVocabularyScrapingItems(ctx, scrapeItems); err != nil {
 		ctx.Logger().Error("failed to insert scrape items to db", err, appcontext.Fields{"scrapeItems": scrapeItems})
 		return err
 	}
@@ -56,7 +56,7 @@ func (w AddOtherVocabularyToScrapeQueueHandler) AddOtherVocabularyToScrapeQueue(
 	return nil
 }
 
-func (w AddOtherVocabularyToScrapeQueueHandler) checkAndInsertItem(ctx *appcontext.AppContext, scrapeItems *[]domain.VocabularyScrapeItem, term string) {
+func (w AddOtherVocabularyToScrapingQueueHandler) checkAndInsertItem(ctx *appcontext.AppContext, scrapeItems *[]domain.VocabularyScrapingItem, term string) {
 	ctx.Logger().Info("check and insert item", appcontext.Fields{"term": term})
 
 	ctx.Logger().Text("check in vocabulary collection first")
@@ -70,7 +70,7 @@ func (w AddOtherVocabularyToScrapeQueueHandler) checkAndInsertItem(ctx *appconte
 	}
 
 	ctx.Logger().Text("check in scrape item collection")
-	item, err := w.vocabularyScrapeItemRepository.FindVocabularyScrapeItemByTerm(ctx, term)
+	item, err := w.VocabularyScrapingItemRepository.FindVocabularyScrapingItemByTerm(ctx, term)
 	if err != nil {
 		ctx.Logger().Error("failed to find scrape item", err, appcontext.Fields{"term": term})
 		return
@@ -78,7 +78,7 @@ func (w AddOtherVocabularyToScrapeQueueHandler) checkAndInsertItem(ctx *appconte
 		ctx.Logger().Info("vocabulary scrape item is already in collection", appcontext.Fields{"term": term})
 	}
 
-	item, err = domain.NewVocabularyScrapeItem(term)
+	item, err = domain.NewVocabularyScrapingItem(term)
 	if err != nil {
 		ctx.Logger().Error("failed to create vocabulary scrape item", err, appcontext.Fields{"term": term})
 		return

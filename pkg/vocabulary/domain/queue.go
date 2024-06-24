@@ -7,7 +7,7 @@ type QueueRepository interface {
 	NewVocabularyExampleCreated(ctx *appcontext.AppContext, payload QueueNewVocabularyExampleCreatedPayload) error
 	CreateVocabularyExampleAudio(ctx *appcontext.AppContext, payload QueueCreateVocabularyExampleAudioPayload) error
 	CreateVerbConjugation(ctx *appcontext.AppContext, payload QueueCreateVerbConjugationPayload) error
-	AddOtherVocabularyToScrapeQueue(ctx *appcontext.AppContext, payload QueueAddOtherVocabularyToScrapeQueuePayload) error
+	AddOtherVocabularyToScrapingQueue(ctx *appcontext.AppContext, payload QueueAddOtherVocabularyToScrapingQueuePayload) error
 }
 
 type QueueNewVocabularyCreatedPayload struct {
@@ -27,7 +27,7 @@ type QueueCreateVerbConjugationPayload struct {
 	Example VocabularyExample
 }
 
-type QueueAddOtherVocabularyToScrapeQueuePayload struct {
+type QueueAddOtherVocabularyToScrapingQueuePayload struct {
 	Example VocabularyExample
 }
 

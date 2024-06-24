@@ -8,22 +8,18 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/namhq1989/vocab-booster-english-hub/internal/nlp"
-
-	"github.com/namhq1989/vocab-booster-english-hub/internal/tts"
-
-	"github.com/namhq1989/vocab-booster-english-hub/internal/ai"
-
 	"github.com/labstack/echo/v4"
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/ai"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/caching"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/config"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/monitoring"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/monolith"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/nlp"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/queue"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/scraper"
-	"github.com/namhq1989/vocab-booster-english-hub/internal/searching"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/tts"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/waiter"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
@@ -32,7 +28,6 @@ import (
 type app struct {
 	cfg        config.Server
 	database   *database.Database
-	searching  *searching.Searching
 	caching    *caching.Caching
 	rest       *echo.Echo
 	rpc        *grpc.Server
@@ -52,10 +47,6 @@ func (a *app) Config() config.Server {
 
 func (a *app) Database() *database.Database {
 	return a.database
-}
-
-func (a *app) Searching() *searching.Searching {
-	return a.searching
 }
 
 func (a *app) Rest() *echo.Echo {

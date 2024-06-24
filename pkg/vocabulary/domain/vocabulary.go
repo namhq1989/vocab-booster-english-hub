@@ -13,24 +13,23 @@ type VocabularyRepository interface {
 	FindVocabularyByTerm(ctx *appcontext.AppContext, term string) (*Vocabulary, error)
 	CreateVocabulary(ctx *appcontext.AppContext, vocabulary Vocabulary) error
 	UpdateVocabulary(ctx *appcontext.AppContext, vocabulary Vocabulary) error
-	RandomPickVocabularyForExercise(ctx *appcontext.AppContext, numOfVocabulary int) ([]Vocabulary, error)
+	RandomPickVocabularyForExercise(ctx *appcontext.AppContext, numOfVocabulary int64) ([]Vocabulary, error)
 }
 
 type Vocabulary struct {
-	ID        string
-	AuthorID  string
-	Term      string
-	Data      VocabularyData
-	CreatedAt time.Time
-	UpdatedAt time.Time
-}
-
-type VocabularyData struct {
+	ID            string
+	AuthorID      string
+	Term          string
 	PartsOfSpeech []PartOfSpeech
 	IPA           string
 	Audio         string
 	Synonyms      []string
 	Antonyms      []string
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+}
+
+type VocabularyData struct {
 }
 
 func NewVocabulary(authorID, term string) (*Vocabulary, error) {
@@ -62,7 +61,7 @@ func (d *Vocabulary) SetPartsOfSpeech(partsOfSpeech []string) error {
 	if len(dPartsOfSpeech) == 0 {
 		return apperrors.Vocabulary.InvalidPartOfSpeech
 	}
-	d.Data.PartsOfSpeech = dPartsOfSpeech
+	d.PartsOfSpeech = dPartsOfSpeech
 
 	return nil
 }
@@ -71,7 +70,7 @@ func (d *Vocabulary) SetIPA(ipa string) error {
 	if ipa == "" {
 		return apperrors.Vocabulary.InvalidIPA
 	}
-	d.Data.IPA = ipa
+	d.IPA = ipa
 	return nil
 }
 
@@ -79,13 +78,13 @@ func (d *Vocabulary) SetAudio(audio string) error {
 	if audio == "" {
 		return apperrors.Vocabulary.InvalidAudioName
 	}
-	d.Data.Audio = audio
+	d.Audio = audio
 	return nil
 }
 
 func (d *Vocabulary) SetLexicalRelations(synonyms, antonyms []string) error {
-	d.Data.Synonyms = synonyms
-	d.Data.Antonyms = antonyms
+	d.Synonyms = synonyms
+	d.Antonyms = antonyms
 	return nil
 }
 
