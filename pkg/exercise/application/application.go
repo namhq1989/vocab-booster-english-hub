@@ -12,6 +12,7 @@ type (
 		NewExercise(ctx *appcontext.AppContext, req *exercisepb.NewExerciseRequest) (*exercisepb.NewExerciseResponse, error)
 		UpdateExerciseAudio(ctx *appcontext.AppContext, req *exercisepb.UpdateExerciseAudioRequest) (*exercisepb.UpdateExerciseAudioResponse, error)
 		AnswerExercise(ctx *appcontext.AppContext, req *exercisepb.AnswerExerciseRequest) (*exercisepb.AnswerExerciseResponse, error)
+		GetUserExercises(ctx *appcontext.AppContext, req *exercisepb.GetUserExercisesRequest) (*exercisepb.GetUserExercisesResponse, error)
 	}
 	App interface {
 		Hubs
@@ -21,6 +22,7 @@ type (
 		hub.NewExerciseHandler
 		hub.UpdateExerciseAudioHandler
 		hub.AnswerExerciseHandler
+		hub.GetUserExercisesHandler
 	}
 	Application struct {
 		appHubHandler
@@ -42,6 +44,9 @@ func New(
 			AnswerExerciseHandler: hub.NewAnswerExerciseHandler(
 				exerciseRepository,
 				userExerciseStatusRepository,
+			),
+			GetUserExercisesHandler: hub.NewGetUserExercisesHandler(
+				exerciseRepository,
 			),
 		},
 	}

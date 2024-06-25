@@ -109,3 +109,48 @@ func (r ExerciseRepository) UpdateExercise(ctx *appcontext.AppContext, exercise 
 	_, err = stmt.ExecContext(ctx.Context(), r.getDB())
 	return err
 }
+
+func (r ExerciseRepository) PickRandomExercisesForUser(ctx *appcontext.AppContext, filter domain.UserExerciseFilter) ([]domain.UserExercise, error) {
+	e := r.getTable().AS("e")
+	ues := table.UserExerciseStatuses.AS("ues")
+
+	stmt := postgres.SELECT(
+		e.ID, e.Level, e.Audio, e.Vocabulary, e.Content, e.Translated, e.CorrectAnswer, e.Options,
+		ues.CorrectStreak, ues.IsFavorite, ues.IsMastered, ues.NextReviewAt,
+	).
+		FROM(
+			e.LEFT_JOIN(ues, e.ID.EQ(ues.ExerciseID).AND(ues.UserID.EQ(postgres.String(filter.UserID)))),
+		).
+		WHERE(
+			postgres.BoolExp(postgres.COALESCE(ues.IsMastered, postgres.Bool(false).EQ(postgres.Bool(false)))),
+		).
+		ORDER_BY(
+			postgres.Raw("RANDOM()"),
+		).
+		LIMIT(filter.NumOfExercises)
+
+	if filter.Level.String() != "" {
+		stmt.WHERE(e.Level.EQ(postgres.String(filter.Level.String())))
+	}
+
+	var (
+		docs   = make([]mapping.UserExercise, 0)
+		result = make([]domain.UserExercise, 0)
+	)
+	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &docs); err != nil {
+		ctx.Logger().Print("err", err)
+		if r.db.IsNoRowsError(err) {
+			return result, nil
+		}
+		return result, err
+	}
+
+	var (
+		mapper = mapping.UserExerciseMapper{}
+	)
+	for _, doc := range docs {
+		ue, _ := mapper.FromModelToDomain(doc, filter.Lang)
+		result = append(result, *ue)
+	}
+	return result, nil
+}

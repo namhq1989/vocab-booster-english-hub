@@ -15,6 +15,9 @@ CREATE TABLE vocabularies (
     antonyms TEXT[] NOT NULL DEFAULT '{}',
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+
+    CONSTRAINT vocabularies_unique_term
+        UNIQUE (term)
 );
 
 CREATE TABLE vocabulary_examples (
@@ -36,6 +39,8 @@ CREATE TABLE vocabulary_examples (
         REFERENCES vocabularies(id)
 );
 
+CREATE INDEX idx_vocabulary_id_created_at ON vocabulary_examples(vocabulary_id, created_at DESC);
+
 CREATE TABLE verb_conjugations (
     id TEXT PRIMARY KEY,
     vocabulary_id TEXT NOT NULL,
@@ -47,7 +52,7 @@ CREATE TABLE verb_conjugations (
         FOREIGN KEY(vocabulary_id)
         REFERENCES vocabularies(id),
 
-    CONSTRAINT unique_value_form
+    CONSTRAINT verb_conjugations_unique_value_form
         UNIQUE (value, form)
 );
 
@@ -56,7 +61,7 @@ CREATE TABLE vocabulary_scraping_items (
     term VARCHAR(30) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
 
-    CONSTRAINT unique_term
+    CONSTRAINT vocabulary_scraping_items_unique_term
         UNIQUE (term)
 );
 
@@ -79,6 +84,11 @@ CREATE TABLE exercises (
         REFERENCES vocabulary_examples(id)
 );
 
+CREATE INDEX idx_vocabulary_example_id ON exercises(vocabulary_example_id);
+CREATE INDEX idx_vocabulary_created_at ON exercises(vocabulary, created_at DESC);
+CREATE INDEX idx_level_created_at ON exercises(level, created_at DESC);
+
+
 CREATE TABLE user_exercise_statuses (
     id TEXT PRIMARY KEY,
     exercise_id TEXT NOT NULL,
@@ -91,8 +101,13 @@ CREATE TABLE user_exercise_statuses (
 
     CONSTRAINT fk_exercise
         FOREIGN KEY(exercise_id)
-        REFERENCES exercises(id)
+        REFERENCES exercises(id),
+
+    CONSTRAINT user_exercise_statuses_unique_user_exercise
+        UNIQUE (user_id, exercise_id)
 );
+
+CREATE INDEX idx_user_id_updated_at ON user_exercise_statuses(user_id, updated_at DESC);
 
 ---- create above / drop below ----
 
