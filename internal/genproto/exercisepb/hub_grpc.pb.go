@@ -22,6 +22,7 @@ const (
 	ExerciseService_NewExercise_FullMethodName         = "/exercisepb.ExerciseService/NewExercise"
 	ExerciseService_AnswerExercise_FullMethodName      = "/exercisepb.ExerciseService/AnswerExercise"
 	ExerciseService_UpdateExerciseAudio_FullMethodName = "/exercisepb.ExerciseService/UpdateExerciseAudio"
+	ExerciseService_GetUserExercises_FullMethodName    = "/exercisepb.ExerciseService/GetUserExercises"
 )
 
 // ExerciseServiceClient is the client API for ExerciseService service.
@@ -31,6 +32,7 @@ type ExerciseServiceClient interface {
 	NewExercise(ctx context.Context, in *NewExerciseRequest, opts ...grpc.CallOption) (*NewExerciseResponse, error)
 	AnswerExercise(ctx context.Context, in *AnswerExerciseRequest, opts ...grpc.CallOption) (*AnswerExerciseResponse, error)
 	UpdateExerciseAudio(ctx context.Context, in *UpdateExerciseAudioRequest, opts ...grpc.CallOption) (*UpdateExerciseAudioResponse, error)
+	GetUserExercises(ctx context.Context, in *GetUserExercisesRequest, opts ...grpc.CallOption) (*GetUserExercisesResponse, error)
 }
 
 type exerciseServiceClient struct {
@@ -71,6 +73,16 @@ func (c *exerciseServiceClient) UpdateExerciseAudio(ctx context.Context, in *Upd
 	return out, nil
 }
 
+func (c *exerciseServiceClient) GetUserExercises(ctx context.Context, in *GetUserExercisesRequest, opts ...grpc.CallOption) (*GetUserExercisesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserExercisesResponse)
+	err := c.cc.Invoke(ctx, ExerciseService_GetUserExercises_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ExerciseServiceServer is the server API for ExerciseService service.
 // All implementations should embed UnimplementedExerciseServiceServer
 // for forward compatibility
@@ -78,6 +90,7 @@ type ExerciseServiceServer interface {
 	NewExercise(context.Context, *NewExerciseRequest) (*NewExerciseResponse, error)
 	AnswerExercise(context.Context, *AnswerExerciseRequest) (*AnswerExerciseResponse, error)
 	UpdateExerciseAudio(context.Context, *UpdateExerciseAudioRequest) (*UpdateExerciseAudioResponse, error)
+	GetUserExercises(context.Context, *GetUserExercisesRequest) (*GetUserExercisesResponse, error)
 }
 
 // UnimplementedExerciseServiceServer should be embedded to have forward compatible implementations.
@@ -92,6 +105,9 @@ func (UnimplementedExerciseServiceServer) AnswerExercise(context.Context, *Answe
 }
 func (UnimplementedExerciseServiceServer) UpdateExerciseAudio(context.Context, *UpdateExerciseAudioRequest) (*UpdateExerciseAudioResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateExerciseAudio not implemented")
+}
+func (UnimplementedExerciseServiceServer) GetUserExercises(context.Context, *GetUserExercisesRequest) (*GetUserExercisesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserExercises not implemented")
 }
 
 // UnsafeExerciseServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -159,6 +175,24 @@ func _ExerciseService_UpdateExerciseAudio_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ExerciseService_GetUserExercises_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserExercisesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExerciseServiceServer).GetUserExercises(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ExerciseService_GetUserExercises_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExerciseServiceServer).GetUserExercises(ctx, req.(*GetUserExercisesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ExerciseService_ServiceDesc is the grpc.ServiceDesc for ExerciseService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -177,6 +211,10 @@ var ExerciseService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateExerciseAudio",
 			Handler:    _ExerciseService_UpdateExerciseAudio_Handler,
+		},
+		{
+			MethodName: "GetUserExercises",
+			Handler:    _ExerciseService_GetUserExercises_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -8,6 +8,7 @@ service ExerciseService {
   rpc NewExercise(NewExerciseRequest) returns (NewExerciseResponse) {}
   rpc AnswerExercise(AnswerExerciseRequest) returns (AnswerExerciseResponse) {}
   rpc UpdateExerciseAudio(UpdateExerciseAudioRequest) returns (UpdateExerciseAudioResponse) {}
+  rpc GetUserExercises(GetUserExercisesRequest) returns (GetUserExercisesResponse) {}
 }
 
 // NEW EXERCISE
@@ -45,3 +46,15 @@ message AnswerExerciseRequest {
 }
 
 message AnswerExerciseResponse {}
+
+// GET USER EXERCISES
+
+message GetUserExercisesRequest {
+  string userId = 1;
+  string level = 2;
+  string lang = 3;
+}
+
+message GetUserExercisesResponse {
+  repeated UserExercise exercises = 1;
+}

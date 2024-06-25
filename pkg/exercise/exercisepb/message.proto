@@ -2,6 +2,23 @@ syntax = "proto3";
 
 package exercisepb;
 
+import "google/protobuf/timestamp.proto";
+
 message TranslatedLanguages {
   string vi = 1;
+}
+
+message UserExercise {
+  string id = 1;
+  string audio = 2;
+  string level = 3;
+  string content = 4;
+  string translated = 5;
+  string vocabulary = 6;
+  string correctAnswer = 7;
+  repeated string options = 8;
+  int32 correctStreak = 9;
+  bool isFavorite = 10;
+  bool isMastered = 11;
+  google.protobuf.Timestamp nextReviewAt = 12;
 }

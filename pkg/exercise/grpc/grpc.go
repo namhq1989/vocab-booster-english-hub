@@ -32,3 +32,7 @@ func (s server) UpdateExerciseAudio(bgCtx context.Context, req *exercisepb.Updat
 func (s server) AnswerExercise(bgCtx context.Context, req *exercisepb.AnswerExerciseRequest) (*exercisepb.AnswerExerciseResponse, error) {
 	return s.app.AnswerExercise(appcontext.NewGRPC(bgCtx), req)
 }
+
+func (s server) GetUserExercises(bgCtx context.Context, req *exercisepb.GetUserExercisesRequest) (*exercisepb.GetUserExercisesResponse, error) {
+	return s.app.GetUserExercises(appcontext.NewGRPC(bgCtx), req)
+}

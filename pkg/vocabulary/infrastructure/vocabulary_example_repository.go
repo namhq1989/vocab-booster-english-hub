@@ -41,18 +41,18 @@ func (r VocabularyExampleRepository) FindVocabularyExamplesByVocabularyID(ctx *a
 		).
 		ORDER_BY(r.getTable().CreatedAt.DESC())
 
-	var docs []model.VocabularyExamples
+	var (
+		docs   []model.VocabularyExamples
+		result = make([]domain.VocabularyExample, 0)
+	)
 	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &docs); err != nil {
 		if r.db.IsNoRowsError(err) {
-			return nil, nil
+			return result, nil
 		}
-		return nil, err
+		return result, err
 	}
 
-	var (
-		result = make([]domain.VocabularyExample, len(docs))
-		mapper = mapping.VocabularyExampleMapper{}
-	)
+	mapper := mapping.VocabularyExampleMapper{}
 	for _, doc := range docs {
 		verb, _ := mapper.FromModelToDomain(doc)
 		result = append(result, *verb)

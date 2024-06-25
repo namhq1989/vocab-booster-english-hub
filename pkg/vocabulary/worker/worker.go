@@ -137,7 +137,7 @@ func (w Worker) addCronjob() {
 		jobs = []cronjobData{
 			{
 				Task:       w.queue.GenerateTypename(queue.TypeNames.AutoScrapingVocabulary),
-				CronSpec:   "@every 1m",
+				CronSpec:   "@every 1h",
 				Payload:    domain.QueueAutoScrapingVocabularyPayload{},
 				RetryTimes: 1,
 			},

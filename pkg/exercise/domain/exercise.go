@@ -15,6 +15,7 @@ type ExerciseRepository interface {
 	FindExerciseByVocabularyExampleID(ctx *appcontext.AppContext, exampleID string) (*Exercise, error)
 	CreateExercise(ctx *appcontext.AppContext, exercise Exercise) error
 	UpdateExercise(ctx *appcontext.AppContext, exercise Exercise) error
+	PickRandomExercisesForUser(ctx *appcontext.AppContext, filter UserExerciseFilter) ([]UserExercise, error)
 }
 
 type Exercise struct {
