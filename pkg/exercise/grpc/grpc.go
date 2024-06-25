@@ -40,3 +40,7 @@ func (s server) GetUserExercises(bgCtx context.Context, req *exercisepb.GetUserE
 func (s server) CountUserReadyToReviewExercises(bgCtx context.Context, req *exercisepb.CountUserReadyToReviewExercisesRequest) (*exercisepb.CountUserReadyToReviewExercisesResponse, error) {
 	return s.app.CountUserReadyToReviewExercises(appcontext.NewGRPC(bgCtx), req)
 }
+
+func (s server) GetUserReadyToReviewExercises(bgCtx context.Context, req *exercisepb.GetUserReadyToReviewExercisesRequest) (*exercisepb.GetUserReadyToReviewExercisesResponse, error) {
+	return s.app.GetUserReadyToReviewExercises(appcontext.NewGRPC(bgCtx), req)
+}

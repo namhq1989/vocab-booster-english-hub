@@ -14,6 +14,7 @@ type (
 		AnswerExercise(ctx *appcontext.AppContext, req *exercisepb.AnswerExerciseRequest) (*exercisepb.AnswerExerciseResponse, error)
 		GetUserExercises(ctx *appcontext.AppContext, req *exercisepb.GetUserExercisesRequest) (*exercisepb.GetUserExercisesResponse, error)
 		CountUserReadyToReviewExercises(ctx *appcontext.AppContext, req *exercisepb.CountUserReadyToReviewExercisesRequest) (*exercisepb.CountUserReadyToReviewExercisesResponse, error)
+		GetUserReadyToReviewExercises(ctx *appcontext.AppContext, req *exercisepb.GetUserReadyToReviewExercisesRequest) (*exercisepb.GetUserReadyToReviewExercisesResponse, error)
 	}
 	App interface {
 		Hubs
@@ -25,6 +26,7 @@ type (
 		hub.AnswerExerciseHandler
 		hub.GetUserExercisesHandler
 		hub.CountUserReadyToReviewExercisesHandler
+		hub.GetUserReadyToReviewExercisesHandler
 	}
 	Application struct {
 		appHubHandler
@@ -51,6 +53,9 @@ func New(
 				exerciseRepository,
 			),
 			CountUserReadyToReviewExercisesHandler: hub.NewCountUserReadyToReviewExercisesHandler(
+				userExerciseStatusRepository,
+			),
+			GetUserReadyToReviewExercisesHandler: hub.NewGetUserReadyToReviewExercisesHandler(
 				userExerciseStatusRepository,
 			),
 		},

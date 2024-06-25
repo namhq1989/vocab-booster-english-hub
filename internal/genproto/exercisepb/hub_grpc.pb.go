@@ -24,6 +24,7 @@ const (
 	ExerciseService_UpdateExerciseAudio_FullMethodName             = "/exercisepb.ExerciseService/UpdateExerciseAudio"
 	ExerciseService_GetUserExercises_FullMethodName                = "/exercisepb.ExerciseService/GetUserExercises"
 	ExerciseService_CountUserReadyToReviewExercises_FullMethodName = "/exercisepb.ExerciseService/CountUserReadyToReviewExercises"
+	ExerciseService_GetUserReadyToReviewExercises_FullMethodName   = "/exercisepb.ExerciseService/GetUserReadyToReviewExercises"
 )
 
 // ExerciseServiceClient is the client API for ExerciseService service.
@@ -35,6 +36,7 @@ type ExerciseServiceClient interface {
 	UpdateExerciseAudio(ctx context.Context, in *UpdateExerciseAudioRequest, opts ...grpc.CallOption) (*UpdateExerciseAudioResponse, error)
 	GetUserExercises(ctx context.Context, in *GetUserExercisesRequest, opts ...grpc.CallOption) (*GetUserExercisesResponse, error)
 	CountUserReadyToReviewExercises(ctx context.Context, in *CountUserReadyToReviewExercisesRequest, opts ...grpc.CallOption) (*CountUserReadyToReviewExercisesResponse, error)
+	GetUserReadyToReviewExercises(ctx context.Context, in *GetUserReadyToReviewExercisesRequest, opts ...grpc.CallOption) (*GetUserReadyToReviewExercisesResponse, error)
 }
 
 type exerciseServiceClient struct {
@@ -95,6 +97,16 @@ func (c *exerciseServiceClient) CountUserReadyToReviewExercises(ctx context.Cont
 	return out, nil
 }
 
+func (c *exerciseServiceClient) GetUserReadyToReviewExercises(ctx context.Context, in *GetUserReadyToReviewExercisesRequest, opts ...grpc.CallOption) (*GetUserReadyToReviewExercisesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserReadyToReviewExercisesResponse)
+	err := c.cc.Invoke(ctx, ExerciseService_GetUserReadyToReviewExercises_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ExerciseServiceServer is the server API for ExerciseService service.
 // All implementations should embed UnimplementedExerciseServiceServer
 // for forward compatibility
@@ -104,6 +116,7 @@ type ExerciseServiceServer interface {
 	UpdateExerciseAudio(context.Context, *UpdateExerciseAudioRequest) (*UpdateExerciseAudioResponse, error)
 	GetUserExercises(context.Context, *GetUserExercisesRequest) (*GetUserExercisesResponse, error)
 	CountUserReadyToReviewExercises(context.Context, *CountUserReadyToReviewExercisesRequest) (*CountUserReadyToReviewExercisesResponse, error)
+	GetUserReadyToReviewExercises(context.Context, *GetUserReadyToReviewExercisesRequest) (*GetUserReadyToReviewExercisesResponse, error)
 }
 
 // UnimplementedExerciseServiceServer should be embedded to have forward compatible implementations.
@@ -124,6 +137,9 @@ func (UnimplementedExerciseServiceServer) GetUserExercises(context.Context, *Get
 }
 func (UnimplementedExerciseServiceServer) CountUserReadyToReviewExercises(context.Context, *CountUserReadyToReviewExercisesRequest) (*CountUserReadyToReviewExercisesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CountUserReadyToReviewExercises not implemented")
+}
+func (UnimplementedExerciseServiceServer) GetUserReadyToReviewExercises(context.Context, *GetUserReadyToReviewExercisesRequest) (*GetUserReadyToReviewExercisesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserReadyToReviewExercises not implemented")
 }
 
 // UnsafeExerciseServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -227,6 +243,24 @@ func _ExerciseService_CountUserReadyToReviewExercises_Handler(srv interface{}, c
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ExerciseService_GetUserReadyToReviewExercises_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserReadyToReviewExercisesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExerciseServiceServer).GetUserReadyToReviewExercises(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ExerciseService_GetUserReadyToReviewExercises_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExerciseServiceServer).GetUserReadyToReviewExercises(ctx, req.(*GetUserReadyToReviewExercisesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ExerciseService_ServiceDesc is the grpc.ServiceDesc for ExerciseService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -253,6 +287,10 @@ var ExerciseService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CountUserReadyToReviewExercises",
 			Handler:    _ExerciseService_CountUserReadyToReviewExercises_Handler,
+		},
+		{
+			MethodName: "GetUserReadyToReviewExercises",
+			Handler:    _ExerciseService_GetUserReadyToReviewExercises_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

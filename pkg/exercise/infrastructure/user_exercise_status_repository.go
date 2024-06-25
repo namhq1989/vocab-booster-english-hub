@@ -111,3 +111,51 @@ func (r UserExerciseStatusRepository) CountUserReadyToReviewExercises(ctx *appco
 	err := stmt.QueryContext(ctx.Context(), r.getDB(), &result)
 	return result.Total, err
 }
+
+func (r UserExerciseStatusRepository) GetUserReadyToReviewExercises(ctx *appcontext.AppContext, filter domain.UserExerciseFilter) ([]domain.UserExercise, error) {
+	var (
+		ues = r.getTable().AS("ues")
+		e   = table.Exercises.AS("e")
+		now = time.Now()
+	)
+
+	whereCond := postgres.AND(ues.UserID.EQ(postgres.String(filter.UserID)))
+	whereCond = whereCond.AND(ues.NextReviewAt.LT(postgres.TimestampzT(now)))
+	if filter.Level.String() != "" {
+		whereCond = whereCond.AND(e.Level.EQ(postgres.String(filter.Level.String())))
+	}
+
+	stmt := postgres.SELECT(
+		e.ID, e.Level, e.Audio, e.Vocabulary, e.Content, e.Translated, e.CorrectAnswer, e.Options,
+		ues.CorrectStreak, ues.IsFavorite, ues.IsMastered, ues.NextReviewAt,
+	).
+		FROM(
+			ues.LEFT_JOIN(e, ues.ExerciseID.EQ(e.ID)),
+		).
+		WHERE(whereCond).
+		ORDER_BY(
+			ues.NextReviewAt,
+		).
+		LIMIT(filter.NumOfExercises)
+
+	var (
+		docs   = make([]mapping.UserExercise, 0)
+		result = make([]domain.UserExercise, 0)
+	)
+	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &docs); err != nil {
+		ctx.Logger().Print("err", err)
+		if r.db.IsNoRowsError(err) {
+			return result, nil
+		}
+		return result, err
+	}
+
+	var (
+		mapper = mapping.UserExerciseMapper{}
+	)
+	for _, doc := range docs {
+		ue, _ := mapper.FromModelToDomain(doc, filter.Lang)
+		result = append(result, *ue)
+	}
+	return result, nil
+}

@@ -111,8 +111,15 @@ func (r ExerciseRepository) UpdateExercise(ctx *appcontext.AppContext, exercise 
 }
 
 func (r ExerciseRepository) PickRandomExercisesForUser(ctx *appcontext.AppContext, filter domain.UserExerciseFilter) ([]domain.UserExercise, error) {
-	e := r.getTable().AS("e")
-	ues := table.UserExerciseStatuses.AS("ues")
+	var (
+		e   = r.getTable().AS("e")
+		ues = table.UserExerciseStatuses.AS("ues")
+	)
+
+	whereCond := postgres.AND(postgres.BoolExp(postgres.COALESCE(ues.IsMastered, postgres.Bool(false).EQ(postgres.Bool(false)))))
+	if filter.Level.String() != "" {
+		whereCond = whereCond.AND(e.Level.EQ(postgres.String(filter.Level.String())))
+	}
 
 	stmt := postgres.SELECT(
 		e.ID, e.Level, e.Audio, e.Vocabulary, e.Content, e.Translated, e.CorrectAnswer, e.Options,
@@ -121,17 +128,11 @@ func (r ExerciseRepository) PickRandomExercisesForUser(ctx *appcontext.AppContex
 		FROM(
 			e.LEFT_JOIN(ues, e.ID.EQ(ues.ExerciseID).AND(ues.UserID.EQ(postgres.String(filter.UserID)))),
 		).
-		WHERE(
-			postgres.BoolExp(postgres.COALESCE(ues.IsMastered, postgres.Bool(false).EQ(postgres.Bool(false)))),
-		).
+		WHERE(whereCond).
 		ORDER_BY(
 			postgres.Raw("RANDOM()"),
 		).
 		LIMIT(filter.NumOfExercises)
-
-	if filter.Level.String() != "" {
-		stmt.WHERE(e.Level.EQ(postgres.String(filter.Level.String())))
-	}
 
 	var (
 		docs   = make([]mapping.UserExercise, 0)
