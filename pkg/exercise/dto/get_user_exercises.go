@@ -22,6 +22,7 @@ func ConvertUserExerciseFromDomainToGrpc(exercises []domain.UserExercise) []*exe
 			CorrectStreak: int32(exercise.CorrectStreak),
 			IsFavorite:    exercise.IsFavorite,
 			IsMastered:    exercise.IsMastered,
+			UpdatedAt:     timestamppb.New(exercise.UpdatedAt),
 			NextReviewAt:  timestamppb.New(exercise.NextReviewAt),
 		}
 	}

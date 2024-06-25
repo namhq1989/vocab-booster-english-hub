@@ -20,4 +20,5 @@ type UserExerciseStatuses struct {
 	IsMastered    bool
 	UpdatedAt     time.Time
 	NextReviewAt  time.Time
+	AnswerCount   int32
 }

@@ -21,6 +21,7 @@ type UserExerciseStatus struct {
 	ExerciseID    string
 	UserID        string
 	CorrectStreak int
+	AnswerCount   int
 	IsFavorite    bool
 	IsMastered    bool
 	UpdatedAt     time.Time
@@ -71,6 +72,7 @@ func (d *UserExerciseStatus) SetResult(isCorrect bool) error {
 	}
 
 	_ = d.SetNextReviewAt()
+	d.AnswerCount++
 	d.UpdatedAt = time.Now()
 	return nil
 }

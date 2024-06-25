@@ -5,6 +5,7 @@ import (
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/exercisepb"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/domain"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type AnswerExerciseHandler struct {
@@ -70,5 +71,7 @@ func (h AnswerExerciseHandler) AnswerExercise(ctx *appcontext.AppContext, req *e
 	}
 
 	ctx.Logger().Text("done answer exercise request")
-	return &exercisepb.AnswerExerciseResponse{}, nil
+	return &exercisepb.AnswerExerciseResponse{
+		NextReviewAt: timestamppb.New(ues.NextReviewAt),
+	}, nil
 }

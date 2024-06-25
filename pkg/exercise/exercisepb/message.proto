@@ -20,5 +20,6 @@ message UserExercise {
   int32 correctStreak = 9;
   bool isFavorite = 10;
   bool isMastered = 11;
-  google.protobuf.Timestamp nextReviewAt = 12;
+  google.protobuf.Timestamp updatedAt = 12;
+  google.protobuf.Timestamp nextReviewAt = 13;
 }

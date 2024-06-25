@@ -19,6 +19,7 @@ type UserExercise struct {
 	CorrectStreak int
 	IsFavorite    bool
 	IsMastered    bool
+	UpdatedAt     time.Time
 	NextReviewAt  time.Time
 }
 
