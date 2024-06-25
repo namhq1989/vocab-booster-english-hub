@@ -94,6 +94,7 @@ CREATE TABLE user_exercise_statuses (
     exercise_id TEXT NOT NULL,
     user_id TEXT NOT NULL,
     correct_streak INT NOT NULL,
+    answer_count INT NOT NULL,
     is_favorite BOOLEAN NOT NULL,
     is_mastered BOOLEAN NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,

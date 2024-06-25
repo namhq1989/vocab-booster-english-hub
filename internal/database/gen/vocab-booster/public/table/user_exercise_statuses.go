@@ -25,6 +25,7 @@ type userExerciseStatusesTable struct {
 	IsMastered    postgres.ColumnBool
 	UpdatedAt     postgres.ColumnTimestampz
 	NextReviewAt  postgres.ColumnTimestampz
+	AnswerCount   postgres.ColumnInteger
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -73,8 +74,9 @@ func newUserExerciseStatusesTableImpl(schemaName, tableName, alias string) userE
 		IsMasteredColumn    = postgres.BoolColumn("is_mastered")
 		UpdatedAtColumn     = postgres.TimestampzColumn("updated_at")
 		NextReviewAtColumn  = postgres.TimestampzColumn("next_review_at")
-		allColumns          = postgres.ColumnList{IDColumn, ExerciseIDColumn, UserIDColumn, CorrectStreakColumn, IsFavoriteColumn, IsMasteredColumn, UpdatedAtColumn, NextReviewAtColumn}
-		mutableColumns      = postgres.ColumnList{ExerciseIDColumn, UserIDColumn, CorrectStreakColumn, IsFavoriteColumn, IsMasteredColumn, UpdatedAtColumn, NextReviewAtColumn}
+		AnswerCountColumn   = postgres.IntegerColumn("answer_count")
+		allColumns          = postgres.ColumnList{IDColumn, ExerciseIDColumn, UserIDColumn, CorrectStreakColumn, IsFavoriteColumn, IsMasteredColumn, UpdatedAtColumn, NextReviewAtColumn, AnswerCountColumn}
+		mutableColumns      = postgres.ColumnList{ExerciseIDColumn, UserIDColumn, CorrectStreakColumn, IsFavoriteColumn, IsMasteredColumn, UpdatedAtColumn, NextReviewAtColumn, AnswerCountColumn}
 	)
 
 	return userExerciseStatusesTable{
@@ -89,6 +91,7 @@ func newUserExerciseStatusesTableImpl(schemaName, tableName, alias string) userE
 		IsMastered:    IsMasteredColumn,
 		UpdatedAt:     UpdatedAtColumn,
 		NextReviewAt:  NextReviewAtColumn,
+		AnswerCount:   AnswerCountColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

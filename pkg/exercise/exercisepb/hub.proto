@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package exercisepb;
 
+import "google/protobuf/timestamp.proto";
 import "exercisepb/message.proto";
 
 service ExerciseService {
@@ -47,7 +48,9 @@ message AnswerExerciseRequest {
   bool isCorrect = 3;
 }
 
-message AnswerExerciseResponse {}
+message AnswerExerciseResponse {
+  google.protobuf.Timestamp nextReviewAt = 1;
+}
 
 // GET USER EXERCISES
 

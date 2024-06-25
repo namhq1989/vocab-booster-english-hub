@@ -33,6 +33,7 @@ func (UserExerciseMapper) FromModelToDomain(ue UserExercise, lang string) (*doma
 		CorrectStreak: int(ue.Status.CorrectStreak),
 		IsFavorite:    ue.Status.IsFavorite,
 		IsMastered:    ue.Status.IsMastered,
+		UpdatedAt:     ue.Status.UpdatedAt,
 		NextReviewAt:  ue.Status.NextReviewAt,
 	}, nil
 }
