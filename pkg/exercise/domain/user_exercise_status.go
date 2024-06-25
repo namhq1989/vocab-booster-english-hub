@@ -13,6 +13,7 @@ type UserExerciseStatusRepository interface {
 	UpdateUserExerciseStatus(ctx *appcontext.AppContext, status UserExerciseStatus) error
 	FindUserExerciseStatus(ctx *appcontext.AppContext, exerciseID, userID string) (*UserExerciseStatus, error)
 	CountUserReadyToReviewExercises(ctx *appcontext.AppContext, userID string) (int64, error)
+	GetUserReadyToReviewExercises(ctx *appcontext.AppContext, filter UserExerciseFilter) ([]UserExercise, error)
 }
 
 type UserExerciseStatus struct {
