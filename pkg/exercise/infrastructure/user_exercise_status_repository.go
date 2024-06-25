@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/go-jet/jet/v2/postgres"
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
@@ -71,8 +72,10 @@ func (r UserExerciseStatusRepository) FindUserExerciseStatus(ctx *appcontext.App
 		r.getTable().AllColumns,
 	).
 		FROM(r.getTable()).
-		WHERE(r.getTable().ExerciseID.EQ(postgres.String(exerciseID))).
-		WHERE(r.getTable().UserID.EQ(postgres.String(userID)))
+		WHERE(
+			r.getTable().ExerciseID.EQ(postgres.String(exerciseID)).
+				AND(r.getTable().UserID.EQ(postgres.String(userID))),
+		)
 
 	var doc model.UserExerciseStatuses
 	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &doc); err != nil {
@@ -87,4 +90,24 @@ func (r UserExerciseStatusRepository) FindUserExerciseStatus(ctx *appcontext.App
 		result, _ = mapper.FromModelToDomain(doc)
 	)
 	return result, nil
+}
+
+func (r UserExerciseStatusRepository) CountUserReadyToReviewExercises(ctx *appcontext.AppContext, userID string) (int64, error) {
+	type countResult struct {
+		Total int64 `json:"total"`
+	}
+	var now = time.Now()
+
+	stmt := postgres.SELECT(
+		postgres.COUNT(r.getTable().ID).AS("count_result.total"),
+	).
+		FROM(r.getTable()).
+		WHERE(
+			r.getTable().UserID.EQ(postgres.String(userID)).
+				AND(r.getTable().NextReviewAt.LT(postgres.TimestampzT(now))),
+		)
+
+	var result = countResult{}
+	err := stmt.QueryContext(ctx.Context(), r.getDB(), &result)
+	return result.Total, err
 }
