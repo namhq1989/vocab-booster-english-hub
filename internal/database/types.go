@@ -17,3 +17,7 @@ func (s *StringArray) Scan(value interface{}) error {
 func (s *StringArray) Value() (driver.Value, error) {
 	return "{" + strings.Join(*s, ",") + "}", nil
 }
+
+type CountResult struct {
+	Total int64 `json:"total"`
+}

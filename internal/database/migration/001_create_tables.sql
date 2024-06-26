@@ -39,7 +39,7 @@ CREATE TABLE vocabulary_examples (
         REFERENCES vocabularies(id)
 );
 
-CREATE INDEX idx_vocabulary_id_created_at ON vocabulary_examples(vocabulary_id, created_at DESC);
+CREATE INDEX idx_vocabulary_examples_vocabulary_id_created_at ON vocabulary_examples(vocabulary_id, created_at DESC);
 
 CREATE TABLE verb_conjugations (
     id TEXT PRIMARY KEY,
@@ -65,6 +65,39 @@ CREATE TABLE vocabulary_scraping_items (
         UNIQUE (term)
 );
 
+-- USER VOCABULARY --
+
+CREATE TABLE user_vocabulary_collections (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    name varchar(30) NOT NULL,
+    num_of_vocabulary INT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
+CREATE INDEX idx_user_vocabulary_collections_user_id ON user_vocabulary_collections(user_id);
+
+CREATE TABLE user_vocabularies (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    vocabulary_id TEXT NOT NULL,
+    value VARCHAR(30) NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
+CREATE INDEX idx_user_vocabularies_user_id ON user_vocabularies(user_id);
+CREATE INDEX idx_user_vocabularies_vocabulary_id ON user_vocabularies(vocabulary_id);
+
+CREATE TABLE user_vocabulary_and_collections (
+    collection_id TEXT NOT NULL,
+    user_vocabulary_id TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+    PRIMARY KEY (collection_id, user_vocabulary_id),
+    FOREIGN KEY (collection_id) REFERENCES user_vocabulary_collections(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_vocabulary_id) REFERENCES user_vocabularies(id) ON DELETE CASCADE
+);
+
+
 -- EXERCISE --
 
 CREATE TABLE exercises (
@@ -84,9 +117,9 @@ CREATE TABLE exercises (
         REFERENCES vocabulary_examples(id)
 );
 
-CREATE INDEX idx_vocabulary_example_id ON exercises(vocabulary_example_id);
-CREATE INDEX idx_vocabulary_created_at ON exercises(vocabulary, created_at DESC);
-CREATE INDEX idx_level_created_at ON exercises(level, created_at DESC);
+CREATE INDEX idx_exercises_vocabulary_example_id ON exercises(vocabulary_example_id);
+CREATE INDEX idx_exercises_vocabulary_created_at ON exercises(vocabulary, created_at DESC);
+CREATE INDEX idx_exercises_level_created_at ON exercises(level, created_at DESC);
 
 
 CREATE TABLE user_exercise_statuses (
@@ -108,7 +141,7 @@ CREATE TABLE user_exercise_statuses (
         UNIQUE (user_id, exercise_id)
 );
 
-CREATE INDEX idx_user_id_updated_at ON user_exercise_statuses(user_id, updated_at DESC);
+CREATE INDEX idx_user_exercise_statuses_user_id_updated_at ON user_exercise_statuses(user_id, updated_at DESC);
 
 ---- create above / drop below ----
 

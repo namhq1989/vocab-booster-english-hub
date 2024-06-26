@@ -93,9 +93,6 @@ func (r UserExerciseStatusRepository) FindUserExerciseStatus(ctx *appcontext.App
 }
 
 func (r UserExerciseStatusRepository) CountUserReadyToReviewExercises(ctx *appcontext.AppContext, userID string) (int64, error) {
-	type countResult struct {
-		Total int64 `json:"total"`
-	}
 	var now = time.Now()
 
 	stmt := postgres.SELECT(
@@ -107,7 +104,7 @@ func (r UserExerciseStatusRepository) CountUserReadyToReviewExercises(ctx *appco
 				AND(r.getTable().NextReviewAt.LT(postgres.TimestampzT(now))),
 		)
 
-	var result = countResult{}
+	var result = database.CountResult{}
 	err := stmt.QueryContext(ctx.Context(), r.getDB(), &result)
 	return result.Total, err
 }

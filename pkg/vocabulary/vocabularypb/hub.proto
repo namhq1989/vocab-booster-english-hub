@@ -6,6 +6,8 @@ import "vocabularypb/message.proto";
 
 service VocabularyService {
   rpc SearchVocabulary(SearchVocabularyRequest) returns (SearchVocabularyResponse) {}
+  rpc CreateUserVocabularyCollection(CreateUserVocabularyCollectionRequest) returns (CreateUserVocabularyCollectionResponse) {}
+  rpc UpdateUserVocabularyCollection(UpdateUserVocabularyCollectionRequest) returns (UpdateUserVocabularyCollectionResponse) {}
 }
 
 // SEARCH VOCABULARY
@@ -19,4 +21,26 @@ message SearchVocabularyResponse {
   bool found = 1;
   repeated string suggestions = 2;
   Vocabulary vocabulary = 3;
+}
+
+// CREATE USER VOCABULARY COLLECTION
+
+message CreateUserVocabularyCollectionRequest {
+  string userId = 1;
+  string name = 2;
+}
+
+message CreateUserVocabularyCollectionResponse {
+  string id = 1;
+}
+
+// UPDATE USER VOCABULARY COLLECTION
+
+message UpdateUserVocabularyCollectionRequest {
+  string collectionId = 1;
+  string name = 2;
+}
+
+message UpdateUserVocabularyCollectionResponse {
+  string id = 1;
 }
