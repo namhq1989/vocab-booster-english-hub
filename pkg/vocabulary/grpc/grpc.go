@@ -40,3 +40,8 @@ func (s server) AddVocabularyToCollection(bgCtx context.Context, req *vocabulary
 	ctx := appcontext.NewGRPC(bgCtx)
 	return s.app.AddVocabularyToCollection(ctx, req)
 }
+
+func (s server) RemoveVocabularyFromCollection(bgCtx context.Context, req *vocabularypb.RemoveVocabularyFromCollectionRequest) (*vocabularypb.RemoveVocabularyFromCollectionResponse, error) {
+	ctx := appcontext.NewGRPC(bgCtx)
+	return s.app.RemoveVocabularyFromCollection(ctx, req)
+}

@@ -14,6 +14,7 @@ type (
 		CreateCollection(ctx *appcontext.AppContext, req *vocabularypb.CreateCollectionRequest) (*vocabularypb.CreateCollectionResponse, error)
 		UpdateCollection(ctx *appcontext.AppContext, req *vocabularypb.UpdateCollectionRequest) (*vocabularypb.UpdateCollectionResponse, error)
 		AddVocabularyToCollection(ctx *appcontext.AppContext, req *vocabularypb.AddVocabularyToCollectionRequest) (*vocabularypb.AddVocabularyToCollectionResponse, error)
+		RemoveVocabularyFromCollection(ctx *appcontext.AppContext, req *vocabularypb.RemoveVocabularyFromCollectionRequest) (*vocabularypb.RemoveVocabularyFromCollectionResponse, error)
 	}
 	App interface {
 		Hubs
@@ -25,6 +26,7 @@ type (
 		hub.CreateCollectionHandler
 		hub.UpdateCollectionHandler
 		hub.AddVocabularyToCollectionHandler
+		hub.RemoveVocabularyFromCollectionHandler
 	}
 	Application struct {
 		appHubHandler
@@ -52,6 +54,11 @@ func New(
 			CreateCollectionHandler: hub.NewCreateCollectionHandler(collectionRepository),
 			UpdateCollectionHandler: hub.NewUpdateCollectionHandler(collectionRepository),
 			AddVocabularyToCollectionHandler: hub.NewAddVocabularyToCollectionHandler(
+				vocabularyRepository,
+				collectionRepository,
+				collectionAndVocabularyRepository,
+			),
+			RemoveVocabularyFromCollectionHandler: hub.NewRemoveVocabularyFromCollectionHandler(
 				vocabularyRepository,
 				collectionRepository,
 				collectionAndVocabularyRepository,
