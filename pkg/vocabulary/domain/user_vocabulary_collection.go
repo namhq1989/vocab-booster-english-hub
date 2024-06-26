@@ -63,6 +63,6 @@ func (d *UserVocabularyCollection) DecreaseNumOfVocabulary() {
 	d.NumOfVocabulary--
 }
 
-func (d *UserVocabularyCollection) CanCreate(totalCollections int) bool {
+func (*UserVocabularyCollection) CanCreate(totalCollections int) bool {
 	return totalCollections <= maxCollectionsPerUser
 }
