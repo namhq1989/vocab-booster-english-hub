@@ -23,11 +23,12 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 	}
 
 	var (
-		vocabularyRepository               = infrastructure.NewVocabularyRepository(mono.Database())
-		vocabularyExampleRepository        = infrastructure.NewVocabularyExampleRepository(mono.Database())
-		vocabularyScrapingItemRepository   = infrastructure.NewVocabularyScrapingItemRepository(mono.Database())
-		verbConjugationRepository          = infrastructure.NewVerbConjugationRepository(mono.Database())
-		userVocabularyCollectionRepository = infrastructure.NewUserVocabularyCollectionRepository(mono.Database())
+		vocabularyRepository              = infrastructure.NewVocabularyRepository(mono.Database())
+		vocabularyExampleRepository       = infrastructure.NewVocabularyExampleRepository(mono.Database())
+		vocabularyScrapingItemRepository  = infrastructure.NewVocabularyScrapingItemRepository(mono.Database())
+		verbConjugationRepository         = infrastructure.NewVerbConjugationRepository(mono.Database())
+		collectionRepository              = infrastructure.NewCollectionRepository(mono.Database())
+		collectionAndVocabularyRepository = infrastructure.NewCollectionAndVocabularyRepository(mono.Database())
 
 		aiRepository      = infrastructure.NewAIRepository(mono.AI())
 		scraperRepository = infrastructure.NewScraperRepository(mono.Scraper())
@@ -42,7 +43,8 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 		app = application.New(
 			vocabularyRepository,
 			vocabularyExampleRepository,
-			userVocabularyCollectionRepository,
+			collectionRepository,
+			collectionAndVocabularyRepository,
 			aiRepository,
 			scraperRepository,
 			ttsRepository,

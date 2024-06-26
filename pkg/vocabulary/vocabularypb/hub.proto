@@ -6,8 +6,10 @@ import "vocabularypb/message.proto";
 
 service VocabularyService {
   rpc SearchVocabulary(SearchVocabularyRequest) returns (SearchVocabularyResponse) {}
-  rpc CreateUserVocabularyCollection(CreateUserVocabularyCollectionRequest) returns (CreateUserVocabularyCollectionResponse) {}
-  rpc UpdateUserVocabularyCollection(UpdateUserVocabularyCollectionRequest) returns (UpdateUserVocabularyCollectionResponse) {}
+  rpc CreateCollection(CreateCollectionRequest) returns (CreateCollectionResponse) {}
+  rpc UpdateCollection(UpdateCollectionRequest) returns (UpdateCollectionResponse) {}
+  rpc AddVocabularyToCollection(AddVocabularyToCollectionRequest) returns (AddVocabularyToCollectionResponse) {}
+  rpc RemoveVocabularyFromCollection(RemoveVocabularyFromCollectionRequest) returns (RemoveVocabularyFromCollectionResponse) {}
 }
 
 // SEARCH VOCABULARY
@@ -23,24 +25,46 @@ message SearchVocabularyResponse {
   Vocabulary vocabulary = 3;
 }
 
-// CREATE USER VOCABULARY COLLECTION
+// CREATE COLLECTION
 
-message CreateUserVocabularyCollectionRequest {
+message CreateCollectionRequest {
   string userId = 1;
   string name = 2;
+  string description = 3;
 }
 
-message CreateUserVocabularyCollectionResponse {
+message CreateCollectionResponse {
   string id = 1;
 }
 
-// UPDATE USER VOCABULARY COLLECTION
+// UPDATE COLLECTION
 
-message UpdateUserVocabularyCollectionRequest {
+message UpdateCollectionRequest {
   string collectionId = 1;
   string name = 2;
+  string description = 3;
 }
 
-message UpdateUserVocabularyCollectionResponse {
+message UpdateCollectionResponse {
   string id = 1;
 }
+
+// ADD VOCABULARY TO COLLECTION
+
+message AddVocabularyToCollectionRequest {
+  string userId = 1;
+  string collectionId = 2;
+  string vocabulary = 3;
+}
+
+message AddVocabularyToCollectionResponse {}
+
+// REMOVE VOCABULARY FROM COLLECTION
+
+message RemoveVocabularyFromCollectionRequest {
+  string userId = 1;
+  string collectionId = 2;
+  string vocabulary = 3;
+}
+
+message RemoveVocabularyFromCollectionResponse {}

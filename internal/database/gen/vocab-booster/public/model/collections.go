@@ -11,10 +11,12 @@ import (
 	"time"
 )
 
-type UserVocabularyCollections struct {
+type Collections struct {
 	ID              string `sql:"primary_key"`
 	UserID          string
 	Name            string
+	Description     string
 	NumOfVocabulary int32
 	CreatedAt       time.Time
+	UpdatedAt       time.Time
 }

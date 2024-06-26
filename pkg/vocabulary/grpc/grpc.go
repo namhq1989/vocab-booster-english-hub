@@ -26,12 +26,22 @@ func (s server) SearchVocabulary(bgCtx context.Context, req *vocabularypb.Search
 	return s.app.SearchVocabulary(ctx, req)
 }
 
-func (s server) CreateUserVocabularyCollection(bgCtx context.Context, req *vocabularypb.CreateUserVocabularyCollectionRequest) (*vocabularypb.CreateUserVocabularyCollectionResponse, error) {
+func (s server) CreateCollection(bgCtx context.Context, req *vocabularypb.CreateCollectionRequest) (*vocabularypb.CreateCollectionResponse, error) {
 	ctx := appcontext.NewGRPC(bgCtx)
-	return s.app.CreateUserVocabularyCollection(ctx, req)
+	return s.app.CreateCollection(ctx, req)
 }
 
-func (s server) UpdateUserVocabularyCollection(bgCtx context.Context, req *vocabularypb.UpdateUserVocabularyCollectionRequest) (*vocabularypb.UpdateUserVocabularyCollectionResponse, error) {
+func (s server) UpdateCollection(bgCtx context.Context, req *vocabularypb.UpdateCollectionRequest) (*vocabularypb.UpdateCollectionResponse, error) {
 	ctx := appcontext.NewGRPC(bgCtx)
-	return s.app.UpdateUserVocabularyCollection(ctx, req)
+	return s.app.UpdateCollection(ctx, req)
+}
+
+func (s server) AddVocabularyToCollection(bgCtx context.Context, req *vocabularypb.AddVocabularyToCollectionRequest) (*vocabularypb.AddVocabularyToCollectionResponse, error) {
+	ctx := appcontext.NewGRPC(bgCtx)
+	return s.app.AddVocabularyToCollection(ctx, req)
+}
+
+func (s server) RemoveVocabularyFromCollection(bgCtx context.Context, req *vocabularypb.RemoveVocabularyFromCollectionRequest) (*vocabularypb.RemoveVocabularyFromCollectionResponse, error) {
+	ctx := appcontext.NewGRPC(bgCtx)
+	return s.app.RemoveVocabularyFromCollection(ctx, req)
 }

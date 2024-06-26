@@ -41,7 +41,8 @@ exercise_invalid_options = "Invalid exercise options"
 user_invalid_id = "Invalid user id"
 user_not_found = "User not found"
 
-# user vocabulary collection
-user_vocabulary_collection_not_found = "User vocabulary collection not found"
-user_vocabulary_collection_invalid_id = "Invalid user vocabulary collection id"
-user_vocabulary_collection_max_collections_reached = "Maximum number of vocabulary collections reached"
+# collection
+collection_not_found = "Collection not found"
+collection_invalid_id = "Invalid collection id"
+collection_max_collections_reached = "Maximum number of collections reached"
+collection_description_too_long = "Collection description too long"

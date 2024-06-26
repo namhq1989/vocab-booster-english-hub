@@ -11,8 +11,10 @@ import (
 	"time"
 )
 
-type UserVocabularyAndCollections struct {
-	CollectionID     string `sql:"primary_key"`
-	UserVocabularyID string `sql:"primary_key"`
-	CreatedAt        time.Time
+type CollectionAndVocabularies struct {
+	ID           string
+	CollectionID string `sql:"primary_key"`
+	VocabularyID string `sql:"primary_key"`
+	Value        string
+	CreatedAt    time.Time
 }

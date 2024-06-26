@@ -12,9 +12,8 @@ import (
 )
 
 type UserVocabularies struct {
-	ID           string `sql:"primary_key"`
-	UserID       string
-	VocabularyID string
-	Value        string
+	ID           string
+	UserID       string `sql:"primary_key"`
+	VocabularyID string `sql:"primary_key"`
 	CreatedAt    time.Time
 }

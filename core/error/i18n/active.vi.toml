@@ -42,7 +42,8 @@ exercise_invalid_options = "Các lựa chọn không hợp lệ"
 user_invalid_id = "ID người dùng không hợp lệ"
 user_not_found = "Không tìm thấy người dùng"
 
-# user vocabulary collection
-user_vocabulary_collection_not_found = "Không tìm thấy bộ từ vựng"
-user_vocabulary_collection_invalid_id = "ID bộ từ vựng không hợp lệ"
-user_vocabulary_collection_max_collections_reached = "Không thể tạo thêm bộ từ vựng"
+# collection
+collection_not_found = "Không tìm thấy bộ từ vựng"
+collection_invalid_id = "ID bộ từ vựng không hợp lệ"
+collection_max_collections_reached = "Không thể tạo thêm bộ từ vựng"
+collection_description_too_long = "Mô tả quá dài"

@@ -20,7 +20,6 @@ type userVocabulariesTable struct {
 	ID           postgres.ColumnString
 	UserID       postgres.ColumnString
 	VocabularyID postgres.ColumnString
-	Value        postgres.ColumnString
 	CreatedAt    postgres.ColumnTimestampz
 
 	AllColumns     postgres.ColumnList
@@ -65,10 +64,9 @@ func newUserVocabulariesTableImpl(schemaName, tableName, alias string) userVocab
 		IDColumn           = postgres.StringColumn("id")
 		UserIDColumn       = postgres.StringColumn("user_id")
 		VocabularyIDColumn = postgres.StringColumn("vocabulary_id")
-		ValueColumn        = postgres.StringColumn("value")
 		CreatedAtColumn    = postgres.TimestampzColumn("created_at")
-		allColumns         = postgres.ColumnList{IDColumn, UserIDColumn, VocabularyIDColumn, ValueColumn, CreatedAtColumn}
-		mutableColumns     = postgres.ColumnList{UserIDColumn, VocabularyIDColumn, ValueColumn, CreatedAtColumn}
+		allColumns         = postgres.ColumnList{IDColumn, UserIDColumn, VocabularyIDColumn, CreatedAtColumn}
+		mutableColumns     = postgres.ColumnList{IDColumn, CreatedAtColumn}
 	)
 
 	return userVocabulariesTable{
@@ -78,7 +76,6 @@ func newUserVocabulariesTableImpl(schemaName, tableName, alias string) userVocab
 		ID:           IDColumn,
 		UserID:       UserIDColumn,
 		VocabularyID: VocabularyIDColumn,
-		Value:        ValueColumn,
 		CreatedAt:    CreatedAtColumn,
 
 		AllColumns:     allColumns,

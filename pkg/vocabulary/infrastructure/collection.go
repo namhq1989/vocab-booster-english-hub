@@ -13,27 +13,27 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/infrastructure/mapping"
 )
 
-type UserVocabularyCollectionRepository struct {
+type CollectionRepository struct {
 	db *database.Database
 }
 
-func NewUserVocabularyCollectionRepository(db *database.Database) UserVocabularyCollectionRepository {
-	r := UserVocabularyCollectionRepository{
+func NewCollectionRepository(db *database.Database) CollectionRepository {
+	r := CollectionRepository{
 		db: db,
 	}
 	return r
 }
 
-func (r UserVocabularyCollectionRepository) getDB() *sql.DB {
+func (r CollectionRepository) getDB() *sql.DB {
 	return r.db.GetDB()
 }
 
-func (UserVocabularyCollectionRepository) getTable() *table.UserVocabularyCollectionsTable {
-	return table.UserVocabularyCollections
+func (CollectionRepository) getTable() *table.CollectionsTable {
+	return table.Collections
 }
 
-func (r UserVocabularyCollectionRepository) CreateUserVocabularyCollection(ctx *appcontext.AppContext, collection domain.UserVocabularyCollection) error {
-	mapper := mapping.UserVocabularyCollectionMapper{}
+func (r CollectionRepository) CreateCollection(ctx *appcontext.AppContext, collection domain.Collection) error {
+	mapper := mapping.CollectionMapper{}
 	doc, err := mapper.FromDomainToModel(collection)
 	if err != nil {
 		return err
@@ -48,8 +48,8 @@ func (r UserVocabularyCollectionRepository) CreateUserVocabularyCollection(ctx *
 	return err
 }
 
-func (r UserVocabularyCollectionRepository) UpdateUserVocabularyCollection(ctx *appcontext.AppContext, collection domain.UserVocabularyCollection) error {
-	mapper := mapping.UserVocabularyCollectionMapper{}
+func (r CollectionRepository) UpdateCollection(ctx *appcontext.AppContext, collection domain.Collection) error {
+	mapper := mapping.CollectionMapper{}
 	doc, err := mapper.FromDomainToModel(collection)
 	if err != nil {
 		return err
@@ -67,7 +67,7 @@ func (r UserVocabularyCollectionRepository) UpdateUserVocabularyCollection(ctx *
 	return err
 }
 
-func (r UserVocabularyCollectionRepository) FindUserVocabularyCollectionsByUserID(ctx *appcontext.AppContext, userID string) ([]domain.UserVocabularyCollection, error) {
+func (r CollectionRepository) FindCollectionsByUserID(ctx *appcontext.AppContext, userID string) ([]domain.Collection, error) {
 	if !database.IsValidID(userID) {
 		return nil, apperrors.Common.InvalidID
 	}
@@ -83,7 +83,7 @@ func (r UserVocabularyCollectionRepository) FindUserVocabularyCollectionsByUserI
 			r.getTable().CreatedAt.DESC(),
 		)
 
-	var docs []model.UserVocabularyCollections
+	var docs []model.Collections
 	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &docs); err != nil {
 		if r.db.IsNoRowsError(err) {
 			return nil, nil
@@ -92,8 +92,8 @@ func (r UserVocabularyCollectionRepository) FindUserVocabularyCollectionsByUserI
 	}
 
 	var (
-		result = make([]domain.UserVocabularyCollection, len(docs))
-		mapper = mapping.UserVocabularyCollectionMapper{}
+		result = make([]domain.Collection, len(docs))
+		mapper = mapping.CollectionMapper{}
 	)
 	for _, doc := range docs {
 		collection, _ := mapper.FromModelToDomain(doc)
@@ -102,7 +102,7 @@ func (r UserVocabularyCollectionRepository) FindUserVocabularyCollectionsByUserI
 	return result, nil
 }
 
-func (r UserVocabularyCollectionRepository) FindUserVocabularyCollectionByID(ctx *appcontext.AppContext, id string) (*domain.UserVocabularyCollection, error) {
+func (r CollectionRepository) FindCollectionByID(ctx *appcontext.AppContext, id string) (*domain.Collection, error) {
 	if !database.IsValidID(id) {
 		return nil, apperrors.Common.InvalidID
 	}
@@ -113,7 +113,7 @@ func (r UserVocabularyCollectionRepository) FindUserVocabularyCollectionByID(ctx
 		FROM(r.getTable()).
 		WHERE(r.getTable().ID.EQ(postgres.String(id)))
 
-	var doc model.UserVocabularyCollections
+	var doc model.Collections
 	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &doc); err != nil {
 		if r.db.IsNoRowsError(err) {
 			return nil, nil
@@ -122,13 +122,13 @@ func (r UserVocabularyCollectionRepository) FindUserVocabularyCollectionByID(ctx
 	}
 
 	var (
-		mapper    = mapping.UserVocabularyCollectionMapper{}
+		mapper    = mapping.CollectionMapper{}
 		result, _ = mapper.FromModelToDomain(doc)
 	)
 	return result, nil
 }
 
-func (r UserVocabularyCollectionRepository) CountTotalUserVocabularyCollectionsByUserID(ctx *appcontext.AppContext, userID string) (int64, error) {
+func (r CollectionRepository) CountTotalCollectionsByUserID(ctx *appcontext.AppContext, userID string) (int64, error) {
 	if !database.IsValidID(userID) {
 		return 0, apperrors.Common.InvalidID
 	}
