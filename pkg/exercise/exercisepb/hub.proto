@@ -12,6 +12,7 @@ service ExerciseService {
   rpc GetUserExercises(GetUserExercisesRequest) returns (GetUserExercisesResponse) {}
   rpc CountUserReadyToReviewExercises(CountUserReadyToReviewExercisesRequest) returns (CountUserReadyToReviewExercisesResponse) {}
   rpc GetUserReadyToReviewExercises(GetUserReadyToReviewExercisesRequest) returns (GetUserReadyToReviewExercisesResponse) {}
+  rpc ChangeExerciseFavorite(ChangeExerciseFavoriteRequest) returns (ChangeExerciseFavoriteResponse) {}
 }
 
 // NEW EXERCISE
@@ -43,8 +44,8 @@ message UpdateExerciseAudioResponse {}
 // ANSWER EXERCISE
 
 message AnswerExerciseRequest {
-  string exerciseId = 1;
-  string userId = 2;
+  string userId = 1;
+  string exerciseId = 2;
   bool isCorrect = 3;
 }
 
@@ -85,3 +86,16 @@ message GetUserReadyToReviewExercisesRequest {
 message GetUserReadyToReviewExercisesResponse {
   repeated UserExercise exercises = 1;
 }
+
+// CHANGE EXERCISE FAVORITE
+
+message ChangeExerciseFavoriteRequest {
+  string userId = 1;
+  string exerciseId = 2;
+  bool isFavorite = 3;
+}
+
+message ChangeExerciseFavoriteResponse {
+  bool isFavorite = 1;
+}
+

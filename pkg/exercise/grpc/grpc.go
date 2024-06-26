@@ -44,3 +44,7 @@ func (s server) CountUserReadyToReviewExercises(bgCtx context.Context, req *exer
 func (s server) GetUserReadyToReviewExercises(bgCtx context.Context, req *exercisepb.GetUserReadyToReviewExercisesRequest) (*exercisepb.GetUserReadyToReviewExercisesResponse, error) {
 	return s.app.GetUserReadyToReviewExercises(appcontext.NewGRPC(bgCtx), req)
 }
+
+func (s server) ChangeExerciseFavorite(bgCtx context.Context, req *exercisepb.ChangeExerciseFavoriteRequest) (*exercisepb.ChangeExerciseFavoriteResponse, error) {
+	return s.app.ChangeExerciseFavorite(appcontext.NewGRPC(bgCtx), req)
+}
