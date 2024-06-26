@@ -11,8 +11,9 @@ type (
 	Hubs interface {
 		SearchVocabulary(ctx *appcontext.AppContext, req *vocabularypb.SearchVocabularyRequest) (*vocabularypb.SearchVocabularyResponse, error)
 
-		CreateUserVocabularyCollection(ctx *appcontext.AppContext, req *vocabularypb.CreateUserVocabularyCollectionRequest) (*vocabularypb.CreateUserVocabularyCollectionResponse, error)
-		UpdateUserVocabularyCollection(ctx *appcontext.AppContext, req *vocabularypb.UpdateUserVocabularyCollectionRequest) (*vocabularypb.UpdateUserVocabularyCollectionResponse, error)
+		CreateCollection(ctx *appcontext.AppContext, req *vocabularypb.CreateCollectionRequest) (*vocabularypb.CreateCollectionResponse, error)
+		UpdateCollection(ctx *appcontext.AppContext, req *vocabularypb.UpdateCollectionRequest) (*vocabularypb.UpdateCollectionResponse, error)
+		AddVocabularyToCollection(ctx *appcontext.AppContext, req *vocabularypb.AddVocabularyToCollectionRequest) (*vocabularypb.AddVocabularyToCollectionResponse, error)
 	}
 	App interface {
 		Hubs
@@ -21,8 +22,9 @@ type (
 	appHubHandler struct {
 		hub.SearchVocabularyHandler
 
-		hub.CreateUserVocabularyCollectionHandler
-		hub.UpdateUserVocabularyCollectionHandler
+		hub.CreateCollectionHandler
+		hub.UpdateCollectionHandler
+		hub.AddVocabularyToCollectionHandler
 	}
 	Application struct {
 		appHubHandler
@@ -34,7 +36,8 @@ var _ App = (*Application)(nil)
 func New(
 	vocabularyRepository domain.VocabularyRepository,
 	vocabularyExampleRepository domain.VocabularyExampleRepository,
-	userVocabularyCollectionRepository domain.UserVocabularyCollectionRepository,
+	collectionRepository domain.CollectionRepository,
+	collectionAndVocabularyRepository domain.CollectionAndVocabularyRepository,
 	aiRepository domain.AIRepository,
 	scraperRepository domain.ScraperRepository,
 	ttsRepository domain.TTSRepository,
@@ -46,8 +49,13 @@ func New(
 		appHubHandler: appHubHandler{
 			SearchVocabularyHandler: hub.NewSearchVocabularyHandler(vocabularyRepository, vocabularyExampleRepository, aiRepository, scraperRepository, ttsRepository, nlpRepository, queueRepository, cachingRepository),
 
-			CreateUserVocabularyCollectionHandler: hub.NewCreateUserVocabularyCollectionHandler(userVocabularyCollectionRepository),
-			UpdateUserVocabularyCollectionHandler: hub.NewUpdateUserVocabularyCollectionHandler(userVocabularyCollectionRepository),
+			CreateCollectionHandler: hub.NewCreateCollectionHandler(collectionRepository),
+			UpdateCollectionHandler: hub.NewUpdateCollectionHandler(collectionRepository),
+			AddVocabularyToCollectionHandler: hub.NewAddVocabularyToCollectionHandler(
+				vocabularyRepository,
+				collectionRepository,
+				collectionAndVocabularyRepository,
+			),
 		},
 	}
 }

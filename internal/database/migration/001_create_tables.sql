@@ -34,9 +34,7 @@ CREATE TABLE vocabulary_examples (
     level VARCHAR(20) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
 
-    CONSTRAINT fk_vocabulary
-        FOREIGN KEY(vocabulary_id)
-        REFERENCES vocabularies(id)
+    FOREIGN KEY(vocabulary_id) REFERENCES vocabularies(id)
 );
 
 CREATE INDEX idx_vocabulary_examples_vocabulary_id_created_at ON vocabulary_examples(vocabulary_id, created_at DESC);
@@ -48,12 +46,9 @@ CREATE TABLE verb_conjugations (
     base VARCHAR(30) NOT NULL,
     form VARCHAR(30) NOT NULL,
 
-    CONSTRAINT fk_vocabulary
-        FOREIGN KEY(vocabulary_id)
-        REFERENCES vocabularies(id),
+    FOREIGN KEY(vocabulary_id) REFERENCES vocabularies(id),
 
-    CONSTRAINT verb_conjugations_unique_value_form
-        UNIQUE (value, form)
+    UNIQUE (value, form)
 );
 
 CREATE TABLE vocabulary_scraping_items (
@@ -61,41 +56,49 @@ CREATE TABLE vocabulary_scraping_items (
     term VARCHAR(30) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
 
-    CONSTRAINT vocabulary_scraping_items_unique_term
-        UNIQUE (term)
+    UNIQUE (term)
 );
 
 -- USER VOCABULARY --
-
-CREATE TABLE user_vocabulary_collections (
-    id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    name varchar(30) NOT NULL,
-    num_of_vocabulary INT NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
-);
-
-CREATE INDEX idx_user_vocabulary_collections_user_id ON user_vocabulary_collections(user_id);
 
 CREATE TABLE user_vocabularies (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
     vocabulary_id TEXT NOT NULL,
-    value VARCHAR(30) NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
-);
-
-CREATE INDEX idx_user_vocabularies_user_id ON user_vocabularies(user_id);
-CREATE INDEX idx_user_vocabularies_vocabulary_id ON user_vocabularies(vocabulary_id);
-
-CREATE TABLE user_vocabulary_and_collections (
-    collection_id TEXT NOT NULL,
-    user_vocabulary_id TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-    PRIMARY KEY (collection_id, user_vocabulary_id),
-    FOREIGN KEY (collection_id) REFERENCES user_vocabulary_collections(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_vocabulary_id) REFERENCES user_vocabularies(id) ON DELETE CASCADE
+
+    PRIMARY KEY (user_id, vocabulary_id),
+    FOREIGN KEY (vocabulary_id) REFERENCES vocabularies(id)
 );
+
+CREATE INDEX idx_user_vocabularies_user_id_created_at ON user_vocabularies(user_id, created_at DESC);
+
+-- VOCABULARY COLLECTION --
+
+CREATE TABLE collections (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    name varchar(30) NOT NULL,
+    description TEXT NOT NULL,
+    num_of_vocabulary INT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
+CREATE INDEX idx_collections_user_id_updated_at ON collections(user_id, updated_at);
+
+CREATE TABLE collection_and_vocabularies (
+    collection_id TEXT NOT NULL,
+    vocabulary_id TEXT NOT NULL,
+    value VARCHAR(30) NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+    PRIMARY KEY (collection_id, vocabulary_id),
+    FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE,
+    FOREIGN KEY (vocabulary_id) REFERENCES vocabularies(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_collection_and_vocabularies_collection_id_created_at ON collection_and_vocabularies(collection_id, vocabulary_id);
+
 
 
 -- EXERCISE --
@@ -112,9 +115,7 @@ CREATE TABLE exercises (
     options TEXT[] NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
 
-    CONSTRAINT fk_vocabulary_example
-        FOREIGN KEY(vocabulary_example_id)
-        REFERENCES vocabulary_examples(id)
+    FOREIGN KEY(vocabulary_example_id) REFERENCES vocabulary_examples(id)
 );
 
 CREATE INDEX idx_exercises_vocabulary_example_id ON exercises(vocabulary_example_id);
@@ -133,12 +134,9 @@ CREATE TABLE user_exercise_statuses (
     updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     next_review_at TIMESTAMPTZ NOT NULL,
 
-    CONSTRAINT fk_exercise
-        FOREIGN KEY(exercise_id)
-        REFERENCES exercises(id),
+    FOREIGN KEY(exercise_id) REFERENCES exercises(id),
 
-    CONSTRAINT user_exercise_statuses_unique_user_exercise
-        UNIQUE (user_id, exercise_id)
+    UNIQUE (user_id, exercise_id)
 );
 
 CREATE INDEX idx_user_exercise_statuses_user_id_updated_at ON user_exercise_statuses(user_id, updated_at DESC);
