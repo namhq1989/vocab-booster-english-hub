@@ -25,3 +25,13 @@ func (s server) SearchVocabulary(bgCtx context.Context, req *vocabularypb.Search
 	ctx := appcontext.NewGRPC(bgCtx)
 	return s.app.SearchVocabulary(ctx, req)
 }
+
+func (s server) CreateUserVocabularyCollection(bgCtx context.Context, req *vocabularypb.CreateUserVocabularyCollectionRequest) (*vocabularypb.CreateUserVocabularyCollectionResponse, error) {
+	ctx := appcontext.NewGRPC(bgCtx)
+	return s.app.CreateUserVocabularyCollection(ctx, req)
+}
+
+func (s server) UpdateUserVocabularyCollection(bgCtx context.Context, req *vocabularypb.UpdateUserVocabularyCollectionRequest) (*vocabularypb.UpdateUserVocabularyCollectionResponse, error) {
+	ctx := appcontext.NewGRPC(bgCtx)
+	return s.app.UpdateUserVocabularyCollection(ctx, req)
+}

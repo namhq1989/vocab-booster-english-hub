@@ -9,6 +9,7 @@ var Common = struct {
 	Unauthorized error
 	Forbidden    error
 	InvalidID    error
+	InvalidName  error
 }{
 	Success:      errors.New("success"),
 	BadRequest:   errors.New("bad_request"),
@@ -16,4 +17,5 @@ var Common = struct {
 	Unauthorized: errors.New("unauthorized"),
 	Forbidden:    errors.New("forbidden"),
 	InvalidID:    errors.New("invalid_id"),
+	InvalidName:  errors.New("invalid_name"),
 }
