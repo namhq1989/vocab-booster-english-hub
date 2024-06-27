@@ -13,6 +13,7 @@ service ExerciseService {
   rpc CountUserReadyToReviewExercises(CountUserReadyToReviewExercisesRequest) returns (CountUserReadyToReviewExercisesResponse) {}
   rpc GetUserReadyToReviewExercises(GetUserReadyToReviewExercisesRequest) returns (GetUserReadyToReviewExercisesResponse) {}
   rpc ChangeExerciseFavorite(ChangeExerciseFavoriteRequest) returns (ChangeExerciseFavoriteResponse) {}
+  rpc GetUserFavoriteExercises(GetUserFavoriteExercisesRequest) returns (GetUserFavoriteExercisesResponse) {}
 }
 
 // NEW EXERCISE
@@ -99,3 +100,16 @@ message ChangeExerciseFavoriteResponse {
   bool isFavorite = 1;
 }
 
+
+// GET USER FAVORITE EXERCISES
+
+message GetUserFavoriteExercisesRequest {
+  string userId = 1;
+  string lang = 2;
+  string pageToken = 3;
+}
+
+message GetUserFavoriteExercisesResponse {
+  repeated UserExercise exercises = 1;
+  string nextPageToken = 2;
+}
