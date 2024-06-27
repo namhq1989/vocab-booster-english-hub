@@ -109,7 +109,7 @@ func (r UserExerciseStatusRepository) CountUserReadyToReviewExercises(ctx *appco
 	return result.Total, err
 }
 
-func (r UserExerciseStatusRepository) GetUserReadyToReviewExercises(ctx *appcontext.AppContext, filter domain.UserExerciseFilter) ([]domain.UserExercise, error) {
+func (r UserExerciseStatusRepository) FindUserReadyToReviewExercises(ctx *appcontext.AppContext, filter domain.UserExerciseFilter) ([]domain.UserExercise, error) {
 	var (
 		ues = r.getTable().AS("ues")
 		e   = table.Exercises.AS("e")
@@ -135,12 +135,42 @@ func (r UserExerciseStatusRepository) GetUserReadyToReviewExercises(ctx *appcont
 		).
 		LIMIT(filter.NumOfExercises)
 
+	return r.queryExercisesWithStmt(ctx, stmt, filter.Lang)
+}
+
+func (r UserExerciseStatusRepository) FindUserFavoriteExercises(ctx *appcontext.AppContext, filter domain.UserFavoriteExerciseFilter) ([]domain.UserExercise, error) {
+	var (
+		ues = r.getTable().AS("ues")
+		e   = table.Exercises.AS("e")
+		now = time.Now()
+	)
+
+	whereCond := postgres.AND(ues.UserID.EQ(postgres.String(filter.UserID)))
+	whereCond = whereCond.AND(ues.IsFavorite.EQ(postgres.Bool(true)))
+	whereCond = whereCond.AND(ues.UpdatedAt.LT(postgres.TimestampzT(now)))
+
+	stmt := postgres.SELECT(
+		e.ID, e.Level, e.Audio, e.Vocabulary, e.Content, e.Translated, e.CorrectAnswer, e.Options,
+		ues.CorrectStreak, ues.IsFavorite, ues.IsMastered, ues.NextReviewAt,
+	).
+		FROM(
+			ues.LEFT_JOIN(e, ues.ExerciseID.EQ(e.ID)),
+		).
+		WHERE(whereCond).
+		ORDER_BY(
+			ues.NextReviewAt,
+		).
+		LIMIT(filter.NumOfExercises)
+
+	return r.queryExercisesWithStmt(ctx, stmt, filter.Lang)
+}
+
+func (r UserExerciseStatusRepository) queryExercisesWithStmt(ctx *appcontext.AppContext, stmt postgres.SelectStatement, lang string) ([]domain.UserExercise, error) {
 	var (
 		docs   = make([]mapping.UserExercise, 0)
 		result = make([]domain.UserExercise, 0)
 	)
 	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &docs); err != nil {
-		ctx.Logger().Print("err", err)
 		if r.db.IsNoRowsError(err) {
 			return result, nil
 		}
@@ -151,7 +181,7 @@ func (r UserExerciseStatusRepository) GetUserReadyToReviewExercises(ctx *appcont
 		mapper = mapping.UserExerciseMapper{}
 	)
 	for _, doc := range docs {
-		ue, _ := mapper.FromModelToDomain(doc, filter.Lang)
+		ue, _ := mapper.FromModelToDomain(doc, lang)
 		result = append(result, *ue)
 	}
 	return result, nil

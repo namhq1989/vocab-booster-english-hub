@@ -30,7 +30,7 @@ func (h GetUserReadyToReviewExercisesHandler) GetUserReadyToReviewExercises(ctx 
 	}
 
 	ctx.Logger().Text("find exercises in db")
-	exercises, err := h.userExerciseStatusRepository.GetUserReadyToReviewExercises(ctx, *filter)
+	exercises, err := h.userExerciseStatusRepository.FindUserReadyToReviewExercises(ctx, *filter)
 	if err != nil {
 		ctx.Logger().Error("failed to find exercises in db", err, appcontext.Fields{})
 		return nil, err

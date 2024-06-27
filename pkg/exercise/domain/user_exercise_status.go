@@ -13,7 +13,8 @@ type UserExerciseStatusRepository interface {
 	UpdateUserExerciseStatus(ctx *appcontext.AppContext, status UserExerciseStatus) error
 	FindUserExerciseStatus(ctx *appcontext.AppContext, exerciseID, userID string) (*UserExerciseStatus, error)
 	CountUserReadyToReviewExercises(ctx *appcontext.AppContext, userID string) (int64, error)
-	GetUserReadyToReviewExercises(ctx *appcontext.AppContext, filter UserExerciseFilter) ([]UserExercise, error)
+	FindUserReadyToReviewExercises(ctx *appcontext.AppContext, filter UserExerciseFilter) ([]UserExercise, error)
+	FindUserFavoriteExercises(ctx *appcontext.AppContext, filter UserFavoriteExerciseFilter) ([]UserExercise, error)
 }
 
 type UserExerciseStatus struct {
@@ -79,6 +80,7 @@ func (d *UserExerciseStatus) SetResult(isCorrect bool) error {
 
 func (d *UserExerciseStatus) SetFavorite(value bool) error {
 	d.IsFavorite = value
+	d.UpdatedAt = time.Now()
 	return nil
 }
 

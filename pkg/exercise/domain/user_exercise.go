@@ -5,6 +5,7 @@ import (
 
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/pagetoken"
 )
 
 type UserExercise struct {
@@ -44,6 +45,27 @@ func NewUserExerciseFilter(userID, level, lang string) (*UserExerciseFilter, err
 		UserID:         userID,
 		Level:          dLevel,
 		Lang:           lang,
+		NumOfExercises: 10,
+	}, nil
+}
+
+type UserFavoriteExerciseFilter struct {
+	UserID         string
+	Lang           string
+	Timestamp      time.Time
+	NumOfExercises int64
+}
+
+func NewUserFavoriteExerciseFilter(userID, lang, pageToken string) (*UserFavoriteExerciseFilter, error) {
+	if !database.IsValidID(userID) {
+		return nil, apperrors.User.InvalidUserID
+	}
+
+	pt := pagetoken.Decode(pageToken)
+	return &UserFavoriteExerciseFilter{
+		UserID:         userID,
+		Lang:           lang,
+		Timestamp:      pt.Timestamp,
 		NumOfExercises: 10,
 	}, nil
 }

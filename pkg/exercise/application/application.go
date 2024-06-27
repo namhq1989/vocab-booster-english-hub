@@ -16,6 +16,7 @@ type (
 		CountUserReadyToReviewExercises(ctx *appcontext.AppContext, req *exercisepb.CountUserReadyToReviewExercisesRequest) (*exercisepb.CountUserReadyToReviewExercisesResponse, error)
 		GetUserReadyToReviewExercises(ctx *appcontext.AppContext, req *exercisepb.GetUserReadyToReviewExercisesRequest) (*exercisepb.GetUserReadyToReviewExercisesResponse, error)
 		ChangeExerciseFavorite(ctx *appcontext.AppContext, req *exercisepb.ChangeExerciseFavoriteRequest) (*exercisepb.ChangeExerciseFavoriteResponse, error)
+		GetUserFavoriteExercises(ctx *appcontext.AppContext, req *exercisepb.GetUserFavoriteExercisesRequest) (*exercisepb.GetUserFavoriteExercisesResponse, error)
 	}
 	App interface {
 		Hubs
@@ -29,6 +30,7 @@ type (
 		hub.CountUserReadyToReviewExercisesHandler
 		hub.GetUserReadyToReviewExercisesHandler
 		hub.ChangeExerciseFavoriteHandler
+		hub.GetUserFavoriteExercisesHandler
 	}
 	Application struct {
 		appHubHandler
@@ -61,6 +63,9 @@ func New(
 				userExerciseStatusRepository,
 			),
 			ChangeExerciseFavoriteHandler: hub.NewChangeExerciseFavoriteHandler(
+				userExerciseStatusRepository,
+			),
+			GetUserFavoriteExercisesHandler: hub.NewGetUserFavoriteExercisesHandler(
 				userExerciseStatusRepository,
 			),
 		},
