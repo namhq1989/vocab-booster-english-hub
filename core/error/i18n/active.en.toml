@@ -29,6 +29,7 @@ vocabulary_invalid_example_pos_tags = "Invalid example POS tags"
 vocabulary_invalid_example_level = "Invalid example level"
 vocabulary_invalid_verb_conjugation = "Invalid verb conjugation"
 vocabulary_invalid_verb_form = "Invalid verb form"
+vocabulary_invalid_sentence = "Invalid sentence"
 
 # exercise
 exercise_not_found = "Exercise not found"

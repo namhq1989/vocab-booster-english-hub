@@ -62,6 +62,10 @@ func (h CreateCommunitySentenceDraftHandler) CreateCommunitySentenceDraft(ctx *a
 		ctx.Logger().Error("failed to create community sentence draft model", err, appcontext.Fields{})
 		return nil, err
 	}
+	if sentence == nil {
+		ctx.Logger().ErrorText("failed to create community sentence draft model")
+		return nil, apperrors.Vocabulary.InvalidSentence
+	}
 
 	ctx.Logger().Text("call AI to evaluate grammar")
 	grammarErrors, err := h.aiRepository.GrammarEvaluation(ctx, req.GetSentence(), req.GetLang())
