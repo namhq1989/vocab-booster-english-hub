@@ -85,7 +85,7 @@ func (h PromoteCommunitySentenceDraftHandler) PromoteCommunitySentenceDraft(ctx 
 	return &vocabularypb.PromoteCommunitySentenceDraftResponse{}, nil
 }
 
-func (h PromoteCommunitySentenceDraftHandler) setSentenceData(ctx *appcontext.AppContext, sentence *domain.CommunitySentence, draft domain.CommunitySentenceDraft, analysisData domain.NlpSentenceAnalysisResult) error {
+func (PromoteCommunitySentenceDraftHandler) setSentenceData(ctx *appcontext.AppContext, sentence *domain.CommunitySentence, draft domain.CommunitySentenceDraft, analysisData domain.NlpSentenceAnalysisResult) error {
 	if err := sentence.SetContent(draft.Content); err != nil {
 		ctx.Logger().Error("failed to set content", err, appcontext.Fields{})
 		return err
