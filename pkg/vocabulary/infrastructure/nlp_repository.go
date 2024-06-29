@@ -76,3 +76,31 @@ func (r NlpRepository) TranslateDefinition(ctx *appcontext.AppContext, definitio
 		Vi: result.Vi,
 	}, nil
 }
+
+func (r NlpRepository) EvaluateSentence(ctx *appcontext.AppContext, sentence, tense string, vocabulary []string) (*domain.NlpSentenceEvaluationResult, error) {
+	result, err := r.nlp.EvaluateSentence(ctx, sentence, tense, vocabulary)
+	if err != nil {
+		return nil, err
+	}
+
+	// convert result to domain data
+	clauses := make([]domain.SentenceClause, 0)
+	for _, clause := range result.Clauses {
+		c, _ := domain.NewSentenceClause(clause.Clause, clause.Tense, clause.IsPrimaryTense)
+		if c != nil {
+			clauses = append(clauses, *c)
+		}
+	}
+
+	return &domain.NlpSentenceEvaluationResult{
+		IsEnglish:           result.IsEnglish,
+		IsVocabularyCorrect: result.IsVocabularyCorrect,
+		IsTenseCorrect:      result.IsTenseCorrect,
+		Sentiment: domain.Sentiment{
+			Polarity:     result.Sentiment.Polarity,
+			Subjectivity: result.Sentiment.Subjectivity,
+		},
+		Translated: result.Translated,
+		Clauses:    clauses,
+	}, nil
+}

@@ -6,6 +6,7 @@ import (
 
 type AIRepository interface {
 	GetVocabularyData(ctx *appcontext.AppContext, vocabulary string) (*AIVocabularyData, error)
+	GrammarEvaluation(ctx *appcontext.AppContext, sentence, lang string) ([]SentenceGrammarError, error)
 }
 
 type AIVocabularyData struct {

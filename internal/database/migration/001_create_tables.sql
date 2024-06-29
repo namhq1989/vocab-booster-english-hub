@@ -59,6 +59,53 @@ CREATE TABLE vocabulary_scraping_items (
     UNIQUE (term)
 );
 
+-- COMMUNITY --
+
+CREATE TABLE community_sentences (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    vocabulary_id TEXT NOT NULL,
+    content TEXT NOT NULL,
+    required_vocabulary TEXT[] NOT NULL DEFAULT '{}',
+    required_tense TEXT NOT NULL,
+    translated JSONB NOT NULL,
+    sentiment JSONB NOT NULL,
+    clauses JSONB NOT NULL DEFAULT '{}',
+    stats_vote int NOT NULL,
+    stats_comment int NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+
+    FOREIGN KEY(vocabulary_id) REFERENCES vocabularies(id)
+);
+
+CREATE INDEX idx_comm_sent_user_id_created_at ON community_sentences(user_id, created_at DESC);
+CREATE INDEX idx_comm_sent_vocabulary_id_created_at ON community_sentences(vocabulary_id, created_at DESC);
+
+CREATE TABLE community_sentence_drafts (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    vocabulary_id TEXT NOT NULL,
+    content TEXT NOT NULL,
+    required_vocabulary TEXT[] NOT NULL DEFAULT '{}',
+    required_tense TEXT NOT NULL,
+    is_correct BOOLEAN NOT NULL,
+    is_grammar_correct BOOLEAN NOT NULL,
+    grammar_errors JSONB NOT NULL DEFAULT '{}',
+    is_english BOOLEAN NOT NULL,
+    is_tense_correct BOOLEAN NOT NULL,
+    is_vocabulary_correct BOOLEAN NOT NULL,
+    translated JSONB NOT NULL,
+    sentiment JSONB NOT NULL,
+    clauses JSONB NOT NULL DEFAULT '{}',
+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+
+    FOREIGN KEY(vocabulary_id) REFERENCES vocabularies(id)
+);
+
+CREATE INDEX idx_comm_sent_dra_user_id_created_at ON community_sentence_drafts(user_id, created_at DESC);
+CREATE INDEX idx_comm_sent_dra_vocabulary_id_created_at ON community_sentence_drafts(vocabulary_id, created_at DESC);
+CREATE INDEX idx_comm_sent_dra_vocabulary_id_user_id ON community_sentence_drafts(vocabulary_id, user_id);
+
 -- USER VOCABULARY --
 
 CREATE TABLE user_vocabularies (
@@ -99,8 +146,6 @@ CREATE TABLE collection_and_vocabularies (
 
 CREATE INDEX idx_collection_and_vocabularies_collection_id_created_at ON collection_and_vocabularies(collection_id, vocabulary_id);
 
-
-
 -- EXERCISE --
 
 CREATE TABLE exercises (
@@ -109,10 +154,10 @@ CREATE TABLE exercises (
     audio VARCHAR(50) NOT NULL,
     level VARCHAR(20) NOT NULL,
     content TEXT NOT NULL,
-    translated JSON NOT NULL,
+    translated JSONB NOT NULL,
     vocabulary VARCHAR(30) NOT NULL,
     correct_answer VARCHAR(30) NOT NULL,
-    options TEXT[] NOT NULL,
+    options TEXT[] NOT NULL DEFAULT '{}',
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
 
     FOREIGN KEY(vocabulary_example_id) REFERENCES vocabulary_examples(id)

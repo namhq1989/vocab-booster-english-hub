@@ -10,8 +10,9 @@ import (
 )
 
 type Operations interface {
-	AnalyzeSentence(ctx *appcontext.AppContext, sentence string) (*SentenceAnalysisResult, error)
+	AnalyzeSentence(_ *appcontext.AppContext, sentence string) (*SentenceAnalysisResult, error)
 	TranslateDefinition(_ *appcontext.AppContext, definition string) (result *DefinitionTranslationResult, err error)
+	EvaluateSentence(_ *appcontext.AppContext, sentence, tense string, vocabulary []string) (result *EvaluateSentenceResult, err error)
 }
 
 type NLP struct {

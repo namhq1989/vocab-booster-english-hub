@@ -45,3 +45,8 @@ func (s server) RemoveVocabularyFromCollection(bgCtx context.Context, req *vocab
 	ctx := appcontext.NewGRPC(bgCtx)
 	return s.app.RemoveVocabularyFromCollection(ctx, req)
 }
+
+func (s server) CreateCommunitySentenceDraft(bgCtx context.Context, req *vocabularypb.CreateCommunitySentenceDraftRequest) (*vocabularypb.CreateCommunitySentenceDraftResponse, error) {
+	ctx := appcontext.NewGRPC(bgCtx)
+	return s.app.CreateCommunitySentenceDraft(ctx, req)
+}

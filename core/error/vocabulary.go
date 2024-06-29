@@ -17,6 +17,7 @@ var Vocabulary = struct {
 	InvalidExampleLevel               error
 	InvalidVerbConjugation            error
 	InvalidVerbForm                   error
+	InvalidSentence                   error
 }{
 	VocabularyNotFound:                errors.New("vocabulary_not_found"),
 	InvalidVocabularyID:               errors.New("vocabulary_invalid_id"),
@@ -32,4 +33,5 @@ var Vocabulary = struct {
 	InvalidExampleLevel:               errors.New("vocabulary_invalid_example_level"),
 	InvalidVerbConjugation:            errors.New("vocabulary_invalid_verb_conjugation"),
 	InvalidVerbForm:                   errors.New("vocabulary_invalid_verb_form"),
+	InvalidSentence:                   errors.New("vocabulary_invalid_sentence"),
 }

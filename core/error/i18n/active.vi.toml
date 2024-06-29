@@ -7,8 +7,12 @@ bad_request = "Yêu cầu không hợp lệ"
 not_found = "Không tìm thấy"
 unauthorized = "Không được ủy quyền"
 forbidden = "Bị cấm"
+already_existed = "Đã tồn tại trong hệ thống"
 invalid_id = "ID không hợp lệ"
 invalid_name = "Tên không hợp lệ"
+invalid_tense = "Thì không hợp lệ"
+invalid_content = "Nội dung không hợp lệ"
+invalid_required_vocabulary = "Từ vựng yêu cầu không hợp lệ"
 
 # vocabulary
 vocabulary_invalid_id = "Từ vựng không hợp lệ"
@@ -26,6 +30,7 @@ vocabulary_invalid_example_pos_tags = "Tag POS câu ví dụ không hợp lệ"
 vocabulary_invalid_example_level = "Cấp độ câu ví dụ không hợp lệ"
 vocabulary_invalid_verb_conjugation = "Chia động từ không hợp lệ"
 vocabulary_invalid_verb_form = "Dạng động từ không hợp lệ"
+vocabulary_invalid_sentence = "Mẫu câu không hợp lệ"
 
 # exercise
 exercise_not_found = "Không tìm thấy bài tập"

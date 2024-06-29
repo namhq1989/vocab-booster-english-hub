@@ -1,4 +1,7 @@
 -- Write your migrate up statements here
+
+-- VOCABULARY EXAMPLE --
+
 CREATE OR REPLACE FUNCTION validate_vocabulary_example() RETURNS TRIGGER AS $$
 BEGIN
     -- Validate translated JSONB
@@ -56,6 +59,80 @@ CREATE TRIGGER validate_vocabulary_example_trigger
     BEFORE INSERT OR UPDATE ON vocabulary_examples
     FOR EACH ROW EXECUTE FUNCTION validate_vocabulary_example();
 
+-- COMMUNITY SENTENCE --
+
+CREATE OR REPLACE FUNCTION validate_community_sentence() RETURNS TRIGGER AS $$
+BEGIN
+    -- Validate translated JSONB
+    IF NOT (
+        jsonb_typeof(NEW.translated) = 'object'
+    ) THEN
+        RAISE EXCEPTION 'Invalid translated JSONB structure';
+END IF;
+
+    -- Validate sentiment JSONB
+    IF NOT (
+        jsonb_typeof(NEW.sentiment->'polarity') = 'number' AND
+        jsonb_typeof(NEW.sentiment->'subjectivity') = 'number'
+    ) THEN
+        RAISE EXCEPTION 'Invalid sentiment JSONB structure';
+END IF;
+
+    -- Validate clauses JSONB
+    IF NOT (
+        jsonb_typeof(NEW.clauses) = 'array'
+    ) THEN
+        RAISE EXCEPTION 'Invalid clauses JSONB structure';
+END IF;
+
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER validate_community_sentence_trigger
+    BEFORE INSERT OR UPDATE ON community_sentences
+    FOR EACH ROW EXECUTE FUNCTION validate_community_sentence();
+
+-- COMMUNITY SENTENCE DRAFT --
+
+CREATE OR REPLACE FUNCTION validate_community_sentence_draft() RETURNS TRIGGER AS $$
+BEGIN
+    -- Validate translated JSONB
+    IF NOT (
+        jsonb_typeof(NEW.translated) = 'object'
+    ) THEN
+        RAISE EXCEPTION 'Invalid translated JSONB structure';
+END IF;
+
+    -- Validate sentiment JSONB
+    IF NOT (
+        jsonb_typeof(NEW.sentiment->'polarity') = 'number' AND
+        jsonb_typeof(NEW.sentiment->'subjectivity') = 'number'
+    ) THEN
+        RAISE EXCEPTION 'Invalid sentiment JSONB structure';
+END IF;
+
+    -- Validate clauses JSONB
+    IF NOT (
+        jsonb_typeof(NEW.clauses) = 'array'
+    ) THEN
+        RAISE EXCEPTION 'Invalid clauses JSONB structure';
+END IF;
+
+    -- Validate grammar errors JSONB
+    IF NOT (
+        jsonb_typeof(NEW.grammar_errors) = 'array'
+    ) THEN
+        RAISE EXCEPTION 'Invalid grammar errors JSONB structure';
+END IF;
+
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER validate_community_sentence_draft_trigger
+    BEFORE INSERT OR UPDATE ON community_sentence_drafts
+    FOR EACH ROW EXECUTE FUNCTION validate_community_sentence_draft();
 
 ---- create above / drop below ----
 

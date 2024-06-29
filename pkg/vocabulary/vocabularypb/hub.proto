@@ -10,6 +10,7 @@ service VocabularyService {
   rpc UpdateCollection(UpdateCollectionRequest) returns (UpdateCollectionResponse) {}
   rpc AddVocabularyToCollection(AddVocabularyToCollectionRequest) returns (AddVocabularyToCollectionResponse) {}
   rpc RemoveVocabularyFromCollection(RemoveVocabularyFromCollectionRequest) returns (RemoveVocabularyFromCollectionResponse) {}
+  rpc CreateCommunitySentenceDraft(CreateCommunitySentenceDraftRequest) returns (CreateCommunitySentenceDraftResponse) {}
 }
 
 // SEARCH VOCABULARY
@@ -68,3 +69,18 @@ message RemoveVocabularyFromCollectionRequest {
 }
 
 message RemoveVocabularyFromCollectionResponse {}
+
+// CREATE COMMUNITY SENTENCE DRAFT
+
+message CreateCommunitySentenceDraftRequest {
+  string userId = 1;
+  string vocabularyId = 2;
+  string lang = 3;
+  string sentence = 4;
+  repeated string vocabulary = 5;
+  string tense = 6;
+}
+
+message CreateCommunitySentenceDraftResponse {
+  string id = 1;
+}

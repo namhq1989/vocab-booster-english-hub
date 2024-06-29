@@ -38,6 +38,10 @@ func main() {
 											field = vocabularyExamples(field, column)
 										case "exercises":
 											field = exercises(field, column)
+										case "community_sentences":
+											field = communitySentence(field, column)
+										case "community_sentence_drafts":
+											field = communitySentenceDraft(field, column)
 										}
 									}
 
@@ -66,6 +70,22 @@ func vocabularyExamples(field template.TableModelField, _ metadata.Column) templ
 
 func exercises(field template.TableModelField, column metadata.Column) template.TableModelField {
 	if column.Name == "options" {
+		field.Type = template.NewType(database.StringArray{})
+	}
+
+	return field
+}
+
+func communitySentence(field template.TableModelField, column metadata.Column) template.TableModelField {
+	if column.Name == "required_vocabulary" {
+		field.Type = template.NewType(database.StringArray{})
+	}
+
+	return field
+}
+
+func communitySentenceDraft(field template.TableModelField, column metadata.Column) template.TableModelField {
+	if column.Name == "required_vocabulary" {
 		field.Type = template.NewType(database.StringArray{})
 	}
 
