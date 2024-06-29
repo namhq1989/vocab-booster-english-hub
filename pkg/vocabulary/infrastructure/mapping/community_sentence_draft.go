@@ -27,6 +27,7 @@ func (CommunitySentenceDraftMapper) FromModelToDomain(sentence model.CommunitySe
 		Sentiment:           domain.Sentiment{},
 		Clauses:             make([]domain.SentenceClause, 0),
 		CreatedAt:           sentence.CreatedAt,
+		UpdatedAt:           sentence.UpdatedAt,
 	}
 
 	if err := json.Unmarshal([]byte(sentence.GrammarErrors), &result.GrammarErrors); err != nil {
@@ -66,6 +67,7 @@ func (CommunitySentenceDraftMapper) FromDomainToModel(sentence domain.CommunityS
 		Sentiment:           "",
 		Clauses:             "",
 		CreatedAt:           sentence.CreatedAt,
+		UpdatedAt:           sentence.UpdatedAt,
 	}
 
 	grammarErrors := make([]SentenceGrammarError, 0)

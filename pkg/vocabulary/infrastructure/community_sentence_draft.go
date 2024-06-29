@@ -32,23 +32,16 @@ func (CommunitySentenceDraftRepository) getTable() *table.CommunitySentenceDraft
 	return table.CommunitySentenceDrafts
 }
 
-func (r CommunitySentenceDraftRepository) FindCommunitySentenceDraft(ctx *appcontext.AppContext, vocabularyID, userID string) (*domain.CommunitySentenceDraft, error) {
-	if !database.IsValidID(userID) {
-		return nil, apperrors.User.InvalidUserID
-	}
-
-	if !database.IsValidID(vocabularyID) {
-		return nil, apperrors.Vocabulary.InvalidVocabularyID
+func (r CommunitySentenceDraftRepository) FindCommunitySentenceDraftByID(ctx *appcontext.AppContext, sentenceID string) (*domain.CommunitySentenceDraft, error) {
+	if !database.IsValidID(sentenceID) {
+		return nil, apperrors.Vocabulary.InvalidSentence
 	}
 
 	stmt := postgres.SELECT(
 		r.getTable().AllColumns,
 	).
 		FROM(r.getTable()).
-		WHERE(
-			r.getTable().VocabularyID.EQ(postgres.String(vocabularyID)).
-				AND(r.getTable().UserID.EQ(postgres.String(userID))),
-		)
+		WHERE(r.getTable().ID.EQ(postgres.String(sentenceID)))
 
 	var doc model.CommunitySentenceDrafts
 	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &doc); err != nil {
@@ -76,6 +69,25 @@ func (r CommunitySentenceDraftRepository) CreateCommunitySentenceDraft(ctx *appc
 		r.getTable().AllColumns,
 	).
 		MODEL(doc)
+
+	_, err = stmt.ExecContext(ctx.Context(), r.getDB())
+	return err
+}
+
+func (r CommunitySentenceDraftRepository) UpdateCommunitySentenceDraft(ctx *appcontext.AppContext, sentence domain.CommunitySentenceDraft) error {
+	mapper := mapping.CommunitySentenceDraftMapper{}
+	doc, err := mapper.FromDomainToModel(sentence)
+	if err != nil {
+		return err
+	}
+
+	stmt := r.getTable().UPDATE(
+		r.getTable().AllColumns,
+	).
+		MODEL(doc).
+		WHERE(
+			r.getTable().ID.EQ(postgres.String(doc.ID)),
+		)
 
 	_, err = stmt.ExecContext(ctx.Context(), r.getDB())
 	return err

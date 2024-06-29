@@ -98,6 +98,7 @@ CREATE TABLE community_sentence_drafts (
     sentiment JSONB NOT NULL,
     clauses JSONB NOT NULL DEFAULT '{}',
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
 
     FOREIGN KEY(vocabulary_id) REFERENCES vocabularies(id)
 );

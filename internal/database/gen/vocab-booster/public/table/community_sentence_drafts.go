@@ -33,6 +33,7 @@ type communitySentenceDraftsTable struct {
 	Clauses             postgres.ColumnString
 	CreatedAt           postgres.ColumnTimestampz
 	IsEnglish           postgres.ColumnBool
+	UpdatedAt           postgres.ColumnTimestampz
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -89,8 +90,9 @@ func newCommunitySentenceDraftsTableImpl(schemaName, tableName, alias string) co
 		ClausesColumn             = postgres.StringColumn("clauses")
 		CreatedAtColumn           = postgres.TimestampzColumn("created_at")
 		IsEnglishColumn           = postgres.BoolColumn("is_english")
-		allColumns                = postgres.ColumnList{IDColumn, UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, IsCorrectColumn, IsGrammarCorrectColumn, GrammarErrorsColumn, IsTenseCorrectColumn, IsVocabularyCorrectColumn, TranslatedColumn, SentimentColumn, ClausesColumn, CreatedAtColumn, IsEnglishColumn}
-		mutableColumns            = postgres.ColumnList{UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, IsCorrectColumn, IsGrammarCorrectColumn, GrammarErrorsColumn, IsTenseCorrectColumn, IsVocabularyCorrectColumn, TranslatedColumn, SentimentColumn, ClausesColumn, CreatedAtColumn, IsEnglishColumn}
+		UpdatedAtColumn           = postgres.TimestampzColumn("updated_at")
+		allColumns                = postgres.ColumnList{IDColumn, UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, IsCorrectColumn, IsGrammarCorrectColumn, GrammarErrorsColumn, IsTenseCorrectColumn, IsVocabularyCorrectColumn, TranslatedColumn, SentimentColumn, ClausesColumn, CreatedAtColumn, IsEnglishColumn, UpdatedAtColumn}
+		mutableColumns            = postgres.ColumnList{UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, IsCorrectColumn, IsGrammarCorrectColumn, GrammarErrorsColumn, IsTenseCorrectColumn, IsVocabularyCorrectColumn, TranslatedColumn, SentimentColumn, ClausesColumn, CreatedAtColumn, IsEnglishColumn, UpdatedAtColumn}
 	)
 
 	return communitySentenceDraftsTable{
@@ -113,6 +115,7 @@ func newCommunitySentenceDraftsTableImpl(schemaName, tableName, alias string) co
 		Clauses:             ClausesColumn,
 		CreatedAt:           CreatedAtColumn,
 		IsEnglish:           IsEnglishColumn,
+		UpdatedAt:           UpdatedAtColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

@@ -18,6 +18,7 @@ var Vocabulary = struct {
 	InvalidVerbConjugation            error
 	InvalidVerbForm                   error
 	InvalidSentence                   error
+	SentenceIsAlreadyCorrect          error
 }{
 	VocabularyNotFound:                errors.New("vocabulary_not_found"),
 	InvalidVocabularyID:               errors.New("vocabulary_invalid_id"),
@@ -34,4 +35,5 @@ var Vocabulary = struct {
 	InvalidVerbConjugation:            errors.New("vocabulary_invalid_verb_conjugation"),
 	InvalidVerbForm:                   errors.New("vocabulary_invalid_verb_form"),
 	InvalidSentence:                   errors.New("vocabulary_invalid_sentence"),
+	SentenceIsAlreadyCorrect:          errors.New("vocabulary_sentence_is_already_correct"),
 }

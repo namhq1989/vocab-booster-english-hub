@@ -37,6 +37,9 @@ const grammarEvaluationPrompt = `
 		"replacement": "suggested replacement"
   	  }]
     }
+	Note:
+	- Ignore missing periods at the end of the sentence error
+	- Ignore warnings and focus solely on errors that significantly impact grammatical correctness
 `
 
 func (ai AI) GrammarEvaluation(ctx *appcontext.AppContext, payload GrammarEvaluationPayload) (*GrammarEvaluationResult, error) {
