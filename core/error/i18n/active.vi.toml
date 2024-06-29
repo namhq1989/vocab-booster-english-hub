@@ -32,6 +32,8 @@ vocabulary_invalid_verb_conjugation = "Chia động từ không hợp lệ"
 vocabulary_invalid_verb_form = "Dạng động từ không hợp lệ"
 vocabulary_invalid_sentence = "Mẫu câu không hợp lệ"
 vocabulary_sentence_is_already_correct = "Mẫu câu này đã đúng và bạn không thể chỉnh sửa nó"
+vocabulary_cannot_promote_draft_sentence = "Xin lỗi, câu của bạn không thể được đưa lên cộng đồng vì có lỗi ngữ pháp và từ vựng. Vui lòng kiểm tra và chỉnh sửa trước khi thử lại"
+vocabulary_sentence_is_too_simple = "Câu của bạn quá đơn giản và không thể đăng lên cộng đồng"
 
 # exercise
 exercise_not_found = "Không tìm thấy bài tập"

@@ -31,6 +31,8 @@ vocabulary_invalid_verb_conjugation = "Invalid verb conjugation"
 vocabulary_invalid_verb_form = "Invalid verb form"
 vocabulary_invalid_sentence = "Invalid sentence"
 vocabulary_sentence_is_already_correct = "Sentence is already correct and you cannot modify it"
+vocabulary_cannot_promote_draft_sentence = "Sorry, your sentence cannot be promoted due to grammatical and vocabulary errors. Please check and correct them before trying again"
+vocabulary_sentence_is_too_simple = "Your sentence is too simple and cannot be promoted"
 
 # exercise
 exercise_not_found = "Exercise not found"

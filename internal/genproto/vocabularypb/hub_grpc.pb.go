@@ -26,6 +26,7 @@ const (
 	VocabularyService_RemoveVocabularyFromCollection_FullMethodName = "/vocabularypb.VocabularyService/RemoveVocabularyFromCollection"
 	VocabularyService_CreateCommunitySentenceDraft_FullMethodName   = "/vocabularypb.VocabularyService/CreateCommunitySentenceDraft"
 	VocabularyService_UpdateCommunitySentenceDraft_FullMethodName   = "/vocabularypb.VocabularyService/UpdateCommunitySentenceDraft"
+	VocabularyService_PromoteCommunitySentenceDraft_FullMethodName  = "/vocabularypb.VocabularyService/PromoteCommunitySentenceDraft"
 )
 
 // VocabularyServiceClient is the client API for VocabularyService service.
@@ -39,6 +40,7 @@ type VocabularyServiceClient interface {
 	RemoveVocabularyFromCollection(ctx context.Context, in *RemoveVocabularyFromCollectionRequest, opts ...grpc.CallOption) (*RemoveVocabularyFromCollectionResponse, error)
 	CreateCommunitySentenceDraft(ctx context.Context, in *CreateCommunitySentenceDraftRequest, opts ...grpc.CallOption) (*CreateCommunitySentenceDraftResponse, error)
 	UpdateCommunitySentenceDraft(ctx context.Context, in *UpdateCommunitySentenceDraftRequest, opts ...grpc.CallOption) (*UpdateCommunitySentenceDraftResponse, error)
+	PromoteCommunitySentenceDraft(ctx context.Context, in *PromoteCommunitySentenceDraftRequest, opts ...grpc.CallOption) (*PromoteCommunitySentenceDraftResponse, error)
 }
 
 type vocabularyServiceClient struct {
@@ -119,6 +121,16 @@ func (c *vocabularyServiceClient) UpdateCommunitySentenceDraft(ctx context.Conte
 	return out, nil
 }
 
+func (c *vocabularyServiceClient) PromoteCommunitySentenceDraft(ctx context.Context, in *PromoteCommunitySentenceDraftRequest, opts ...grpc.CallOption) (*PromoteCommunitySentenceDraftResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PromoteCommunitySentenceDraftResponse)
+	err := c.cc.Invoke(ctx, VocabularyService_PromoteCommunitySentenceDraft_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // VocabularyServiceServer is the server API for VocabularyService service.
 // All implementations should embed UnimplementedVocabularyServiceServer
 // for forward compatibility
@@ -130,6 +142,7 @@ type VocabularyServiceServer interface {
 	RemoveVocabularyFromCollection(context.Context, *RemoveVocabularyFromCollectionRequest) (*RemoveVocabularyFromCollectionResponse, error)
 	CreateCommunitySentenceDraft(context.Context, *CreateCommunitySentenceDraftRequest) (*CreateCommunitySentenceDraftResponse, error)
 	UpdateCommunitySentenceDraft(context.Context, *UpdateCommunitySentenceDraftRequest) (*UpdateCommunitySentenceDraftResponse, error)
+	PromoteCommunitySentenceDraft(context.Context, *PromoteCommunitySentenceDraftRequest) (*PromoteCommunitySentenceDraftResponse, error)
 }
 
 // UnimplementedVocabularyServiceServer should be embedded to have forward compatible implementations.
@@ -156,6 +169,9 @@ func (UnimplementedVocabularyServiceServer) CreateCommunitySentenceDraft(context
 }
 func (UnimplementedVocabularyServiceServer) UpdateCommunitySentenceDraft(context.Context, *UpdateCommunitySentenceDraftRequest) (*UpdateCommunitySentenceDraftResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCommunitySentenceDraft not implemented")
+}
+func (UnimplementedVocabularyServiceServer) PromoteCommunitySentenceDraft(context.Context, *PromoteCommunitySentenceDraftRequest) (*PromoteCommunitySentenceDraftResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PromoteCommunitySentenceDraft not implemented")
 }
 
 // UnsafeVocabularyServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -295,6 +311,24 @@ func _VocabularyService_UpdateCommunitySentenceDraft_Handler(srv interface{}, ct
 	return interceptor(ctx, in, info, handler)
 }
 
+func _VocabularyService_PromoteCommunitySentenceDraft_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PromoteCommunitySentenceDraftRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VocabularyServiceServer).PromoteCommunitySentenceDraft(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: VocabularyService_PromoteCommunitySentenceDraft_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VocabularyServiceServer).PromoteCommunitySentenceDraft(ctx, req.(*PromoteCommunitySentenceDraftRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // VocabularyService_ServiceDesc is the grpc.ServiceDesc for VocabularyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -329,6 +363,10 @@ var VocabularyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateCommunitySentenceDraft",
 			Handler:    _VocabularyService_UpdateCommunitySentenceDraft_Handler,
+		},
+		{
+			MethodName: "PromoteCommunitySentenceDraft",
+			Handler:    _VocabularyService_PromoteCommunitySentenceDraft_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

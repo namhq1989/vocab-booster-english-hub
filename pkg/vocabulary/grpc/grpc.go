@@ -55,3 +55,8 @@ func (s server) UpdateCommunitySentenceDraft(bgCtx context.Context, req *vocabul
 	ctx := appcontext.NewGRPC(bgCtx)
 	return s.app.UpdateCommunitySentenceDraft(ctx, req)
 }
+
+func (s server) PromoteCommunitySentenceDraft(bgCtx context.Context, req *vocabularypb.PromoteCommunitySentenceDraftRequest) (*vocabularypb.PromoteCommunitySentenceDraftResponse, error) {
+	ctx := appcontext.NewGRPC(bgCtx)
+	return s.app.PromoteCommunitySentenceDraft(ctx, req)
+}

@@ -26,6 +26,7 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 		vocabularyRepository              = infrastructure.NewVocabularyRepository(mono.Database())
 		vocabularyExampleRepository       = infrastructure.NewVocabularyExampleRepository(mono.Database())
 		vocabularyScrapingItemRepository  = infrastructure.NewVocabularyScrapingItemRepository(mono.Database())
+		communitySentenceRepository       = infrastructure.NewCommunitySentenceRepository(mono.Database())
 		communitySentenceDraftRepository  = infrastructure.NewCommunitySentenceDraftRepository(mono.Database())
 		verbConjugationRepository         = infrastructure.NewVerbConjugationRepository(mono.Database())
 		collectionRepository              = infrastructure.NewCollectionRepository(mono.Database())
@@ -44,6 +45,7 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 		app = application.New(
 			vocabularyRepository,
 			vocabularyExampleRepository,
+			communitySentenceRepository,
 			communitySentenceDraftRepository,
 			collectionRepository,
 			collectionAndVocabularyRepository,
