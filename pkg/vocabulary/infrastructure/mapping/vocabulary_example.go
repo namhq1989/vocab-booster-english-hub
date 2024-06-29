@@ -37,10 +37,6 @@ func (VocabularyExampleMapper) FromModelToDomain(example model.VocabularyExample
 		return nil, err
 	}
 
-	if err := json.Unmarshal([]byte(example.Level), &result.Level); err != nil {
-		return nil, err
-	}
-
 	if err := json.Unmarshal([]byte(example.Translated), &result.Translated); err != nil {
 		return nil, err
 	}

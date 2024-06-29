@@ -18,6 +18,7 @@ type (
 
 		CreateCommunitySentenceDraft(ctx *appcontext.AppContext, req *vocabularypb.CreateCommunitySentenceDraftRequest) (*vocabularypb.CreateCommunitySentenceDraftResponse, error)
 		UpdateCommunitySentenceDraft(ctx *appcontext.AppContext, req *vocabularypb.UpdateCommunitySentenceDraftRequest) (*vocabularypb.UpdateCommunitySentenceDraftResponse, error)
+		PromoteCommunitySentenceDraft(ctx *appcontext.AppContext, req *vocabularypb.PromoteCommunitySentenceDraftRequest) (*vocabularypb.PromoteCommunitySentenceDraftResponse, error)
 	}
 	App interface {
 		Hubs
@@ -33,6 +34,7 @@ type (
 
 		hub.CreateCommunitySentenceDraftHandler
 		hub.UpdateCommunitySentenceDraftHandler
+		hub.PromoteCommunitySentenceDraftHandler
 	}
 	Application struct {
 		appHubHandler
@@ -44,6 +46,7 @@ var _ App = (*Application)(nil)
 func New(
 	vocabularyRepository domain.VocabularyRepository,
 	vocabularyExampleRepository domain.VocabularyExampleRepository,
+	communitySentenceRepository domain.CommunitySentenceRepository,
 	communitySentenceDraftRepository domain.CommunitySentenceDraftRepository,
 	collectionRepository domain.CollectionRepository,
 	collectionAndVocabularyRepository domain.CollectionAndVocabularyRepository,
@@ -80,6 +83,11 @@ func New(
 			UpdateCommunitySentenceDraftHandler: hub.NewUpdateCommunitySentenceDraftHandler(
 				communitySentenceDraftRepository,
 				aiRepository,
+				nlpRepository,
+			),
+			PromoteCommunitySentenceDraftHandler: hub.NewPromoteCommunitySentenceDraftHandler(
+				communitySentenceRepository,
+				communitySentenceDraftRepository,
 				nlpRepository,
 			),
 		},

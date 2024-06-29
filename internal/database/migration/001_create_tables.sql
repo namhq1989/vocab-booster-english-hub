@@ -71,8 +71,11 @@ CREATE TABLE community_sentences (
     translated JSONB NOT NULL,
     sentiment JSONB NOT NULL,
     clauses JSONB NOT NULL DEFAULT '{}',
-    stats_vote int NOT NULL,
-    stats_comment int NOT NULL,
+    pos_tags JSONB NOT NULL DEFAULT '{}',
+    dependencies JSONB NOT NULL DEFAULT '{}',
+    verbs JSONB NOT NULL DEFAULT '{}',
+    level VARCHAR(20) NOT NULL,
+    stats_like int NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
 
     FOREIGN KEY(vocabulary_id) REFERENCES vocabularies(id)

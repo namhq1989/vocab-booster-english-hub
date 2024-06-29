@@ -26,9 +26,12 @@ type communitySentencesTable struct {
 	Translated         postgres.ColumnString
 	Sentiment          postgres.ColumnString
 	Clauses            postgres.ColumnString
-	StatsVote          postgres.ColumnInteger
-	StatsComment       postgres.ColumnInteger
+	StatsLike          postgres.ColumnInteger
 	CreatedAt          postgres.ColumnTimestampz
+	PosTags            postgres.ColumnString
+	Dependencies       postgres.ColumnString
+	Verbs              postgres.ColumnString
+	Level              postgres.ColumnString
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -78,11 +81,14 @@ func newCommunitySentencesTableImpl(schemaName, tableName, alias string) communi
 		TranslatedColumn         = postgres.StringColumn("translated")
 		SentimentColumn          = postgres.StringColumn("sentiment")
 		ClausesColumn            = postgres.StringColumn("clauses")
-		StatsVoteColumn          = postgres.IntegerColumn("stats_vote")
-		StatsCommentColumn       = postgres.IntegerColumn("stats_comment")
+		StatsLikeColumn          = postgres.IntegerColumn("stats_like")
 		CreatedAtColumn          = postgres.TimestampzColumn("created_at")
-		allColumns               = postgres.ColumnList{IDColumn, UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, TranslatedColumn, SentimentColumn, ClausesColumn, StatsVoteColumn, StatsCommentColumn, CreatedAtColumn}
-		mutableColumns           = postgres.ColumnList{UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, TranslatedColumn, SentimentColumn, ClausesColumn, StatsVoteColumn, StatsCommentColumn, CreatedAtColumn}
+		PosTagsColumn            = postgres.StringColumn("pos_tags")
+		DependenciesColumn       = postgres.StringColumn("dependencies")
+		VerbsColumn              = postgres.StringColumn("verbs")
+		LevelColumn              = postgres.StringColumn("level")
+		allColumns               = postgres.ColumnList{IDColumn, UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, TranslatedColumn, SentimentColumn, ClausesColumn, StatsLikeColumn, CreatedAtColumn, PosTagsColumn, DependenciesColumn, VerbsColumn, LevelColumn}
+		mutableColumns           = postgres.ColumnList{UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, TranslatedColumn, SentimentColumn, ClausesColumn, StatsLikeColumn, CreatedAtColumn, PosTagsColumn, DependenciesColumn, VerbsColumn, LevelColumn}
 	)
 
 	return communitySentencesTable{
@@ -98,9 +104,12 @@ func newCommunitySentencesTableImpl(schemaName, tableName, alias string) communi
 		Translated:         TranslatedColumn,
 		Sentiment:          SentimentColumn,
 		Clauses:            ClausesColumn,
-		StatsVote:          StatsVoteColumn,
-		StatsComment:       StatsCommentColumn,
+		StatsLike:          StatsLikeColumn,
 		CreatedAt:          CreatedAtColumn,
+		PosTags:            PosTagsColumn,
+		Dependencies:       DependenciesColumn,
+		Verbs:              VerbsColumn,
+		Level:              LevelColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

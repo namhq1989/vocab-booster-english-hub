@@ -23,12 +23,12 @@ type VocabularyExample struct {
 	Content      string
 	Translated   language.TranslatedLanguages
 	MainWord     VocabularyMainWord
-	CreatedAt    time.Time
 	PosTags      []PosTag
 	Sentiment    Sentiment
 	Dependencies []Dependency
 	Verbs        []Verb
 	Level        SentenceLevel
+	CreatedAt    time.Time
 }
 
 type VocabularyMainWord struct {

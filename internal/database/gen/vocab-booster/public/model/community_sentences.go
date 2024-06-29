@@ -22,7 +22,10 @@ type CommunitySentences struct {
 	Translated         string
 	Sentiment          string
 	Clauses            string
-	StatsVote          int32
-	StatsComment       int32
+	StatsLike          int32
 	CreatedAt          time.Time
+	PosTags            string
+	Dependencies       string
+	Verbs              string
+	Level              string
 }

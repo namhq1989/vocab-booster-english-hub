@@ -19,6 +19,8 @@ var Vocabulary = struct {
 	InvalidVerbForm                   error
 	InvalidSentence                   error
 	SentenceIsAlreadyCorrect          error
+	CannotPromoteDraftSentence        error
+	SentenceIsTooSimple               error
 }{
 	VocabularyNotFound:                errors.New("vocabulary_not_found"),
 	InvalidVocabularyID:               errors.New("vocabulary_invalid_id"),
@@ -36,4 +38,6 @@ var Vocabulary = struct {
 	InvalidVerbForm:                   errors.New("vocabulary_invalid_verb_form"),
 	InvalidSentence:                   errors.New("vocabulary_invalid_sentence"),
 	SentenceIsAlreadyCorrect:          errors.New("vocabulary_sentence_is_already_correct"),
+	CannotPromoteDraftSentence:        errors.New("vocabulary_cannot_promote_draft_sentence"),
+	SentenceIsTooSimple:               errors.New("vocabulary_sentence_is_too_simple"),
 }

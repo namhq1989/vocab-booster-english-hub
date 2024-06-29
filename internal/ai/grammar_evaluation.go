@@ -27,7 +27,8 @@ type GrammarEvaluationError struct {
 
 const grammarEvaluationPrompt = `
 	{{timestamp}}
-	Identify and correct the grammatical errors in the following sentence:
+	Check the following sentence for simple grammar errors, focusing only on grammatical errors and ignoring context or stylistic issues.
+	Ignore awkward phrasing, missing periods at the end of the sentence, errors related to parallel structure, and correct possessive forms.
 	"{{sentence}}"
 	The output should be only in JSON format without any markdown tags. Here is the required structure:
 	{
@@ -37,9 +38,6 @@ const grammarEvaluationPrompt = `
 		"replacement": "suggested replacement"
   	  }]
     }
-	Note:
-	- Ignore missing periods at the end of the sentence error
-	- Ignore warnings and focus solely on errors that significantly impact grammatical correctness
 `
 
 func (ai AI) GrammarEvaluation(ctx *appcontext.AppContext, payload GrammarEvaluationPayload) (*GrammarEvaluationResult, error) {
