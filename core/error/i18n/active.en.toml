@@ -30,6 +30,7 @@ vocabulary_invalid_example_level = "Invalid example level"
 vocabulary_invalid_verb_conjugation = "Invalid verb conjugation"
 vocabulary_invalid_verb_form = "Invalid verb form"
 vocabulary_invalid_sentence = "Invalid sentence"
+vocabulary_sentence_is_already_correct = "Sentence is already correct and you cannot modify it"
 
 # exercise
 exercise_not_found = "Exercise not found"

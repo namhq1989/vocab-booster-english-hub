@@ -11,6 +11,7 @@ service VocabularyService {
   rpc AddVocabularyToCollection(AddVocabularyToCollectionRequest) returns (AddVocabularyToCollectionResponse) {}
   rpc RemoveVocabularyFromCollection(RemoveVocabularyFromCollectionRequest) returns (RemoveVocabularyFromCollectionResponse) {}
   rpc CreateCommunitySentenceDraft(CreateCommunitySentenceDraftRequest) returns (CreateCommunitySentenceDraftResponse) {}
+  rpc UpdateCommunitySentenceDraft(UpdateCommunitySentenceDraftRequest) returns (UpdateCommunitySentenceDraftResponse) {}
 }
 
 // SEARCH VOCABULARY
@@ -84,3 +85,14 @@ message CreateCommunitySentenceDraftRequest {
 message CreateCommunitySentenceDraftResponse {
   string id = 1;
 }
+
+// UPDATE COMMUNITY SENTENCE DRAFT
+
+message UpdateCommunitySentenceDraftRequest {
+  string userId = 1;
+  string sentenceId = 2;
+  string lang = 3;
+  string sentence = 4;
+}
+
+message UpdateCommunitySentenceDraftResponse {}

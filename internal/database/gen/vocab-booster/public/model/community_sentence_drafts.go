@@ -29,4 +29,5 @@ type CommunitySentenceDrafts struct {
 	Clauses             string
 	CreatedAt           time.Time
 	IsEnglish           bool
+	UpdatedAt           time.Time
 }

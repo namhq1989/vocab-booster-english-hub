@@ -31,6 +31,7 @@ vocabulary_invalid_example_level = "Cấp độ câu ví dụ không hợp lệ"
 vocabulary_invalid_verb_conjugation = "Chia động từ không hợp lệ"
 vocabulary_invalid_verb_form = "Dạng động từ không hợp lệ"
 vocabulary_invalid_sentence = "Mẫu câu không hợp lệ"
+vocabulary_sentence_is_already_correct = "Mẫu câu này đã đúng và bạn không thể chỉnh sửa nó"
 
 # exercise
 exercise_not_found = "Không tìm thấy bài tập"

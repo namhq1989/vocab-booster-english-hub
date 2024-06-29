@@ -10,8 +10,9 @@ import (
 )
 
 type CommunitySentenceDraftRepository interface {
-	FindCommunitySentenceDraft(ctx *appcontext.AppContext, vocabularyID, userID string) (*CommunitySentenceDraft, error)
+	FindCommunitySentenceDraftByID(ctx *appcontext.AppContext, sentenceID string) (*CommunitySentenceDraft, error)
 	CreateCommunitySentenceDraft(ctx *appcontext.AppContext, sentence CommunitySentenceDraft) error
+	UpdateCommunitySentenceDraft(ctx *appcontext.AppContext, sentence CommunitySentenceDraft) error
 	DeleteCommunitySentenceDrafts(ctx *appcontext.AppContext, vocabularyID, userID string) error
 }
 
@@ -32,6 +33,7 @@ type CommunitySentenceDraft struct {
 	Sentiment           Sentiment
 	Clauses             []SentenceClause
 	CreatedAt           time.Time
+	UpdatedAt           time.Time
 }
 
 func NewCommunitySentenceDraft(userID, vocabularyID string) (*CommunitySentenceDraft, error) {
@@ -51,76 +53,84 @@ func NewCommunitySentenceDraft(userID, vocabularyID string) (*CommunitySentenceD
 	}, nil
 }
 
-func (v *CommunitySentenceDraft) SetContent(content string) error {
+func (s *CommunitySentenceDraft) SetContent(content string) error {
 	if content == "" {
 		return apperrors.Common.InvalidContent
 	}
 
-	v.Content = content
+	s.Content = content
 	return nil
 }
 
-func (v *CommunitySentenceDraft) SetRequiredVocabulary(required []string) error {
+func (s *CommunitySentenceDraft) SetRequiredVocabulary(required []string) error {
 	if len(required) == 0 {
 		return apperrors.Common.InvalidRequiredVocabulary
 	}
 
-	v.RequiredVocabulary = required
+	s.RequiredVocabulary = required
 	return nil
 }
 
-func (v *CommunitySentenceDraft) SetRequiredTense(tense string) error {
+func (s *CommunitySentenceDraft) SetRequiredTense(tense string) error {
 	dTense := ToTense(tense)
 	if !dTense.IsValid() {
 		return apperrors.Common.InvalidTense
 	}
 
-	v.RequiredTense = dTense
+	s.RequiredTense = dTense
 	return nil
 }
 
-func (v *CommunitySentenceDraft) setIsCorrect() {
-	v.IsCorrect = v.IsEnglish && v.IsGrammarCorrect && v.IsVocabularyCorrect && v.IsTenseCorrect
+func (s *CommunitySentenceDraft) setIsCorrect() {
+	s.IsCorrect = s.IsEnglish && s.IsGrammarCorrect && s.IsVocabularyCorrect && s.IsTenseCorrect
 }
 
-func (v *CommunitySentenceDraft) setIsGrammarCorrect(value bool) {
-	v.IsGrammarCorrect = value
-	v.setIsCorrect()
+func (s *CommunitySentenceDraft) setIsGrammarCorrect(value bool) {
+	s.IsGrammarCorrect = value
+	s.setIsCorrect()
 }
 
-func (v *CommunitySentenceDraft) SetIsEnglish(value bool) {
-	v.IsEnglish = value
-	v.setIsCorrect()
+func (s *CommunitySentenceDraft) SetIsEnglish(value bool) {
+	s.IsEnglish = value
+	s.setIsCorrect()
 }
 
-func (v *CommunitySentenceDraft) SetIsVocabularyCorrect(value bool) {
-	v.IsVocabularyCorrect = value
-	v.setIsCorrect()
+func (s *CommunitySentenceDraft) SetIsVocabularyCorrect(value bool) {
+	s.IsVocabularyCorrect = value
+	s.setIsCorrect()
 }
 
-func (v *CommunitySentenceDraft) SetIsTenseCorrect(value bool) {
-	v.IsTenseCorrect = value
-	v.setIsCorrect()
+func (s *CommunitySentenceDraft) SetIsTenseCorrect(value bool) {
+	s.IsTenseCorrect = value
+	s.setIsCorrect()
 }
 
-func (v *CommunitySentenceDraft) SetClauses(clauses []SentenceClause) error {
-	v.Clauses = clauses
+func (s *CommunitySentenceDraft) SetClauses(clauses []SentenceClause) error {
+	s.Clauses = clauses
 	return nil
 }
 
-func (v *CommunitySentenceDraft) SetSentiment(polarity, subjectivity float64) error {
-	v.Sentiment.Polarity = polarity
-	v.Sentiment.Subjectivity = subjectivity
+func (s *CommunitySentenceDraft) SetSentiment(polarity, subjectivity float64) error {
+	s.Sentiment.Polarity = polarity
+	s.Sentiment.Subjectivity = subjectivity
 	return nil
 }
 
-func (v *CommunitySentenceDraft) SetTranslated(translated language.TranslatedLanguages) error {
-	v.Translated = translated
+func (s *CommunitySentenceDraft) SetTranslated(translated language.TranslatedLanguages) error {
+	s.Translated = translated
 	return nil
 }
 
-func (v *CommunitySentenceDraft) SetGrammarErrors(errors []SentenceGrammarError) error {
-	v.GrammarErrors = errors
-	v.setIsGrammarCorrect(len(v.GrammarErrors) == 0)
+func (s *CommunitySentenceDraft) SetGrammarErrors(errors []SentenceGrammarError) error {
+	s.GrammarErrors = errors
+	s.setIsGrammarCorrect(len(s.GrammarErrors) == 0)
 	return nil
+}
+
+func (s *CommunitySentenceDraft) SetUpdatedAt() {
+	s.UpdatedAt = time.Now()
+}
+
+func (s *CommunitySentenceDraft) IsOwner(userID string) bool {
+	return s.UserID == userID
 }
