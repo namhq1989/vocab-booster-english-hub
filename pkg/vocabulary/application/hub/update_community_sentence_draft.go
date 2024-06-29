@@ -80,7 +80,7 @@ func (h UpdateCommunitySentenceDraftHandler) UpdateCommunitySentenceDraft(ctx *a
 	return nil, nil
 }
 
-func (h UpdateCommunitySentenceDraftHandler) hasGrammarErrors(ctx *appcontext.AppContext, sentence *domain.CommunitySentenceDraft, content string, grammarErrors []domain.SentenceGrammarError) error {
+func (UpdateCommunitySentenceDraftHandler) hasGrammarErrors(ctx *appcontext.AppContext, sentence *domain.CommunitySentenceDraft, content string, grammarErrors []domain.SentenceGrammarError) error {
 	ctx.Logger().Text("set sentence data")
 	if err := sentence.SetContent(content); err != nil {
 		ctx.Logger().Error("failed to set content", err, appcontext.Fields{})
