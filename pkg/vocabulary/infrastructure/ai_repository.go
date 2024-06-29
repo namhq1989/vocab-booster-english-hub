@@ -1,19 +1,27 @@
 package infrastructure
 
 import (
+	"fmt"
+	"regexp"
+	"strings"
+
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
+	"github.com/namhq1989/vocab-booster-english-hub/core/language"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/ai"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/nlp"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/manipulation"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 )
 
 type AIRepository struct {
-	ai ai.Operations
+	ai  ai.Operations
+	nlp nlp.Operations
 }
 
-func NewAIRepository(ai ai.Operations) AIRepository {
+func NewAIRepository(ai ai.Operations, nlp nlp.Operations) AIRepository {
 	return AIRepository{
-		ai: ai,
+		ai:  ai,
+		nlp: nlp,
 	}
 }
 
@@ -46,5 +54,52 @@ func (r AIRepository) GetVocabularyData(ctx *appcontext.AppContext, vocabulary s
 		Synonyms: result.Synonyms,
 		Antonyms: result.Antonyms,
 		Examples: examples,
+	}, nil
+}
+
+func (r AIRepository) GrammarEvaluation(ctx *appcontext.AppContext, sentence, _ string) ([]domain.SentenceGrammarError, error) {
+	result, err := r.ai.GrammarEvaluation(ctx, ai.GrammarEvaluationPayload{
+		Sentence: sentence,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	grammarErrors := make([]domain.SentenceGrammarError, 0)
+	for _, ge := range result.Errors {
+		translated, _ := r.translateGrammarErrorMessage(ctx, ge.Message)
+		if translated != nil {
+			sge, _ := domain.NewSentenceGrammarError(ge.Message, ge.Segment, ge.Replacement, *translated)
+			if sge != nil {
+				grammarErrors = append(grammarErrors, *sge)
+			}
+		}
+	}
+
+	return grammarErrors, nil
+}
+
+func (r AIRepository) translateGrammarErrorMessage(ctx *appcontext.AppContext, message string) (*language.TranslatedLanguages, error) {
+	re := regexp.MustCompile(`'[^']+'`)
+	keywords := re.FindAllString(message, -1)
+
+	placeholderText := message
+	for i, keyword := range keywords {
+		placeholder := fmt.Sprintf("P_%d", i)
+		placeholderText = strings.Replace(placeholderText, keyword, placeholder, 1)
+	}
+
+	translatedResult, err := r.nlp.TranslateDefinition(ctx, placeholderText)
+	if err != nil {
+		return nil, err
+	}
+
+	for i, keyword := range keywords {
+		placeholder := fmt.Sprintf("P_%d", i)
+		translatedResult.Vi = strings.Replace(translatedResult.Vi, placeholder, keyword, 1)
+	}
+
+	return &language.TranslatedLanguages{
+		Vi: translatedResult.Vi,
 	}, nil
 }

@@ -12,6 +12,8 @@ package table
 func UseSchema(schema string) {
 	CollectionAndVocabularies = CollectionAndVocabularies.FromSchema(schema)
 	Collections = Collections.FromSchema(schema)
+	CommunitySentenceDrafts = CommunitySentenceDrafts.FromSchema(schema)
+	CommunitySentences = CommunitySentences.FromSchema(schema)
 	Exercises = Exercises.FromSchema(schema)
 	SchemaVersion = SchemaVersion.FromSchema(schema)
 	UserExerciseStatuses = UserExerciseStatuses.FromSchema(schema)

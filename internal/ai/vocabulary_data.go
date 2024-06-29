@@ -61,7 +61,7 @@ const vocabularyDataPrompt = `
 	}
 `
 
-func (ai *AI) VocabularyData(ctx *appcontext.AppContext, payload VocabularyDataPayload) (*VocabularyDataResult, error) {
+func (ai AI) VocabularyData(ctx *appcontext.AppContext, payload VocabularyDataPayload) (*VocabularyDataResult, error) {
 	prompt := strings.ReplaceAll(vocabularyDataPrompt, "{{vocabulary}}", payload.Vocabulary)
 	prompt = strings.ReplaceAll(prompt, "{{timestamp}}", fmt.Sprintf("%d", time.Now().Unix()))
 

@@ -7,8 +7,12 @@ bad_request = "Bad request"
 not_found = "Not found"
 unauthorized = "Unauthorized"
 forbidden = "Forbidden"
+already_existed = "Already existed"
 invalid_id = "Invalid id"
 invalid_name = "Invalid name"
+invalid_tense = "Invalid tense"
+invalid_content = "Invalid content"
+invalid_required_vocabulary = "Invalid required vocabulary"
 
 # vocabulary
 vocabulary_invalid_id = "Invalid vocabulary id"

@@ -4,6 +4,10 @@ type TranslatedLanguages struct {
 	Vi string `json:"vi"` // Vietnamese
 }
 
+const (
+	Vietnamese = "vi"
+)
+
 func (l TranslatedLanguages) GetLanguageValue(lang string) string {
 	lang = toLanguage(lang)
 

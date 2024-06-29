@@ -8,6 +8,7 @@ import (
 type NlpRepository interface {
 	AnalyzeSentence(ctx *appcontext.AppContext, sentence string) (*NlpSentenceAnalysisResult, error)
 	TranslateDefinition(ctx *appcontext.AppContext, definition string) (*language.TranslatedLanguages, error)
+	EvaluateSentence(ctx *appcontext.AppContext, sentence, tense string, vocabulary []string) (*NlpSentenceEvaluationResult, error)
 }
 
 type NlpSentenceAnalysisResult struct {
@@ -17,4 +18,13 @@ type NlpSentenceAnalysisResult struct {
 	Dependencies []Dependency
 	Verbs        []Verb
 	Level        SentenceLevel
+}
+
+type NlpSentenceEvaluationResult struct {
+	IsEnglish           bool
+	IsVocabularyCorrect bool
+	IsTenseCorrect      bool
+	Sentiment           Sentiment
+	Translated          language.TranslatedLanguages
+	Clauses             []SentenceClause
 }
