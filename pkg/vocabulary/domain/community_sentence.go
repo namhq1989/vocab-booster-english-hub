@@ -10,7 +10,9 @@ import (
 )
 
 type CommunitySentenceRepository interface {
+	FindCommunitySentenceByID(ctx *appcontext.AppContext, id string) (*CommunitySentence, error)
 	CreateCommunitySentence(ctx *appcontext.AppContext, sentence CommunitySentence) error
+	UpdateCommunitySentence(ctx *appcontext.AppContext, sentence CommunitySentence) error
 }
 
 type CommunitySentence struct {
