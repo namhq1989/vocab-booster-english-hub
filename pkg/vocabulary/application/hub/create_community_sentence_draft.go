@@ -12,20 +12,17 @@ import (
 type CreateCommunitySentenceDraftHandler struct {
 	vocabularyRepository             domain.VocabularyRepository
 	communitySentenceDraftRepository domain.CommunitySentenceDraftRepository
-	aiRepository                     domain.AIRepository
 	nlpRepository                    domain.NlpRepository
 }
 
 func NewCreateCommunitySentenceDraftHandler(
 	vocabularyRepository domain.VocabularyRepository,
 	communitySentenceDraftRepository domain.CommunitySentenceDraftRepository,
-	aiRepository domain.AIRepository,
 	nlpRepository domain.NlpRepository,
 ) CreateCommunitySentenceDraftHandler {
 	return CreateCommunitySentenceDraftHandler{
 		vocabularyRepository:             vocabularyRepository,
 		communitySentenceDraftRepository: communitySentenceDraftRepository,
-		aiRepository:                     aiRepository,
 		nlpRepository:                    nlpRepository,
 	}
 }
@@ -67,10 +64,10 @@ func (h CreateCommunitySentenceDraftHandler) CreateCommunitySentenceDraft(ctx *a
 		return nil, apperrors.Vocabulary.InvalidSentence
 	}
 
-	ctx.Logger().Text("call AI to evaluate grammar")
-	grammarErrors, err := h.aiRepository.GrammarEvaluation(ctx, req.GetSentence(), req.GetLang())
+	ctx.Logger().Text("call NLP to evaluate grammar")
+	grammarErrors, err := h.nlpRepository.GrammarCheck(ctx, req.GetSentence())
 	if err != nil {
-		ctx.Logger().Error("failed to call AI to evaluate grammar", err, appcontext.Fields{})
+		ctx.Logger().Error("failed to call NLP to evaluate grammar", err, appcontext.Fields{})
 		return nil, err
 	}
 
@@ -182,10 +179,21 @@ func (h CreateCommunitySentenceDraftHandler) noGrammarErrors(ctx *appcontext.App
 		return nil, err
 	}
 
-	// set bool flags
-	sentence.SetIsEnglish(sentenceEvaluationResult.IsEnglish)
-	sentence.SetIsTenseCorrect(sentenceEvaluationResult.IsTenseCorrect)
-	sentence.SetIsVocabularyCorrect(sentenceEvaluationResult.IsVocabularyCorrect)
+	// set error code
+	if !sentenceEvaluationResult.IsEnglish {
+		sentence.SetErrorCode(domain.SentenceErrorCodeIsNotEnglish)
+	} else if !sentenceEvaluationResult.IsVocabularyCorrect {
+		sentence.SetErrorCode(domain.SentenceErrorCodeInvalidVocabulary)
+	} else if !sentenceEvaluationResult.IsTenseCorrect {
+		sentence.SetErrorCode(domain.SentenceErrorCodeInvalidTense)
+	} else {
+		sentence.SetErrorCode(domain.SentenceErrorCodeEmpty)
+	}
+	if !sentence.ErrorCode.IsEmpty() {
+		ctx.Logger().Error("sentence has error code", nil, appcontext.Fields{"error_code": sentence.ErrorCode.String()})
+	} else {
+		ctx.Logger().Text("sentence has no error code")
+	}
 
 	ctx.Logger().Text("persist sentence draft in db")
 	if err = h.communitySentenceDraftRepository.CreateCommunitySentenceDraft(ctx, *sentence); err != nil {

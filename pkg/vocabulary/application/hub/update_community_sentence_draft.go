@@ -9,18 +9,15 @@ import (
 
 type UpdateCommunitySentenceDraftHandler struct {
 	communitySentenceDraftRepository domain.CommunitySentenceDraftRepository
-	aiRepository                     domain.AIRepository
 	nlpRepository                    domain.NlpRepository
 }
 
 func NewUpdateCommunitySentenceDraftHandler(
 	communitySentenceDraftRepository domain.CommunitySentenceDraftRepository,
-	aiRepository domain.AIRepository,
 	nlpRepository domain.NlpRepository,
 ) UpdateCommunitySentenceDraftHandler {
 	return UpdateCommunitySentenceDraftHandler{
 		communitySentenceDraftRepository: communitySentenceDraftRepository,
-		aiRepository:                     aiRepository,
 		nlpRepository:                    nlpRepository,
 	}
 }
@@ -51,10 +48,10 @@ func (h UpdateCommunitySentenceDraftHandler) UpdateCommunitySentenceDraft(ctx *a
 		return nil, apperrors.Vocabulary.SentenceIsAlreadyCorrect
 	}
 
-	ctx.Logger().Text("call AI to evaluate grammar")
-	grammarErrors, err := h.aiRepository.GrammarEvaluation(ctx, req.GetSentence(), req.GetLang())
+	ctx.Logger().Text("call NLP to evaluate grammar")
+	grammarErrors, err := h.nlpRepository.GrammarCheck(ctx, req.GetSentence())
 	if err != nil {
-		ctx.Logger().Error("failed to call AI to evaluate grammar", err, appcontext.Fields{})
+		ctx.Logger().Error("failed to call NLP to evaluate grammar", err, appcontext.Fields{})
 		return nil, err
 	}
 
@@ -129,10 +126,21 @@ func (h UpdateCommunitySentenceDraftHandler) noGrammarErrors(ctx *appcontext.App
 		return err
 	}
 
-	// set bool flags
-	sentence.SetIsEnglish(sentenceEvaluationResult.IsEnglish)
-	sentence.SetIsTenseCorrect(sentenceEvaluationResult.IsTenseCorrect)
-	sentence.SetIsVocabularyCorrect(sentenceEvaluationResult.IsVocabularyCorrect)
+	// set error code
+	if !sentenceEvaluationResult.IsEnglish {
+		sentence.SetErrorCode(domain.SentenceErrorCodeIsNotEnglish)
+	} else if !sentenceEvaluationResult.IsVocabularyCorrect {
+		sentence.SetErrorCode(domain.SentenceErrorCodeInvalidVocabulary)
+	} else if !sentenceEvaluationResult.IsTenseCorrect {
+		sentence.SetErrorCode(domain.SentenceErrorCodeInvalidTense)
+	} else {
+		sentence.SetErrorCode(domain.SentenceErrorCodeEmpty)
+	}
+	if !sentence.ErrorCode.IsEmpty() {
+		ctx.Logger().Error("sentence has error code", nil, appcontext.Fields{"error_code": sentence.ErrorCode.String()})
+	} else {
+		ctx.Logger().Text("sentence has no error code")
+	}
 
 	return nil
 }

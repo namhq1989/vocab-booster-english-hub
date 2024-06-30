@@ -29,6 +29,7 @@ const grammarEvaluationPrompt = `
 	{{timestamp}}
 	Check the following sentence for simple grammar errors, focusing only on grammatical errors and ignoring context or stylistic issues.
 	Ignore awkward phrasing, missing periods at the end of the sentence, errors related to parallel structure, and correct possessive forms.
+	Ensure that suggestions are really important and do not alter the intended meaning of the sentence.
 	"{{sentence}}"
 	The output should be only in JSON format without any markdown tags. Here is the required structure:
 	{

@@ -104,3 +104,20 @@ func (r NlpRepository) EvaluateSentence(ctx *appcontext.AppContext, sentence, te
 		Clauses:    clauses,
 	}, nil
 }
+
+func (r NlpRepository) GrammarCheck(ctx *appcontext.AppContext, sentence string) ([]domain.SentenceGrammarError, error) {
+	result, err := r.nlp.GrammarCheck(ctx, sentence)
+	if err != nil {
+		return nil, err
+	}
+
+	grammarErrors := make([]domain.SentenceGrammarError, 0)
+	for _, ge := range result.Errors {
+		sge, _ := domain.NewSentenceGrammarError(ge.Message, ge.Segment, ge.Replacement, ge.Translated)
+		if sge != nil {
+			grammarErrors = append(grammarErrors, *sge)
+		}
+	}
+
+	return grammarErrors, nil
+}

@@ -77,12 +77,10 @@ func New(
 			CreateCommunitySentenceDraftHandler: hub.NewCreateCommunitySentenceDraftHandler(
 				vocabularyRepository,
 				communitySentenceDraftRepository,
-				aiRepository,
 				nlpRepository,
 			),
 			UpdateCommunitySentenceDraftHandler: hub.NewUpdateCommunitySentenceDraftHandler(
 				communitySentenceDraftRepository,
-				aiRepository,
 				nlpRepository,
 			),
 			PromoteCommunitySentenceDraftHandler: hub.NewPromoteCommunitySentenceDraftHandler(
