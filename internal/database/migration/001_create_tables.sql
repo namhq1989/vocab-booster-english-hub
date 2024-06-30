@@ -107,10 +107,23 @@ CREATE INDEX idx_comm_sent_dra_user_id_created_at ON community_sentence_drafts(u
 CREATE INDEX idx_comm_sent_dra_vocabulary_id_created_at ON community_sentence_drafts(vocabulary_id, created_at DESC);
 CREATE INDEX idx_comm_sent_dra_vocabulary_id_user_id ON community_sentence_drafts(vocabulary_id, user_id);
 
+CREATE TABLE community_sentence_likes (
+    id TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    sentence_id TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+
+    PRIMARY KEY (user_id, sentence_id),
+    FOREIGN KEY(sentence_id) REFERENCES community_sentences(id)
+);
+
+CREATE INDEX idx_community_sentence_likes_user_id_sentence_id ON community_sentence_likes(user_id, sentence_id);
+
+
 -- USER VOCABULARY --
 
 CREATE TABLE user_vocabularies (
-    id TEXT PRIMARY KEY,
+    id TEXT NOT NULL,
     user_id TEXT NOT NULL,
     vocabulary_id TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,

@@ -85,3 +85,11 @@ func (s server) PromoteCommunitySentenceDraft(bgCtx context.Context, req *vocabu
 	}
 	return resp, nil
 }
+
+func (s server) LikeCommunitySentence(bgCtx context.Context, req *vocabularypb.LikeCommunitySentenceRequest) (*vocabularypb.LikeCommunitySentenceResponse, error) {
+	resp, err := s.app.LikeCommunitySentence(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
+}
