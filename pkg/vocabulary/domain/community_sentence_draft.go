@@ -17,23 +17,20 @@ type CommunitySentenceDraftRepository interface {
 }
 
 type CommunitySentenceDraft struct {
-	ID                  string
-	UserID              string
-	VocabularyID        string
-	Content             string
-	RequiredVocabulary  []string
-	RequiredTense       Tense
-	IsCorrect           bool
-	IsGrammarCorrect    bool
-	GrammarErrors       []SentenceGrammarError
-	IsEnglish           bool
-	IsTenseCorrect      bool
-	IsVocabularyCorrect bool
-	Translated          language.TranslatedLanguages
-	Sentiment           Sentiment
-	Clauses             []SentenceClause
-	CreatedAt           time.Time
-	UpdatedAt           time.Time
+	ID                 string
+	UserID             string
+	VocabularyID       string
+	Content            string
+	RequiredVocabulary []string
+	RequiredTense      Tense
+	IsCorrect          bool
+	ErrorCode          SentenceErrorCode
+	GrammarErrors      []SentenceGrammarError
+	Translated         language.TranslatedLanguages
+	Sentiment          Sentiment
+	Clauses            []SentenceClause
+	CreatedAt          time.Time
+	UpdatedAt          time.Time
 }
 
 func NewCommunitySentenceDraft(userID, vocabularyID string) (*CommunitySentenceDraft, error) {
@@ -50,6 +47,7 @@ func NewCommunitySentenceDraft(userID, vocabularyID string) (*CommunitySentenceD
 		UserID:       userID,
 		VocabularyID: vocabularyID,
 		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 	}, nil
 }
 
@@ -82,26 +80,11 @@ func (s *CommunitySentenceDraft) SetRequiredTense(tense string) error {
 }
 
 func (s *CommunitySentenceDraft) setIsCorrect() {
-	s.IsCorrect = s.IsEnglish && s.IsGrammarCorrect && s.IsVocabularyCorrect && s.IsTenseCorrect
+	s.IsCorrect = s.ErrorCode.IsEmpty()
 }
 
-func (s *CommunitySentenceDraft) setIsGrammarCorrect(value bool) {
-	s.IsGrammarCorrect = value
-	s.setIsCorrect()
-}
-
-func (s *CommunitySentenceDraft) SetIsEnglish(value bool) {
-	s.IsEnglish = value
-	s.setIsCorrect()
-}
-
-func (s *CommunitySentenceDraft) SetIsVocabularyCorrect(value bool) {
-	s.IsVocabularyCorrect = value
-	s.setIsCorrect()
-}
-
-func (s *CommunitySentenceDraft) SetIsTenseCorrect(value bool) {
-	s.IsTenseCorrect = value
+func (s *CommunitySentenceDraft) SetErrorCode(code SentenceErrorCode) {
+	s.ErrorCode = code
 	s.setIsCorrect()
 }
 
@@ -123,7 +106,11 @@ func (s *CommunitySentenceDraft) SetTranslated(translated language.TranslatedLan
 
 func (s *CommunitySentenceDraft) SetGrammarErrors(errors []SentenceGrammarError) error {
 	s.GrammarErrors = errors
-	s.setIsGrammarCorrect(len(s.GrammarErrors) == 0)
+	if len(s.GrammarErrors) > 0 {
+		s.SetErrorCode(SentenceErrorCodeInvalidGrammar)
+	} else {
+		s.SetErrorCode(SentenceErrorCodeEmpty)
+	}
 	return nil
 }
 

@@ -9,6 +9,7 @@ type NlpRepository interface {
 	AnalyzeSentence(ctx *appcontext.AppContext, sentence string) (*NlpSentenceAnalysisResult, error)
 	TranslateDefinition(ctx *appcontext.AppContext, definition string) (*language.TranslatedLanguages, error)
 	EvaluateSentence(ctx *appcontext.AppContext, sentence, tense string, vocabulary []string) (*NlpSentenceEvaluationResult, error)
+	GrammarCheck(ctx *appcontext.AppContext, sentence string) ([]SentenceGrammarError, error)
 }
 
 type NlpSentenceAnalysisResult struct {

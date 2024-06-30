@@ -13,6 +13,7 @@ type Operations interface {
 	AnalyzeSentence(_ *appcontext.AppContext, sentence string) (*SentenceAnalysisResult, error)
 	TranslateDefinition(_ *appcontext.AppContext, definition string) (result *DefinitionTranslationResult, err error)
 	EvaluateSentence(_ *appcontext.AppContext, sentence, tense string, vocabulary []string) (result *EvaluateSentenceResult, err error)
+	GrammarCheck(_ *appcontext.AppContext, sentence string) (result *GrammarCheckResult, err error)
 }
 
 type NLP struct {
