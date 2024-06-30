@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/exercisepb"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/application"
 	"google.golang.org/grpc"
@@ -22,33 +23,65 @@ func RegisterServer(_ *appcontext.AppContext, registrar grpc.ServiceRegistrar, a
 }
 
 func (s server) NewExercise(bgCtx context.Context, req *exercisepb.NewExerciseRequest) (*exercisepb.NewExerciseResponse, error) {
-	return s.app.NewExercise(appcontext.NewGRPC(bgCtx), req)
+	resp, err := s.app.NewExercise(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }
 
 func (s server) UpdateExerciseAudio(bgCtx context.Context, req *exercisepb.UpdateExerciseAudioRequest) (*exercisepb.UpdateExerciseAudioResponse, error) {
-	return s.app.UpdateExerciseAudio(appcontext.NewGRPC(bgCtx), req)
+	resp, err := s.app.UpdateExerciseAudio(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }
 
 func (s server) AnswerExercise(bgCtx context.Context, req *exercisepb.AnswerExerciseRequest) (*exercisepb.AnswerExerciseResponse, error) {
-	return s.app.AnswerExercise(appcontext.NewGRPC(bgCtx), req)
+	resp, err := s.app.AnswerExercise(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }
 
 func (s server) GetUserExercises(bgCtx context.Context, req *exercisepb.GetUserExercisesRequest) (*exercisepb.GetUserExercisesResponse, error) {
-	return s.app.GetUserExercises(appcontext.NewGRPC(bgCtx), req)
+	resp, err := s.app.GetUserExercises(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }
 
 func (s server) CountUserReadyToReviewExercises(bgCtx context.Context, req *exercisepb.CountUserReadyToReviewExercisesRequest) (*exercisepb.CountUserReadyToReviewExercisesResponse, error) {
-	return s.app.CountUserReadyToReviewExercises(appcontext.NewGRPC(bgCtx), req)
+	resp, err := s.app.CountUserReadyToReviewExercises(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }
 
 func (s server) GetUserReadyToReviewExercises(bgCtx context.Context, req *exercisepb.GetUserReadyToReviewExercisesRequest) (*exercisepb.GetUserReadyToReviewExercisesResponse, error) {
-	return s.app.GetUserReadyToReviewExercises(appcontext.NewGRPC(bgCtx), req)
+	resp, err := s.app.GetUserReadyToReviewExercises(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }
 
 func (s server) ChangeExerciseFavorite(bgCtx context.Context, req *exercisepb.ChangeExerciseFavoriteRequest) (*exercisepb.ChangeExerciseFavoriteResponse, error) {
-	return s.app.ChangeExerciseFavorite(appcontext.NewGRPC(bgCtx), req)
+	resp, err := s.app.ChangeExerciseFavorite(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }
 
 func (s server) GetUserFavoriteExercises(bgCtx context.Context, req *exercisepb.GetUserFavoriteExercisesRequest) (*exercisepb.GetUserFavoriteExercisesResponse, error) {
-	return s.app.GetUserFavoriteExercises(appcontext.NewGRPC(bgCtx), req)
+	resp, err := s.app.GetUserFavoriteExercises(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }
