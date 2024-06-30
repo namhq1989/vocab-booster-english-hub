@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/vocabularypb"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/application"
 	"google.golang.org/grpc"
@@ -22,41 +23,65 @@ func RegisterServer(_ *appcontext.AppContext, registrar grpc.ServiceRegistrar, a
 }
 
 func (s server) SearchVocabulary(bgCtx context.Context, req *vocabularypb.SearchVocabularyRequest) (*vocabularypb.SearchVocabularyResponse, error) {
-	ctx := appcontext.NewGRPC(bgCtx)
-	return s.app.SearchVocabulary(ctx, req)
+	resp, err := s.app.SearchVocabulary(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }
 
 func (s server) CreateCollection(bgCtx context.Context, req *vocabularypb.CreateCollectionRequest) (*vocabularypb.CreateCollectionResponse, error) {
-	ctx := appcontext.NewGRPC(bgCtx)
-	return s.app.CreateCollection(ctx, req)
+	resp, err := s.app.CreateCollection(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }
 
 func (s server) UpdateCollection(bgCtx context.Context, req *vocabularypb.UpdateCollectionRequest) (*vocabularypb.UpdateCollectionResponse, error) {
-	ctx := appcontext.NewGRPC(bgCtx)
-	return s.app.UpdateCollection(ctx, req)
+	resp, err := s.app.UpdateCollection(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }
 
 func (s server) AddVocabularyToCollection(bgCtx context.Context, req *vocabularypb.AddVocabularyToCollectionRequest) (*vocabularypb.AddVocabularyToCollectionResponse, error) {
-	ctx := appcontext.NewGRPC(bgCtx)
-	return s.app.AddVocabularyToCollection(ctx, req)
+	resp, err := s.app.AddVocabularyToCollection(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }
 
 func (s server) RemoveVocabularyFromCollection(bgCtx context.Context, req *vocabularypb.RemoveVocabularyFromCollectionRequest) (*vocabularypb.RemoveVocabularyFromCollectionResponse, error) {
-	ctx := appcontext.NewGRPC(bgCtx)
-	return s.app.RemoveVocabularyFromCollection(ctx, req)
+	resp, err := s.app.RemoveVocabularyFromCollection(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }
 
 func (s server) CreateCommunitySentenceDraft(bgCtx context.Context, req *vocabularypb.CreateCommunitySentenceDraftRequest) (*vocabularypb.CreateCommunitySentenceDraftResponse, error) {
-	ctx := appcontext.NewGRPC(bgCtx)
-	return s.app.CreateCommunitySentenceDraft(ctx, req)
+	resp, err := s.app.CreateCommunitySentenceDraft(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }
 
 func (s server) UpdateCommunitySentenceDraft(bgCtx context.Context, req *vocabularypb.UpdateCommunitySentenceDraftRequest) (*vocabularypb.UpdateCommunitySentenceDraftResponse, error) {
-	ctx := appcontext.NewGRPC(bgCtx)
-	return s.app.UpdateCommunitySentenceDraft(ctx, req)
+	resp, err := s.app.UpdateCommunitySentenceDraft(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }
 
 func (s server) PromoteCommunitySentenceDraft(bgCtx context.Context, req *vocabularypb.PromoteCommunitySentenceDraftRequest) (*vocabularypb.PromoteCommunitySentenceDraftResponse, error) {
-	ctx := appcontext.NewGRPC(bgCtx)
-	return s.app.PromoteCommunitySentenceDraft(ctx, req)
+	resp, err := s.app.PromoteCommunitySentenceDraft(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
 }

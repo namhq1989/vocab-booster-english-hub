@@ -1,12 +1,14 @@
 package apperrors
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 
 	"github.com/BurntSushi/toml"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -14,6 +16,14 @@ const (
 	langEn = "en"
 	langVi = "vi"
 )
+
+func toLang(lang string) string {
+	if lang == langVi {
+		return langVi
+	}
+
+	return langEn
+}
 
 var localizers = map[string]*i18n.Localizer{
 	langEn: nil,
@@ -52,4 +62,23 @@ func GetMessage(lang string, err error) (code, msg string) {
 	}
 
 	return key, msg
+}
+
+func ToGrpcError(ctx context.Context, err error) error {
+	lang := getGrpcLangInContext(ctx)
+	code, msg := GetMessage(lang, err)
+	return status.Errorf(status.Code(err), "%s | %s", code, msg)
+}
+
+func getGrpcLangInContext(ctx context.Context) string {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return langEn
+	}
+
+	languages := md["lang"]
+	if len(languages) == 0 {
+		return langEn
+	}
+	return toLang(languages[0])
 }
