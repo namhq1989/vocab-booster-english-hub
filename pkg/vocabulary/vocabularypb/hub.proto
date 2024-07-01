@@ -14,6 +14,7 @@ service VocabularyService {
   rpc UpdateCommunitySentenceDraft(UpdateCommunitySentenceDraftRequest) returns (UpdateCommunitySentenceDraftResponse) {}
   rpc PromoteCommunitySentenceDraft(PromoteCommunitySentenceDraftRequest) returns (PromoteCommunitySentenceDraftResponse) {}
   rpc LikeCommunitySentence(LikeCommunitySentenceRequest) returns (LikeCommunitySentenceResponse) {}
+  rpc GetVocabularyCommunitySentences(GetVocabularyCommunitySentencesRequest) returns (GetVocabularyCommunitySentencesResponse) {}
 }
 
 // SEARCH VOCABULARY
@@ -117,4 +118,19 @@ message LikeCommunitySentenceRequest {
 
 message LikeCommunitySentenceResponse {
   bool isLiked = 1;
+}
+
+
+// GET VOCABULARY COMMUNITY SENTENCES
+
+message GetVocabularyCommunitySentencesRequest {
+  string vocabularyId = 1;
+  string userId = 2;
+  string lang = 3;
+  string pageToken = 4;
+}
+
+message GetVocabularyCommunitySentencesResponse {
+  repeated CommunitySentence sentences = 1;
+  string nextPageToken = 2;
 }

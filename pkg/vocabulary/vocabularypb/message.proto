@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package vocabularypb;
 
+import "google/protobuf/timestamp.proto";
+
 message TranslatedLanguages {
   string vi = 1;
 }
@@ -60,4 +62,35 @@ message Verb {
   string pastParticiple = 3;
   string gerund = 4;
   string thirdPersonSingular = 5;
+}
+
+message SentenceClause {
+  string clause = 1;
+  string tense = 2;
+  bool isPrimaryTense = 3;
+}
+
+message SentenceGrammarError {
+  string message = 1;
+  string translated = 2;
+  string segment = 3;
+  string replacement = 4;
+}
+
+message CommunitySentence {
+  string id = 1;
+  string vocabularyId = 2;
+  string content = 3;
+  repeated string requiredVocabulary = 4;
+  string requiredTense = 5;
+  string translated = 6;
+  repeated SentenceClause clauses = 8;
+  repeated PosTag posTags = 9;
+  Sentiment sentiment = 10;
+  repeated Dependency dependencies = 11;
+  repeated Verb verbs = 12;
+  string level = 13;
+  int32 statsLike = 14;
+  bool isLiked = 15;
+  google.protobuf.Timestamp createdAt = 16;
 }

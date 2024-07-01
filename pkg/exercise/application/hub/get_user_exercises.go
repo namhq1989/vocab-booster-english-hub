@@ -34,7 +34,7 @@ func (h GetUserExercisesHandler) GetUserExercises(ctx *appcontext.AppContext, re
 		return nil, err
 	}
 
-	result := dto.ConvertUserExerciseFromDomainToGrpc(exercises)
+	result := dto.ConvertUserExercisesFromDomainToGrpc(exercises)
 	ctx.Logger().Text("done get user exercises request")
 
 	return &exercisepb.GetUserExercisesResponse{

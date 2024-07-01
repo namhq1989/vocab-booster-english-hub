@@ -93,3 +93,11 @@ func (s server) LikeCommunitySentence(bgCtx context.Context, req *vocabularypb.L
 	}
 	return resp, nil
 }
+
+func (s server) GetVocabularyCommunitySentences(bgCtx context.Context, req *vocabularypb.GetVocabularyCommunitySentencesRequest) (*vocabularypb.GetVocabularyCommunitySentencesResponse, error) {
+	resp, err := s.app.GetVocabularyCommunitySentences(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
+}
