@@ -7,10 +7,12 @@ import (
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
 	"github.com/namhq1989/vocab-booster-english-hub/core/language"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/pagetoken"
 )
 
 type CommunitySentenceRepository interface {
 	FindCommunitySentenceByID(ctx *appcontext.AppContext, id string) (*CommunitySentence, error)
+	FindVocabularyCommunitySentences(ctx *appcontext.AppContext, filter VocabularyCommunitySentenceFilter) ([]ExtendedCommunitySentence, error)
 	CreateCommunitySentence(ctx *appcontext.AppContext, sentence CommunitySentence) error
 	UpdateCommunitySentence(ctx *appcontext.AppContext, sentence CommunitySentence) error
 }
@@ -132,4 +134,45 @@ func (s *CommunitySentence) DecreaseStatsLike() {
 	if s.StatsLike < 0 {
 		s.StatsLike = 0
 	}
+}
+
+//
+// FILTER
+//
+
+type VocabularyCommunitySentenceFilter struct {
+	UserID       string
+	VocabularyID string
+	Lang         string
+	Timestamp    time.Time
+	Limit        int64
+}
+
+func NewVocabularyCommunitySentenceFilter(userID, vocabularyID, lang, pageToken string) (*VocabularyCommunitySentenceFilter, error) {
+	if !database.IsValidID(userID) {
+		return nil, apperrors.User.InvalidUserID
+	}
+
+	if !database.IsValidID(vocabularyID) {
+		return nil, apperrors.Vocabulary.InvalidVocabularyID
+	}
+
+	pt := pagetoken.Decode(pageToken)
+	return &VocabularyCommunitySentenceFilter{
+		UserID:       userID,
+		VocabularyID: vocabularyID,
+		Timestamp:    pt.Timestamp,
+		Lang:         lang,
+		Limit:        10,
+	}, nil
+}
+
+//
+// EXTENDED SENTENCE
+//
+
+type ExtendedCommunitySentence struct {
+	CommunitySentence
+	Translated string
+	IsLiked    bool
 }

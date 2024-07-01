@@ -150,3 +150,28 @@ func (CommunitySentenceMapper) FromDomainToModel(sentence domain.CommunitySenten
 
 	return result, nil
 }
+
+//
+// EXTENDED
+//
+
+type ExtendedCommunitySentence struct {
+	Sentence model.CommunitySentences `alias:"cs"`
+	IsLiked  bool                     `alias:"csl.is_liked"`
+}
+
+type ExtendedCommunitySentenceMapper struct{}
+
+func (ExtendedCommunitySentenceMapper) FromModelToDomain(sentence ExtendedCommunitySentence, lang string) (*domain.ExtendedCommunitySentence, error) {
+	var sentenceMapper = CommunitySentenceMapper{}
+	communitySentence, err := sentenceMapper.FromModelToDomain(sentence.Sentence)
+	if err != nil {
+		return nil, err
+	}
+
+	return &domain.ExtendedCommunitySentence{
+		CommunitySentence: *communitySentence,
+		Translated:        communitySentence.Translated.GetLanguageValue(lang),
+		IsLiked:           sentence.IsLiked,
+	}, nil
+}

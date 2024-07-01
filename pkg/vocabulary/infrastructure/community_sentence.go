@@ -93,3 +93,51 @@ func (r CommunitySentenceRepository) FindCommunitySentenceByID(ctx *appcontext.A
 	)
 	return result, nil
 }
+
+func (r CommunitySentenceRepository) FindVocabularyCommunitySentences(ctx *appcontext.AppContext, filter domain.VocabularyCommunitySentenceFilter) ([]domain.ExtendedCommunitySentence, error) {
+	var (
+		cs  = r.getTable().AS("cs")
+		csl = table.CommunitySentenceLikes.AS("csl")
+	)
+
+	isLikedExpr := postgres.CASE().
+		WHEN(csl.UserID.IS_NOT_NULL()).
+		THEN(postgres.Bool(true)).
+		ELSE(postgres.Bool(false)).
+		AS("csl.is_liked")
+
+	stmt := postgres.SELECT(
+		cs.AllColumns,
+		isLikedExpr,
+	).
+		FROM(
+			cs.LEFT_JOIN(csl, csl.SentenceID.EQ(cs.ID).
+				AND(csl.UserID.EQ(postgres.String(filter.UserID)))),
+		).
+		WHERE(
+			cs.VocabularyID.EQ(postgres.String(filter.VocabularyID)).
+				AND(cs.CreatedAt.LT(postgres.TimestampzT(filter.Timestamp))),
+		).
+		LIMIT(filter.Limit).
+		ORDER_BY(cs.CreatedAt.DESC())
+
+	var (
+		docs   = make([]mapping.ExtendedCommunitySentence, 0)
+		result = make([]domain.ExtendedCommunitySentence, 0)
+	)
+	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &docs); err != nil {
+		if r.db.IsNoRowsError(err) {
+			return result, nil
+		}
+		return result, err
+	}
+
+	var (
+		mapper = mapping.ExtendedCommunitySentenceMapper{}
+	)
+	for _, doc := range docs {
+		ue, _ := mapper.FromModelToDomain(doc, filter.Lang)
+		result = append(result, *ue)
+	}
+	return result, nil
+}

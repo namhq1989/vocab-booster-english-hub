@@ -34,7 +34,7 @@ func (h GetUserFavoriteExercisesHandler) GetUserFavoriteExercises(ctx *appcontex
 		return nil, err
 	}
 
-	result := dto.ConvertUserExerciseFromDomainToGrpc(exercises)
+	result := dto.ConvertUserExercisesFromDomainToGrpc(exercises)
 	ctx.Logger().Text("done get user favorite exercises request")
 
 	return &exercisepb.GetUserFavoriteExercisesResponse{

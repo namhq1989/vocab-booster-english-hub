@@ -36,7 +36,7 @@ func (h GetUserReadyToReviewExercisesHandler) GetUserReadyToReviewExercises(ctx 
 		return nil, err
 	}
 
-	result := dto.ConvertUserExerciseFromDomainToGrpc(exercises)
+	result := dto.ConvertUserExercisesFromDomainToGrpc(exercises)
 	ctx.Logger().Text("done get user ready to review exercises request")
 
 	return &exercisepb.GetUserReadyToReviewExercisesResponse{

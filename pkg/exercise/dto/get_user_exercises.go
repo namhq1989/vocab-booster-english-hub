@@ -6,7 +6,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func ConvertUserExerciseFromDomainToGrpc(exercises []domain.UserExercise) []*exercisepb.UserExercise {
+func ConvertUserExercisesFromDomainToGrpc(exercises []domain.UserExercise) []*exercisepb.UserExercise {
 	var result = make([]*exercisepb.UserExercise, len(exercises))
 
 	for index, exercise := range exercises {
