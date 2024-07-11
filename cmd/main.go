@@ -4,6 +4,8 @@ import (
 	"crypto/subtle"
 	"fmt"
 
+	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/staticfiles"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
@@ -34,6 +36,9 @@ func main() {
 
 	// app error
 	apperrors.Init()
+
+	// static files
+	staticfiles.Init(cfg.EndpointTTS)
 
 	// server
 	a := app{}
