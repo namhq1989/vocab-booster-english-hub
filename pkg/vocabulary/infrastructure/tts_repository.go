@@ -1,9 +1,9 @@
 package infrastructure
 
 import (
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/tts"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
 
 type TTSRepository struct {

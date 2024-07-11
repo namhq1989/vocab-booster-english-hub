@@ -4,10 +4,12 @@ import (
 	"crypto/subtle"
 	"fmt"
 
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
+
+	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/staticfiles"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
-	"github.com/namhq1989/vocab-booster-english-hub/core/logger"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/ai"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/caching"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/config"
@@ -21,6 +23,7 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/waiter"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary"
+	"github.com/namhq1989/vocab-booster-utilities/logger"
 )
 
 func main() {
@@ -34,6 +37,9 @@ func main() {
 
 	// app error
 	apperrors.Init()
+
+	// static files
+	staticfiles.Init(cfg.EndpointTTS)
 
 	// server
 	a := app{}

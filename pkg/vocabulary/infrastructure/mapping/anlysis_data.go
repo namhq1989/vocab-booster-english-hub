@@ -1,6 +1,6 @@
 package mapping
 
-import "github.com/namhq1989/vocab-booster-english-hub/core/language"
+import "github.com/namhq1989/vocab-booster-utilities/language"
 
 type PosTag struct {
 	Word  string `json:"word"`

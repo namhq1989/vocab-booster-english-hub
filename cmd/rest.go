@@ -6,8 +6,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/config"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 	"golang.org/x/text/language"
 )
 
@@ -16,6 +16,8 @@ func initRest(cfg config.Server) *echo.Echo {
 	e := echo.New()
 
 	setMiddleware(e, cfg)
+
+	e.Static("/audio", "files/tts")
 
 	return e
 }
@@ -43,7 +45,7 @@ func setMiddleware(e *echo.Echo, cfg config.Server) {
 func addContext(e *echo.Echo) {
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			ctx := appcontext.New(c.Request().Context())
+			ctx := appcontext.NewRest(c.Request().Context())
 			c.Set("ctx", ctx)
 
 			return next(c)

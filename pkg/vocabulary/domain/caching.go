@@ -1,6 +1,6 @@
 package domain
 
-import "github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
+import "github.com/namhq1989/vocab-booster-utilities/appcontext"
 
 type CachingRepository interface {
 	GetVocabularyByTerm(ctx *appcontext.AppContext, term string) (*Vocabulary, error)

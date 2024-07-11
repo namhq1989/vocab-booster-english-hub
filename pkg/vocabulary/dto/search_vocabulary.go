@@ -45,17 +45,13 @@ func ConvertVocabularyFromDomainToGrpc(vocabulary domain.Vocabulary, examples []
 			Id:           example.ID,
 			VocabularyId: example.VocabularyID,
 			Content:      example.Content,
-			Translated: &vocabularypb.TranslatedLanguages{
-				Vi: example.Translated.Vi,
-			},
+			Translated:   ConvertTranslatedLanguagesToGrpcData(example.Translated),
 			MainWord: &vocabularypb.VocabularyMainWord{
 				Word:       example.MainWord.Word,
 				Base:       example.MainWord.Base,
 				Pos:        example.MainWord.Pos.String(),
 				Definition: example.MainWord.Definition,
-				Translated: &vocabularypb.TranslatedLanguages{
-					Vi: example.MainWord.Translated.Vi,
-				},
+				Translated: ConvertTranslatedLanguagesToGrpcData(example.MainWord.Translated),
 			},
 			PosTags: posTags,
 			Sentiment: &vocabularypb.Sentiment{

@@ -1,8 +1,8 @@
 package domain
 
 import (
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
-	"github.com/namhq1989/vocab-booster-english-hub/core/language"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
+	"github.com/namhq1989/vocab-booster-utilities/language"
 )
 
 type SentenceClause struct {

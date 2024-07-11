@@ -38,6 +38,7 @@ type (
 
 		// NLP
 		EndpointNLP string
+		EndpointTTS string
 	}
 )
 
@@ -69,6 +70,7 @@ func Init() Server {
 		AWSRegion:    getEnvStr("AWS_REGION"),
 
 		EndpointNLP: getEnvStr("ENDPOINT_NLP"),
+		EndpointTTS: getEnvStr("ENDPOINT_TTS"),
 	}
 	cfg.IsEnvRelease = cfg.Environment == "release"
 
@@ -105,6 +107,9 @@ func Init() Server {
 
 	if cfg.EndpointNLP == "" {
 		panic(errors.New("missing ENDPOINT_NLP"))
+	}
+	if cfg.EndpointTTS == "" {
+		panic(errors.New("missing ENDPOINT_TTS"))
 	}
 
 	return cfg

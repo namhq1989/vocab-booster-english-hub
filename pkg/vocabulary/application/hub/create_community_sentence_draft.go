@@ -3,10 +3,10 @@ package hub
 import (
 	"slices"
 
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/vocabularypb"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
 
 type CreateCommunitySentenceDraftHandler struct {

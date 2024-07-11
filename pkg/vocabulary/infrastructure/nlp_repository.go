@@ -1,10 +1,10 @@
 package infrastructure
 
 import (
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
-	"github.com/namhq1989/vocab-booster-english-hub/core/language"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/nlp"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
+	"github.com/namhq1989/vocab-booster-utilities/language"
 )
 
 type NlpRepository struct {
@@ -67,14 +67,7 @@ func (r NlpRepository) AnalyzeSentence(ctx *appcontext.AppContext, sentence stri
 }
 
 func (r NlpRepository) TranslateDefinition(ctx *appcontext.AppContext, definition string) (*language.TranslatedLanguages, error) {
-	result, err := r.nlp.TranslateDefinition(ctx, definition)
-	if err != nil {
-		return nil, err
-	}
-
-	return &language.TranslatedLanguages{
-		Vi: result.Vi,
-	}, nil
+	return r.nlp.Translate(ctx, definition)
 }
 
 func (r NlpRepository) EvaluateSentence(ctx *appcontext.AppContext, sentence, tense string, vocabulary []string) (*domain.NlpSentenceEvaluationResult, error) {

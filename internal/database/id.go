@@ -1,14 +1,16 @@
 package database
 
-import (
-	"github.com/segmentio/ksuid"
-)
+import "go.mongodb.org/mongo-driver/bson/primitive"
 
 func NewStringID() string {
-	return ksuid.New().String()
+	return primitive.NewObjectID().Hex()
 }
 
-func IsValidID(value string) bool {
-	_, err := ksuid.Parse(value)
+func ObjectIDFromString(id string) (primitive.ObjectID, error) {
+	return primitive.ObjectIDFromHex(id)
+}
+
+func IsValidID(id string) bool {
+	_, err := ObjectIDFromString(id)
 	return err == nil
 }

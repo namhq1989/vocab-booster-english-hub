@@ -3,10 +3,11 @@ package grpc
 import (
 	"context"
 
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
+
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/exercisepb"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/application"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 	"google.golang.org/grpc"
 )
 

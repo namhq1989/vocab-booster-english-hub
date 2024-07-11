@@ -4,9 +4,9 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
-	"github.com/namhq1989/vocab-booster-english-hub/core/language"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
+	"github.com/namhq1989/vocab-booster-utilities/language"
 )
 
 type AutoScrapingVocabularyHandler struct {

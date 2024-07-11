@@ -4,14 +4,16 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/namhq1989/vocab-booster-utilities/language"
+
 	"github.com/go-resty/resty/v2"
 	"github.com/goccy/go-json"
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
 
 type Operations interface {
 	AnalyzeSentence(_ *appcontext.AppContext, sentence string) (*SentenceAnalysisResult, error)
-	TranslateDefinition(_ *appcontext.AppContext, definition string) (result *DefinitionTranslationResult, err error)
+	Translate(_ *appcontext.AppContext, term string) (result *language.TranslatedLanguages, err error)
 	EvaluateSentence(_ *appcontext.AppContext, sentence, tense string, vocabulary []string) (result *EvaluateSentenceResult, err error)
 	GrammarCheck(_ *appcontext.AppContext, sentence string) (result *GrammarCheckResult, err error)
 }

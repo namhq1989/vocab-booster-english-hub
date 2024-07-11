@@ -2,6 +2,7 @@ package dto
 
 import (
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/exercisepb"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/staticfiles"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/domain"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -13,7 +14,7 @@ func ConvertUserExercisesFromDomainToGrpc(exercises []domain.UserExercise) []*ex
 		result[index] = &exercisepb.UserExercise{
 			Id:            exercise.ID,
 			Level:         exercise.Level.String(),
-			Audio:         exercise.Audio,
+			Audio:         staticfiles.GetExampleEndpoint(exercise.Audio),
 			Vocabulary:    exercise.Vocabulary,
 			Content:       exercise.Content,
 			Translated:    exercise.Translated,
