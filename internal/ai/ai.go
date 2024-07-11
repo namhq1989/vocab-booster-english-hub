@@ -3,7 +3,7 @@ package ai
 import (
 	"fmt"
 
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 
 	"github.com/sashabaranov/go-openai"
 )

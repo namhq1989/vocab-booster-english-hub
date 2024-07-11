@@ -1,9 +1,9 @@
 package grpcclient
 
 import (
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/exercisepb"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/vocabularypb"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

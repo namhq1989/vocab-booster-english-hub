@@ -1,13 +1,13 @@
 package vocabulary
 
 import (
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/grpcclient"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/monolith"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/application"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/grpc"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/infrastructure"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/worker"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
 
 type Module struct{}

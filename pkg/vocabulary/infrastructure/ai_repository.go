@@ -5,12 +5,12 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
-	"github.com/namhq1989/vocab-booster-english-hub/core/language"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/ai"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/nlp"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/manipulation"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
+	"github.com/namhq1989/vocab-booster-utilities/language"
 )
 
 type AIRepository struct {
@@ -89,17 +89,17 @@ func (r AIRepository) translateGrammarErrorMessage(ctx *appcontext.AppContext, m
 		placeholderText = strings.Replace(placeholderText, keyword, placeholder, 1)
 	}
 
-	translatedResult, err := r.nlp.TranslateDefinition(ctx, placeholderText)
+	translatedResult, err := r.nlp.Translate(ctx, placeholderText)
 	if err != nil {
 		return nil, err
 	}
 
 	for i, keyword := range keywords {
 		placeholder := fmt.Sprintf("P_%d", i)
-		translatedResult.Vi = strings.Replace(translatedResult.Vi, placeholder, keyword, 1)
+		translatedResult.Vietnamese = strings.Replace(translatedResult.Vietnamese, placeholder, keyword, 1)
 	}
 
 	return &language.TranslatedLanguages{
-		Vi: translatedResult.Vi,
+		Vietnamese: translatedResult.Vietnamese,
 	}, nil
 }

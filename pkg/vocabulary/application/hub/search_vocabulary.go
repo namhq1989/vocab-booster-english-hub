@@ -3,12 +3,13 @@ package hub
 import (
 	"sync"
 
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
-	"github.com/namhq1989/vocab-booster-english-hub/core/language"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
+
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/vocabularypb"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/dto"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
+	"github.com/namhq1989/vocab-booster-utilities/language"
 )
 
 type SearchVocabularyHandler struct {

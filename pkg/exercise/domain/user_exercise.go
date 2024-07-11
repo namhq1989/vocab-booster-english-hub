@@ -3,7 +3,8 @@ package domain
 import (
 	"time"
 
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
+
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/pagetoken"
 )

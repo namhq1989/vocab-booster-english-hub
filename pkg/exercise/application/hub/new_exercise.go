@@ -1,10 +1,10 @@
 package hub
 
 import (
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
-	"github.com/namhq1989/vocab-booster-english-hub/core/language"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/exercisepb"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/domain"
+	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/dto"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
 
 type NewExerciseHandler struct {
@@ -25,9 +25,7 @@ func (h NewExerciseHandler) NewExercise(ctx *appcontext.AppContext, req *exercis
 	})
 
 	ctx.Logger().Text("create new exercise model")
-	exercise, err := domain.NewExercise(req.GetVocabularyExampleId(), req.GetLevel(), req.GetContent(), req.GetVocabulary(), req.GetCorrectAnswer(), language.TranslatedLanguages{
-		Vi: req.GetTranslated().GetVi(),
-	}, req.GetOptions())
+	exercise, err := domain.NewExercise(req.GetVocabularyExampleId(), req.GetLevel(), req.GetContent(), req.GetVocabulary(), req.GetCorrectAnswer(), dto.ConvertGrpcDataToTranslatedLanguages(req.GetTranslated()), req.GetOptions())
 	if err != nil {
 		ctx.Logger().Error("failed to create new exercise model", err, appcontext.Fields{})
 		return nil, err

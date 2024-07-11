@@ -35,7 +35,7 @@ func Init() {
 	bundle.RegisterUnmarshalFunc("toml", toml.Unmarshal)
 
 	dir, _ := os.Getwd()
-	path := filepath.Join(dir, "core", "error", "i18n")
+	path := filepath.Join(dir, "internal", "utils", "error", "i18n")
 	bundle.MustLoadMessageFile(filepath.Join(path, "active.en.toml"))
 	bundle.MustLoadMessageFile(filepath.Join(path, "active.vi.toml"))
 

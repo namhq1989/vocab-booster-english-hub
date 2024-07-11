@@ -3,9 +3,9 @@ package domain
 import (
 	"time"
 
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
 
 type VocabularyRepository interface {

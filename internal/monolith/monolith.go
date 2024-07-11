@@ -2,7 +2,6 @@ package monolith
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/ai"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/caching"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/config"
@@ -13,6 +12,7 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/internal/scraper"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/tts"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/waiter"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 	"google.golang.org/grpc"
 )
 

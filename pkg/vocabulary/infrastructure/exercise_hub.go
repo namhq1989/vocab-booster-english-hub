@@ -1,9 +1,9 @@
 package infrastructure
 
 import (
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
-	"github.com/namhq1989/vocab-booster-english-hub/core/language"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/exercisepb"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
+	"github.com/namhq1989/vocab-booster-utilities/language"
 )
 
 type ExerciseHub struct {
@@ -22,7 +22,7 @@ func (r ExerciseHub) CreateExercise(ctx *appcontext.AppContext, vocabularyExampl
 		Level:               level,
 		Content:             content,
 		Translated: &exercisepb.TranslatedLanguages{
-			Vi: translated.Vi,
+			Vietnamese: translated.Vietnamese,
 		},
 		Vocabulary:    vocabulary,
 		CorrectAnswer: correctAnswer,

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
 
 const (

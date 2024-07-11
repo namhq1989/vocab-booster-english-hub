@@ -2,9 +2,9 @@ package mapping
 
 import (
 	"github.com/goccy/go-json"
-	"github.com/namhq1989/vocab-booster-english-hub/core/language"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database/gen/vocab-booster/public/model"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
+	"github.com/namhq1989/vocab-booster-utilities/language"
 )
 
 type CommunitySentenceDraftMapper struct{}

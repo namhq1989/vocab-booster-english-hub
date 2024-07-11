@@ -4,12 +4,12 @@ import (
 	"database/sql"
 
 	"github.com/go-jet/jet/v2/postgres"
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database/gen/vocab-booster/public/model"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database/gen/vocab-booster/public/table"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/infrastructure/mapping"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
 
 type VocabularyExampleRepository struct {

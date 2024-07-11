@@ -5,7 +5,7 @@ package vocabularypb;
 import "google/protobuf/timestamp.proto";
 
 message TranslatedLanguages {
-  string vi = 1;
+  string vietnamese = 1;
 }
 
 message Vocabulary {

@@ -1,10 +1,10 @@
 package hub
 
 import (
-	"github.com/namhq1989/vocab-booster-english-hub/core/appcontext"
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/core/error"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/exercisepb"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/domain"
+	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
 
 type ChangeExerciseFavoriteHandler struct {
