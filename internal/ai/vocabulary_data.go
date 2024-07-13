@@ -37,7 +37,7 @@ const vocabularyDataPrompt = `
 	- IPA transcription with periods to indicate syllable breaks
 	- Random 3-5 strong matches synonyms
 	- Random 3-5 strong matches antonyms
-    - For each POS, provide 2 examples with random difficulty levels:
+    - For each POS, provide 3 examples with random difficulty levels:
       + beginner (A simple sentence with basic vocabulary and structure)
       + intermediate (A moderately complex sentence with some advanced vocabulary and structure)
       + advanced (A complex sentence with advanced vocabulary and intricate structure).
