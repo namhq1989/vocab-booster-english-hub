@@ -40,6 +40,11 @@ func (r AIRepository) GetVocabularyData(ctx *appcontext.AppContext, vocabulary s
 
 	examples := make([]domain.AIVocabularyExample, 0)
 	for _, example := range result.Examples {
+		if !strings.Contains(example.Example, example.Word) {
+			ctx.Logger().Error("failed to find word in example", nil, appcontext.Fields{"example": example, "word": example.Word})
+			continue
+		}
+
 		examples = append(examples, domain.AIVocabularyExample{
 			Example:    manipulation.RemoveSuffix(example.Example, "."),
 			Word:       example.Word,

@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"reflect"
 	"time"
 
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
@@ -64,14 +63,6 @@ func (d *VocabularyExample) SetContent(content string, translated language.Trans
 		return apperrors.Vocabulary.InvalidExampleContent
 	}
 
-	// check for each translated language
-	val := reflect.ValueOf(translated)
-	for i := 0; i < val.NumField(); i++ {
-		if val.Field(i).String() == "" {
-			return apperrors.Vocabulary.InvalidExampleTranslatedLanguages
-		}
-	}
-
 	d.Content = content
 	d.Translated = translated
 	return nil
@@ -93,14 +84,6 @@ func (d *VocabularyExample) SetMainWordData(word, base, definition, pos string, 
 
 	if definition == "" {
 		return apperrors.Vocabulary.InvalidDefinition
-	}
-
-	// check for each translated language
-	val := reflect.ValueOf(translated)
-	for i := 0; i < val.NumField(); i++ {
-		if val.Field(i).String() == "" {
-			return apperrors.Vocabulary.InvalidExampleTranslatedLanguages
-		}
 	}
 
 	d.MainWord.Pos = dPos

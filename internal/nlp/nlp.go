@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/namhq1989/vocab-booster-utilities/language"
-
 	"github.com/go-resty/resty/v2"
 	"github.com/goccy/go-json"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
+	"github.com/namhq1989/vocab-booster-utilities/language"
 )
 
 type Operations interface {
