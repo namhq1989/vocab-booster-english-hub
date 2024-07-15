@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/manipulation"
+
 	"github.com/go-jet/jet/v2/postgres"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database/gen/vocab-booster/public/model"
@@ -185,4 +187,38 @@ func (r UserExerciseStatusRepository) queryExercisesWithStmt(ctx *appcontext.App
 		result = append(result, *ue)
 	}
 	return result, nil
+}
+
+type statsResult struct {
+	Mastered      int64 `json:"mastered"`
+	ReadyToReview int64 `json:"ready_to_review"`
+}
+
+func (r UserExerciseStatusRepository) FindUserStats(ctx *appcontext.AppContext, userID string) (*domain.UserStats, error) {
+	var (
+		now = time.Now()
+	)
+
+	stmt := postgres.RawStatement(
+		`SELECT
+    				COUNT(CASE ues.is_mastered WHEN TRUE::boolean THEN 1 END) AS "stats_result.mastered",
+    				COUNT(CASE WHEN ues.next_review_at < $ts::timestamp with time zone THEN 1 END) AS "stats_result.ready_to_review"
+				  FROM public.user_exercise_statuses AS ues
+				  WHERE ues.user_id = $userID::text;`,
+		postgres.RawArgs{
+			"$ts":     manipulation.ToSQLTimestamp(now),
+			"$userID": userID,
+		},
+	)
+
+	var result = statsResult{}
+	err := stmt.QueryContext(ctx.Context(), r.getDB(), &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &domain.UserStats{
+		Mastered:         int(result.Mastered),
+		WaitingForReview: int(result.ReadyToReview),
+	}, nil
 }

@@ -16,6 +16,7 @@ type UserExerciseStatusRepository interface {
 	CountUserReadyToReviewExercises(ctx *appcontext.AppContext, userID string) (int64, error)
 	FindUserReadyToReviewExercises(ctx *appcontext.AppContext, filter UserExerciseFilter) ([]UserExercise, error)
 	FindUserFavoriteExercises(ctx *appcontext.AppContext, filter UserFavoriteExerciseFilter) ([]UserExercise, error)
+	FindUserStats(ctx *appcontext.AppContext, userID string) (*UserStats, error)
 }
 
 type UserExerciseStatus struct {
