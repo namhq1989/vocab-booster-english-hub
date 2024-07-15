@@ -86,3 +86,11 @@ func (s server) GetUserFavoriteExercises(bgCtx context.Context, req *exercisepb.
 	}
 	return resp, nil
 }
+
+func (s server) GetUserStats(bgCtx context.Context, req *exercisepb.GetUserStatsRequest) (*exercisepb.GetUserStatsResponse, error) {
+	resp, err := s.app.GetUserStats(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
+}

@@ -20,3 +20,7 @@ func IsYesterday(t time.Time) bool {
 	yesterday := StartOfYesterday()
 	return t.Year() == yesterday.Year() && t.Month() == yesterday.Month() && t.Day() == yesterday.Day()
 }
+
+func ToSQLTimestamp(t time.Time) string {
+	return t.Format("2006-01-02 15:04:05.999999-07:00")
+}
