@@ -50,6 +50,7 @@ func (h AnswerExerciseHandler) AnswerExercise(ctx *appcontext.AppContext, req *e
 	}
 
 	if ues == nil {
+		isNewInteracting = true
 		ctx.Logger().Text("this is the first time user complete this exercise, create new")
 		ues, err = domain.NewUserExerciseStatus(req.GetExerciseId(), req.GetUserId())
 		if err != nil {
@@ -63,7 +64,6 @@ func (h AnswerExerciseHandler) AnswerExercise(ctx *appcontext.AppContext, req *e
 			return nil, err
 		}
 	} else {
-		isNewInteracting = true
 		ctx.Logger().Text("user already complete this exercise before, just update")
 	}
 

@@ -119,9 +119,6 @@ func (r UserExerciseStatusRepository) FindUserReadyToReviewExercises(ctx *appcon
 
 	whereCond := postgres.AND(ues.UserID.EQ(postgres.String(filter.UserID)))
 	whereCond = whereCond.AND(ues.NextReviewAt.LT(postgres.TimestampzT(now)))
-	if filter.Level.String() != "" {
-		whereCond = whereCond.AND(e.Level.EQ(postgres.String(filter.Level.String())))
-	}
 
 	stmt := postgres.SELECT(
 		e.ID, e.Level, e.Audio, e.Vocabulary, e.Content, e.Translated, e.CorrectAnswer, e.Options,

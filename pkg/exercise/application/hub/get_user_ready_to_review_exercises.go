@@ -20,10 +20,10 @@ func NewGetUserReadyToReviewExercisesHandler(
 }
 
 func (h GetUserReadyToReviewExercisesHandler) GetUserReadyToReviewExercises(ctx *appcontext.AppContext, req *exercisepb.GetUserReadyToReviewExercisesRequest) (*exercisepb.GetUserReadyToReviewExercisesResponse, error) {
-	ctx.Logger().Info("[hub] new get user ready to review exercises request", appcontext.Fields{"userID": req.GetUserId(), "level": req.GetLevel(), "lang": req.GetLang()})
+	ctx.Logger().Info("[hub] new get user ready to review exercises request", appcontext.Fields{"userID": req.GetUserId(), "lang": req.GetLang()})
 
 	ctx.Logger().Text("new user exercise filter")
-	filter, err := domain.NewUserExerciseFilter(req.GetUserId(), req.GetLevel(), req.GetLang())
+	filter, err := domain.NewUserExerciseFilter(req.GetUserId(), "", req.GetLang())
 	if err != nil {
 		ctx.Logger().Error("failed to create new user exercise filter", err, appcontext.Fields{})
 		return nil, err

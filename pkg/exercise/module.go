@@ -37,6 +37,7 @@ func (m Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) erro
 			exerciseCollectionRepository,
 			cachingRepository,
 			queueRepository,
+			service,
 		)
 	)
 
@@ -56,7 +57,7 @@ func (m Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) erro
 	)
 	w.Start()
 
-	m.init(ctx, exerciseCollectionRepository)
+	m.init(ctx, exerciseCollectionRepository, cachingRepository)
 
 	return nil
 }
@@ -64,11 +65,16 @@ func (m Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) erro
 func (m Module) init(
 	ctx *appcontext.AppContext,
 	exerciseCollectionRepository domain.ExerciseCollectionRepository,
+	cachingRepository domain.CachingRepository,
 ) {
-	m.createExerciseCollections(ctx, exerciseCollectionRepository)
+	m.createExerciseCollections(ctx, exerciseCollectionRepository, cachingRepository)
 }
 
-func (Module) createExerciseCollections(ctx *appcontext.AppContext, exerciseCollectionRepository domain.ExerciseCollectionRepository) {
+func (Module) createExerciseCollections(
+	ctx *appcontext.AppContext,
+	exerciseCollectionRepository domain.ExerciseCollectionRepository,
+	cachingRepository domain.CachingRepository,
+) {
 	// create default collection
 	totalCollections, err := exerciseCollectionRepository.CountExerciseCollections(ctx)
 	if err != nil {
@@ -79,16 +85,16 @@ func (Module) createExerciseCollections(ctx *appcontext.AppContext, exerciseColl
 		collections := []domain.ExerciseCollection{
 			{
 				ID:   database.NewStringID(),
-				Name: "Random",
-				Slug: "random",
+				Name: "All",
+				Slug: "all",
 				Translated: language.TranslatedLanguages{
-					Vietnamese: "Ngẫu nhiên",
+					Vietnamese: "Tất cả",
 				},
 				Criteria:       "",
 				IsFromSystem:   true,
 				StatsExercises: 0,
-				Order:          1,
-				Image:          "random.svg",
+				Order:          0,
+				Image:          "all.svg",
 			},
 			{
 				ID:   database.NewStringID(),
@@ -135,6 +141,10 @@ func (Module) createExerciseCollections(ctx *appcontext.AppContext, exerciseColl
 			if err = exerciseCollectionRepository.CreateExerciseCollection(ctx, collection); err != nil {
 				panic(err)
 			}
+		}
+
+		if err = cachingRepository.SetExerciseCollections(ctx, collections); err != nil {
+			panic(err)
 		}
 	}
 }

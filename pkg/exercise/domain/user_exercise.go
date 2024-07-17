@@ -26,27 +26,22 @@ type UserExercise struct {
 }
 
 type UserExerciseFilter struct {
-	UserID         string
-	Level          ExerciseLevel
-	Lang           string
-	NumOfExercises int64
+	UserID             string
+	CollectionCriteria string
+	Lang               string
+	NumOfExercises     int64
 }
 
-func NewUserExerciseFilter(userID, level, lang string) (*UserExerciseFilter, error) {
+func NewUserExerciseFilter(userID, collectionCriteria, lang string) (*UserExerciseFilter, error) {
 	if !database.IsValidID(userID) {
 		return nil, apperrors.User.InvalidUserID
 	}
 
-	dLevel := ToExerciseLevel(level)
-	if !dLevel.IsValid() {
-		dLevel = ExerciseLevelUnknown
-	}
-
 	return &UserExerciseFilter{
-		UserID:         userID,
-		Level:          dLevel,
-		Lang:           lang,
-		NumOfExercises: 10,
+		UserID:             userID,
+		CollectionCriteria: collectionCriteria,
+		Lang:               lang,
+		NumOfExercises:     10,
 	}, nil
 }
 
