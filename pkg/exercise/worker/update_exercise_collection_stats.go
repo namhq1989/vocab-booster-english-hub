@@ -36,27 +36,26 @@ func (w UpdateExerciseCollectionStatsHandler) UpdateExerciseCollectionStats(ctx 
 
 	hasChanged := false
 
-	for index, _ := range collections {
-		collection := collections[index]
-		if !collection.IsFromSystem {
-			ctx.Logger().Info("skip this collection because it's not from system", appcontext.Fields{"name": collection.Name})
+	for index := range collections {
+		if !collections[index].IsFromSystem {
+			ctx.Logger().Info("skip this collection because it's not from system", appcontext.Fields{"name": collections[index].Name})
 			continue
 		}
 
-		numOfNew, _ := w.exerciseRepository.CountExercisesByCriteria(ctx, collection.Criteria, collection.LastStatsUpdatedAt)
+		numOfNew, _ := w.exerciseRepository.CountExercisesByCriteria(ctx, collections[index].Criteria, collections[index].LastStatsUpdatedAt)
 		if numOfNew > 0 {
 			hasChanged = true
 
-			_ = collection.IncreaseStatsExercises(int(numOfNew))
+			_ = collections[index].IncreaseStatsExercises(int(numOfNew))
 
-			ctx.Logger().Info("update collection stats", appcontext.Fields{"name": collection.Name, "numOfNew": numOfNew})
-			err = w.exerciseCollectionRepository.UpdateExerciseCollection(ctx, collection)
+			ctx.Logger().Info("update collection stats", appcontext.Fields{"name": collections[index].Name, "numOfNew": numOfNew})
+			err = w.exerciseCollectionRepository.UpdateExerciseCollection(ctx, collections[index])
 			if err != nil {
 				ctx.Logger().Error("failed to update collection stats", err, appcontext.Fields{})
 				return err
 			}
 		} else {
-			ctx.Logger().Info("no new exercise in this collection", appcontext.Fields{"name": collection.Name})
+			ctx.Logger().Info("no new exercise in this collection", appcontext.Fields{"name": collections[index].Name})
 		}
 	}
 

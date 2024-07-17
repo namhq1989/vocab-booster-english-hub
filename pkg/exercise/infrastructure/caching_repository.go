@@ -45,6 +45,6 @@ func (r CachingRepository) generateExerciseCollectionsKey() string {
 	return r.caching.GenerateKey("exercise", "exercise_collections")
 }
 
-func (r CachingRepository) getExerciseCollectionsTTL() time.Duration {
+func (CachingRepository) getExerciseCollectionsTTL() time.Duration {
 	return 1 * time.Hour
 }
