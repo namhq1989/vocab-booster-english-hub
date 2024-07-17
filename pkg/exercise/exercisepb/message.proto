@@ -32,4 +32,5 @@ message ExerciseCollection {
   string translated = 4;
   string image = 5;
   int32 statsExercises = 7;
+  int32 statsInteracted = 8;
 }

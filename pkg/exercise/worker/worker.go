@@ -49,7 +49,11 @@ func New(
 		queue: queue,
 
 		workerHandlers: workerHandlers{
-			UpdateUserExerciseCollectionStatsHandler: NewUpdateUserExerciseCollectionStatsHandler(userExerciseCollectionStatusRepository, service),
+			UpdateUserExerciseCollectionStatsHandler: NewUpdateUserExerciseCollectionStatsHandler(
+				userExerciseCollectionStatusRepository,
+				cachingRepository,
+				service,
+			),
 		},
 		workerCronjob: workerCronjob{
 			UpdateExerciseCollectionStatsHandler: NewUpdateExerciseCollectionStatsHandler(

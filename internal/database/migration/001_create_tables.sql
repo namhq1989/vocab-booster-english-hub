@@ -14,7 +14,7 @@ CREATE TABLE vocabularies (
     synonyms TEXT[] NOT NULL DEFAULT '{}',
     antonyms TEXT[] NOT NULL DEFAULT '{}',
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
 
     CONSTRAINT vocabularies_unique_term
         UNIQUE (term)
@@ -168,7 +168,7 @@ CREATE TABLE exercise_collections (
     translated JSONB NOT NULL,
     criteria TEXT NOT NULL DEFAULT '',
     is_from_system BOOLEAN NOT NULL DEFAULT FALSE,
-    order INTEGER NOT NULL DEFAULT 0,
+    "order" INTEGER NOT NULL DEFAULT 0,
     image TEXT NOT NULL DEFAULT '',
     stats_exercises INTEGER NOT NULL DEFAULT 0,
     last_stats_updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
@@ -184,7 +184,7 @@ CREATE TABLE user_exercise_collection_status (
     collection_id  TEXT NOT NULL,
     interacted_exercises INTEGER NOT NULL DEFAULT 0,
 
-    PRIMARY KEY (user_id, collection_id),
+    PRIMARY KEY (user_id, collection_id)
 );
 
 CREATE INDEX idx_user_exercise_collections_user_id_collection_id ON user_exercise_collection_status(user_id, collection_id);

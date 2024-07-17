@@ -11,15 +11,18 @@ import (
 
 type UpdateUserExerciseCollectionStatsHandler struct {
 	userExerciseCollectionStatsRepository domain.UserExerciseCollectionStatusRepository
+	cachingRepository                     domain.CachingRepository
 	service                               domain.Service
 }
 
 func NewUpdateUserExerciseCollectionStatsHandler(
 	userExerciseCollectionStatsRepository domain.UserExerciseCollectionStatusRepository,
+	cachingRepository domain.CachingRepository,
 	service domain.Service,
 ) UpdateUserExerciseCollectionStatsHandler {
 	return UpdateUserExerciseCollectionStatsHandler{
 		userExerciseCollectionStatsRepository: userExerciseCollectionStatsRepository,
+		cachingRepository:                     cachingRepository,
 		service:                               service,
 	}
 }
@@ -38,6 +41,24 @@ func (w UpdateUserExerciseCollectionStatsHandler) UpdateUserExerciseCollectionSt
 	}
 
 	criteria := fmt.Sprintf("level=%s", payload.Exercise.Level)
+
+	// always add Random collection into the criteria list
+	for _, c := range []string{"", criteria} {
+		if err = w.updateStats(ctx, payload.UserExerciseStatus.UserID, collections, c); err != nil {
+			return err
+		}
+	}
+
+	// delete caching data
+	err = w.cachingRepository.DeleteUserExerciseCollections(ctx, payload.UserExerciseStatus.UserID)
+	if err != nil {
+		ctx.Logger().Error("failed to delete caching data", err, appcontext.Fields{})
+	}
+
+	return nil
+}
+
+func (w UpdateUserExerciseCollectionStatsHandler) updateStats(ctx *appcontext.AppContext, userID string, collections []domain.ExerciseCollection, criteria string) error {
 	ctx.Logger().Info("find collection with criteria", appcontext.Fields{"criteria": criteria})
 	collectionIndex := slices.IndexFunc(collections, func(c domain.ExerciseCollection) bool {
 		return c.Criteria == criteria
@@ -50,7 +71,7 @@ func (w UpdateUserExerciseCollectionStatsHandler) UpdateUserExerciseCollectionSt
 	collection := collections[collectionIndex]
 
 	ctx.Logger().Text("create new user exercise collection status model")
-	uecs, err := domain.NewUserExerciseCollectionStatus(payload.UserExerciseStatus.UserID, collection.ID)
+	uecs, err := domain.NewUserExerciseCollectionStatus(userID, collection.ID)
 	if err != nil {
 		ctx.Logger().Error("failed to create new user exercise collection status model", err, appcontext.Fields{})
 		return err

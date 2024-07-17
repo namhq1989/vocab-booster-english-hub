@@ -6,17 +6,18 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/domain"
 )
 
-func ConvertExerciseCollectionsFromDomainToGrpc(collections []domain.ExerciseCollection, lang string) []*exercisepb.ExerciseCollection {
+func ConvertUserExerciseCollectionsFromDomainToGrpc(collections []domain.UserExerciseCollection, lang string) []*exercisepb.ExerciseCollection {
 	var result = make([]*exercisepb.ExerciseCollection, len(collections))
 
 	for index, collection := range collections {
 		result[index] = &exercisepb.ExerciseCollection{
-			Id:             collection.ID,
-			Name:           collection.Name,
-			Slug:           collection.Slug,
-			Translated:     collection.Translated.GetLanguageValue(lang),
-			StatsExercises: int32(collection.StatsExercises),
-			Image:          staticfiles.GetExerciseCollectionsEndpoint(collection.Image),
+			Id:              collection.ID,
+			Name:            collection.Name,
+			Slug:            collection.Slug,
+			Translated:      collection.Translated.GetLanguageValue(lang),
+			StatsExercises:  int32(collection.StatsExercises),
+			StatsInteracted: int32(collection.StatsInteracted),
+			Image:           staticfiles.GetExerciseCollectionsEndpoint(collection.Image),
 		}
 	}
 

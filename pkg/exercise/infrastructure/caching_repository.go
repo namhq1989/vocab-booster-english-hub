@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/namhq1989/vocab-booster-english-hub/internal/caching"
@@ -47,4 +48,40 @@ func (r CachingRepository) generateExerciseCollectionsKey() string {
 
 func (CachingRepository) getExerciseCollectionsTTL() time.Duration {
 	return 1 * time.Hour
+}
+
+func (r CachingRepository) GetUserExerciseCollections(ctx *appcontext.AppContext, userID string) (*[]domain.UserExerciseCollection, error) {
+	key := r.generateUserExerciseCollectionsKey(userID)
+
+	dataStr, err := r.caching.Get(ctx, key)
+	if err != nil {
+		return nil, err
+	}
+
+	var result []domain.UserExerciseCollection
+	if err = json.Unmarshal([]byte(dataStr), &result); err != nil {
+		return nil, nil
+	}
+
+	return &result, nil
+}
+
+func (r CachingRepository) SetUserExerciseCollections(ctx *appcontext.AppContext, userID string, collections []domain.UserExerciseCollection) error {
+	key := r.generateUserExerciseCollectionsKey(userID)
+	r.caching.SetTTL(ctx, key, collections, r.getUserExerciseCollectionsTTL())
+	return nil
+}
+
+func (r CachingRepository) DeleteUserExerciseCollections(ctx *appcontext.AppContext, userID string) error {
+	key := r.generateUserExerciseCollectionsKey(userID)
+	_, err := r.caching.Del(ctx, key)
+	return err
+}
+
+func (r CachingRepository) generateUserExerciseCollectionsKey(userID string) string {
+	return r.caching.GenerateKey("exercise", fmt.Sprintf("%s_user_exercise_collections", userID))
+}
+
+func (CachingRepository) getUserExerciseCollectionsTTL() time.Duration {
+	return 24 * time.Hour * 7
 }
