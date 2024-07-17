@@ -49,6 +49,7 @@ func New(
 	exerciseCollectionRepository domain.ExerciseCollectionRepository,
 	cachingRepository domain.CachingRepository,
 	queueRepository domain.QueueRepository,
+	service domain.Service,
 ) *Application {
 	return &Application{
 		appHubHandler: appHubHandler{
@@ -59,7 +60,7 @@ func New(
 				userExerciseStatusRepository,
 				queueRepository,
 			),
-			GetUserExercisesHandler:                hub.NewGetUserExercisesHandler(exerciseRepository),
+			GetUserExercisesHandler:                hub.NewGetUserExercisesHandler(exerciseRepository, service),
 			CountUserReadyToReviewExercisesHandler: hub.NewCountUserReadyToReviewExercisesHandler(userExerciseStatusRepository),
 			GetUserReadyToReviewExercisesHandler:   hub.NewGetUserReadyToReviewExercisesHandler(userExerciseStatusRepository),
 			ChangeExerciseFavoriteHandler:          hub.NewChangeExerciseFavoriteHandler(userExerciseStatusRepository),

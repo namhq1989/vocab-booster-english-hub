@@ -60,7 +60,7 @@ message AnswerExerciseResponse {
 
 message GetUserExercisesRequest {
   string userId = 1;
-  string level = 2;
+  string collectionId = 2;
   string lang = 3;
 }
 
@@ -82,8 +82,7 @@ message CountUserReadyToReviewExercisesResponse {
 
 message GetUserReadyToReviewExercisesRequest {
   string userId = 1;
-  string level = 2;
-  string lang = 3;
+  string lang = 2;
 }
 
 message GetUserReadyToReviewExercisesResponse {

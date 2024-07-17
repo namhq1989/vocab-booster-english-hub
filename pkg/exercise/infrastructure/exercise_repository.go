@@ -118,10 +118,14 @@ func (r ExerciseRepository) PickRandomExercisesForUser(ctx *appcontext.AppContex
 		ues = table.UserExerciseStatuses.AS("ues")
 	)
 
-	// whereCond := postgres.AND(postgres.BoolExp(postgres.COALESCE(ues.IsMastered, postgres.Bool(false).EQ(postgres.Bool(false)))))
 	whereCond := ues.ExerciseID.IS_NULL().OR(ues.IsMastered.EQ(postgres.Bool(false)))
-	if filter.Level.String() != "" {
-		whereCond = whereCond.AND(e.Level.EQ(postgres.String(filter.Level.String())))
+	if filter.CollectionCriteria != "" {
+		parts := strings.Split(filter.CollectionCriteria, "=")
+		if len(parts) == 2 {
+			if parts[0] == "level" && parts[1] != "" {
+				whereCond = whereCond.AND(e.Level.EQ(postgres.String(parts[1])))
+			}
+		}
 	}
 
 	stmt := postgres.SELECT(
@@ -137,12 +141,13 @@ func (r ExerciseRepository) PickRandomExercisesForUser(ctx *appcontext.AppContex
 		).
 		LIMIT(filter.NumOfExercises)
 
+	ctx.Logger().Print("sql", stmt.DebugSql())
+
 	var (
 		docs   = make([]mapping.UserExercise, 0)
 		result = make([]domain.UserExercise, 0)
 	)
 	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &docs); err != nil {
-		ctx.Logger().Print("err", err)
 		if r.db.IsNoRowsError(err) {
 			return result, nil
 		}

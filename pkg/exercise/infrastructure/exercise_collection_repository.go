@@ -7,6 +7,7 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database/gen/vocab-booster/public/model"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database/gen/vocab-booster/public/table"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/domain"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/infrastructure/mapping"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
@@ -87,7 +88,6 @@ func (r ExerciseCollectionRepository) FindExerciseCollections(ctx *appcontext.Ap
 		result = make([]domain.ExerciseCollection, 0)
 	)
 	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &docs); err != nil {
-		ctx.Logger().Print("err", err)
 		if r.db.IsNoRowsError(err) {
 			return result, nil
 		}
@@ -125,7 +125,6 @@ func (r ExerciseCollectionRepository) FindUserExerciseCollections(ctx *appcontex
 		result = make([]domain.UserExerciseCollection, 0)
 	)
 	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &docs); err != nil {
-		ctx.Logger().Print("err", err)
 		if r.db.IsNoRowsError(err) {
 			return result, nil
 		}
@@ -139,5 +138,31 @@ func (r ExerciseCollectionRepository) FindUserExerciseCollections(ctx *appcontex
 		uec, _ := mapper.FromModelToDomain(doc)
 		result = append(result, *uec)
 	}
+	return result, nil
+}
+
+func (r ExerciseCollectionRepository) FindExerciseCollectionByID(ctx *appcontext.AppContext, collectionID string) (*domain.ExerciseCollection, error) {
+	if !database.IsValidID(collectionID) {
+		return nil, apperrors.Collection.CollectionNotFound
+	}
+
+	stmt := postgres.SELECT(
+		r.getTable().AllColumns,
+	).
+		FROM(r.getTable()).
+		WHERE(r.getTable().ID.EQ(postgres.String(collectionID)))
+
+	var doc model.ExerciseCollections
+	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &doc); err != nil {
+		if r.db.IsNoRowsError(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	var (
+		mapper    = mapping.ExerciseCollectionMapper{}
+		result, _ = mapper.FromModelToDomain(doc)
+	)
 	return result, nil
 }
