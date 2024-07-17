@@ -18,6 +18,7 @@ type (
 		ChangeExerciseFavorite(ctx *appcontext.AppContext, req *exercisepb.ChangeExerciseFavoriteRequest) (*exercisepb.ChangeExerciseFavoriteResponse, error)
 		GetUserFavoriteExercises(ctx *appcontext.AppContext, req *exercisepb.GetUserFavoriteExercisesRequest) (*exercisepb.GetUserFavoriteExercisesResponse, error)
 		GetUserStats(ctx *appcontext.AppContext, req *exercisepb.GetUserStatsRequest) (*exercisepb.GetUserStatsResponse, error)
+		GetExerciseCollections(ctx *appcontext.AppContext, req *exercisepb.GetExerciseCollectionsRequest) (*exercisepb.GetExerciseCollectionsResponse, error)
 	}
 	App interface {
 		Hubs
@@ -33,6 +34,7 @@ type (
 		hub.ChangeExerciseFavoriteHandler
 		hub.GetUserFavoriteExercisesHandler
 		hub.GetUserStatsHandler
+		hub.GetExerciseCollectionsHandler
 	}
 	Application struct {
 		appHubHandler
@@ -44,6 +46,8 @@ var _ App = (*Application)(nil)
 func New(
 	exerciseRepository domain.ExerciseRepository,
 	userExerciseStatusRepository domain.UserExerciseStatusRepository,
+	queueRepository domain.QueueRepository,
+	service domain.Service,
 ) *Application {
 	return &Application{
 		appHubHandler: appHubHandler{
@@ -54,6 +58,7 @@ func New(
 			AnswerExerciseHandler: hub.NewAnswerExerciseHandler(
 				exerciseRepository,
 				userExerciseStatusRepository,
+				queueRepository,
 			),
 			GetUserExercisesHandler: hub.NewGetUserExercisesHandler(
 				exerciseRepository,
@@ -73,6 +78,7 @@ func New(
 			GetUserStatsHandler: hub.NewGetUserStatsHandler(
 				userExerciseStatusRepository,
 			),
+			GetExerciseCollectionsHandler: hub.NewGetExerciseCollectionsHandler(service),
 		},
 	}
 }

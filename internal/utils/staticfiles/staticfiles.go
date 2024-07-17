@@ -3,13 +3,15 @@ package staticfiles
 import "fmt"
 
 type Endpoint struct {
-	tts string
+	tts    string
+	images string
 }
 
 var endpoint = Endpoint{}
 
-func Init(ttsEndpoint string) {
+func Init(ttsEndpoint, imagesEndpoint string) {
 	endpoint.tts = ttsEndpoint
+	endpoint.images = imagesEndpoint
 }
 
 func GetVocabularyEndpoint(fileName string) string {
@@ -18,4 +20,8 @@ func GetVocabularyEndpoint(fileName string) string {
 
 func GetExampleEndpoint(fileName string) string {
 	return fmt.Sprintf("%s/%s/%s", endpoint.tts, "audio/example", fileName)
+}
+
+func GetExerciseCollectionsEndpoint(fileName string) string {
+	return fmt.Sprintf("%s/%s/%s", endpoint.images, "image", fileName)
 }

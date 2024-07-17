@@ -10,13 +10,13 @@ package table
 // UseSchema sets a new schema name for all generated table SQL builder types. It is recommended to invoke
 // this method only once at the beginning of the program.
 func UseSchema(schema string) {
-	CollectionAndVocabularies = CollectionAndVocabularies.FromSchema(schema)
-	Collections = Collections.FromSchema(schema)
 	CommunitySentenceDrafts = CommunitySentenceDrafts.FromSchema(schema)
 	CommunitySentenceLikes = CommunitySentenceLikes.FromSchema(schema)
 	CommunitySentences = CommunitySentences.FromSchema(schema)
+	ExerciseCollections = ExerciseCollections.FromSchema(schema)
 	Exercises = Exercises.FromSchema(schema)
 	SchemaVersion = SchemaVersion.FromSchema(schema)
+	UserExerciseCollectionStatus = UserExerciseCollectionStatus.FromSchema(schema)
 	UserExerciseStatuses = UserExerciseStatuses.FromSchema(schema)
 	UserVocabularies = UserVocabularies.FromSchema(schema)
 	VerbConjugations = VerbConjugations.FromSchema(schema)

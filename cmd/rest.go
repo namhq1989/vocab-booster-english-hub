@@ -18,6 +18,7 @@ func initRest(cfg config.Server) *echo.Echo {
 	setMiddleware(e, cfg)
 
 	e.Static("/audio", "files/tts")
+	e.Static("/image", "files/images")
 
 	return e
 }

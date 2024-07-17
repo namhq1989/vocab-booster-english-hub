@@ -13,6 +13,7 @@ invalid_name = "Invalid name"
 invalid_tense = "Invalid tense"
 invalid_content = "Invalid content"
 invalid_required_vocabulary = "Invalid required vocabulary"
+invalid_language = "Invalid language"
 
 # vocabulary
 vocabulary_invalid_id = "Invalid vocabulary id"

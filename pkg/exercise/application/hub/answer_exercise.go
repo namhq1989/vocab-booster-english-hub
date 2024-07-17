@@ -11,15 +11,18 @@ import (
 type AnswerExerciseHandler struct {
 	exerciseRepository           domain.ExerciseRepository
 	userExerciseStatusRepository domain.UserExerciseStatusRepository
+	queueRepository              domain.QueueRepository
 }
 
 func NewAnswerExerciseHandler(
 	exerciseRepository domain.ExerciseRepository,
 	userExerciseStatusRepository domain.UserExerciseStatusRepository,
+	queueRepository domain.QueueRepository,
 ) AnswerExerciseHandler {
 	return AnswerExerciseHandler{
 		exerciseRepository:           exerciseRepository,
 		userExerciseStatusRepository: userExerciseStatusRepository,
+		queueRepository:              queueRepository,
 	}
 }
 
@@ -38,6 +41,8 @@ func (h AnswerExerciseHandler) AnswerExercise(ctx *appcontext.AppContext, req *e
 	}
 
 	ctx.Logger().Text("find user exercise status in db")
+	isNewInteracting := false
+
 	ues, err := h.userExerciseStatusRepository.FindUserExerciseStatus(ctx, req.GetExerciseId(), req.GetUserId())
 	if err != nil {
 		ctx.Logger().Error("failed to find user exercise status in db", err, appcontext.Fields{})
@@ -58,6 +63,7 @@ func (h AnswerExerciseHandler) AnswerExercise(ctx *appcontext.AppContext, req *e
 			return nil, err
 		}
 	} else {
+		isNewInteracting = true
 		ctx.Logger().Text("user already complete this exercise before, just update")
 	}
 
@@ -70,8 +76,29 @@ func (h AnswerExerciseHandler) AnswerExercise(ctx *appcontext.AppContext, req *e
 		return nil, err
 	}
 
+	ctx.Logger().Text("enqueue task")
+	if err = h.enqueueTask(ctx, *ues, *exercise, isNewInteracting); err != nil {
+		ctx.Logger().Error("failed to enqueue task", err, appcontext.Fields{})
+	}
+
 	ctx.Logger().Text("done answer exercise request")
 	return &exercisepb.AnswerExerciseResponse{
 		NextReviewAt: timestamppb.New(ues.NextReviewAt),
 	}, nil
+}
+
+func (h AnswerExerciseHandler) enqueueTask(ctx *appcontext.AppContext, ues domain.UserExerciseStatus, exercise domain.Exercise, isNewInteracting bool) error {
+	if isNewInteracting {
+		ctx.Logger().Text("add task updateUserExerciseCollectionStats")
+		if err := h.queueRepository.UpdateUserExerciseCollectionStats(ctx, domain.QueueUpdateUserExerciseCollectionStatsPayload{
+			UserExerciseStatus: ues,
+			Exercise:           exercise,
+		}); err != nil {
+			ctx.Logger().Error("failed to add task updateUserExerciseCollectionStats", err, appcontext.Fields{})
+		}
+	} else {
+		ctx.Logger().Text("user already complete this exercise before, skip adding task updateUserExerciseCollectionStats")
+	}
+
+	return nil
 }
