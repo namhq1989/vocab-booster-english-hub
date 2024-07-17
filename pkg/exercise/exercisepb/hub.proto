@@ -15,6 +15,7 @@ service ExerciseService {
   rpc ChangeExerciseFavorite(ChangeExerciseFavoriteRequest) returns (ChangeExerciseFavoriteResponse) {}
   rpc GetUserFavoriteExercises(GetUserFavoriteExercisesRequest) returns (GetUserFavoriteExercisesResponse) {}
   rpc GetUserStats(GetUserStatsRequest) returns (GetUserStatsResponse) {}
+  rpc GetExerciseCollections(GetExerciseCollectionsRequest) returns (GetExerciseCollectionsResponse) {}
 }
 
 // NEW EXERCISE
@@ -124,4 +125,15 @@ message GetUserStatsRequest {
 message GetUserStatsResponse {
   int32 mastered = 1;
   int32 waitingForReview = 2;
+}
+
+// GET EXERCISE COLLECTIONS
+
+message GetExerciseCollectionsRequest {
+  string userId = 1;
+  string lang = 2;
+}
+
+message GetExerciseCollectionsResponse {
+  repeated ExerciseCollection collections = 1;
 }

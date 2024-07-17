@@ -37,8 +37,9 @@ type (
 		AWSRegion    string
 
 		// NLP
-		EndpointNLP string
-		EndpointTTS string
+		EndpointNLP    string
+		EndpointTTS    string
+		EndpointImages string
 	}
 )
 
@@ -69,8 +70,9 @@ func Init() Server {
 		AWSSecretKey: getEnvStr("AWS_SECRET_ACCESS_KEY"),
 		AWSRegion:    getEnvStr("AWS_REGION"),
 
-		EndpointNLP: getEnvStr("ENDPOINT_NLP"),
-		EndpointTTS: getEnvStr("ENDPOINT_TTS"),
+		EndpointNLP:    getEnvStr("ENDPOINT_NLP"),
+		EndpointTTS:    getEnvStr("ENDPOINT_TTS"),
+		EndpointImages: getEnvStr("ENDPOINT_IMAGES"),
 	}
 	cfg.IsEnvRelease = cfg.Environment == "release"
 
@@ -110,6 +112,9 @@ func Init() Server {
 	}
 	if cfg.EndpointTTS == "" {
 		panic(errors.New("missing ENDPOINT_TTS"))
+	}
+	if cfg.EndpointImages == "" {
+		panic(errors.New("missing ENDPOINT_IMAGES"))
 	}
 
 	return cfg

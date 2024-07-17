@@ -119,47 +119,6 @@ CREATE TABLE community_sentence_likes (
 
 CREATE INDEX idx_community_sentence_likes_user_id_sentence_id ON community_sentence_likes(user_id, sentence_id);
 
-
--- USER VOCABULARY --
-
-CREATE TABLE user_vocabularies (
-    id TEXT NOT NULL,
-    user_id TEXT NOT NULL,
-    vocabulary_id TEXT NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-
-    PRIMARY KEY (user_id, vocabulary_id),
-    FOREIGN KEY (vocabulary_id) REFERENCES vocabularies(id)
-);
-
-CREATE INDEX idx_user_vocabularies_user_id_created_at ON user_vocabularies(user_id, created_at DESC);
-
--- VOCABULARY COLLECTION --
-
-CREATE TABLE collections (
-    id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    name varchar(30) NOT NULL,
-    description TEXT NOT NULL,
-    num_of_vocabulary INT NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
-);
-
-CREATE INDEX idx_collections_user_id_updated_at ON collections(user_id, updated_at);
-
-CREATE TABLE collection_and_vocabularies (
-    collection_id TEXT NOT NULL,
-    vocabulary_id TEXT NOT NULL,
-    value VARCHAR(30) NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-    PRIMARY KEY (collection_id, vocabulary_id),
-    FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE,
-    FOREIGN KEY (vocabulary_id) REFERENCES vocabularies(id) ON DELETE CASCADE
-);
-
-CREATE INDEX idx_collection_and_vocabularies_collection_id_created_at ON collection_and_vocabularies(collection_id, vocabulary_id);
-
 -- EXERCISE --
 
 CREATE TABLE exercises (
@@ -200,8 +159,37 @@ CREATE TABLE user_exercise_statuses (
 
 CREATE INDEX idx_user_exercise_statuses_user_id_updated_at ON user_exercise_statuses(user_id, updated_at DESC);
 
+-- EXERCISE COLLECTION --
+
+CREATE TABLE exercise_collections (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    slug TEXT NOT NULL,
+    translated JSONB NOT NULL,
+    criteria TEXT NOT NULL DEFAULT '',
+    is_from_system BOOLEAN NOT NULL DEFAULT FALSE,
+    order INTEGER NOT NULL DEFAULT 0,
+    image TEXT NOT NULL DEFAULT '',
+    stats_exercises INTEGER NOT NULL DEFAULT 0,
+    last_stats_updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+
+    UNIQUE (slug)
+);
+
+CREATE INDEX idx_exercise_collections_slug ON exercise_collections(slug);
+
+CREATE TABLE user_exercise_collection_status (
+    id TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    collection_id  TEXT NOT NULL,
+    interacted_exercises INTEGER NOT NULL DEFAULT 0,
+
+    PRIMARY KEY (user_id, collection_id),
+);
+
+CREATE INDEX idx_user_exercise_collections_user_id_collection_id ON user_exercise_collection_status(user_id, collection_id);
+
 ---- create above / drop below ----
 
 -- Write your migrate down statements here. If this migration is irreversible
-DROP TABLE exercises CASCADE;
-DROP TABLE user_exercise_statuses CASCADE;
+

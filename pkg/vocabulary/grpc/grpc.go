@@ -31,38 +31,6 @@ func (s server) SearchVocabulary(bgCtx context.Context, req *vocabularypb.Search
 	return resp, nil
 }
 
-func (s server) CreateCollection(bgCtx context.Context, req *vocabularypb.CreateCollectionRequest) (*vocabularypb.CreateCollectionResponse, error) {
-	resp, err := s.app.CreateCollection(appcontext.NewGRPC(bgCtx), req)
-	if err != nil {
-		return nil, apperrors.ToGrpcError(bgCtx, err)
-	}
-	return resp, nil
-}
-
-func (s server) UpdateCollection(bgCtx context.Context, req *vocabularypb.UpdateCollectionRequest) (*vocabularypb.UpdateCollectionResponse, error) {
-	resp, err := s.app.UpdateCollection(appcontext.NewGRPC(bgCtx), req)
-	if err != nil {
-		return nil, apperrors.ToGrpcError(bgCtx, err)
-	}
-	return resp, nil
-}
-
-func (s server) AddVocabularyToCollection(bgCtx context.Context, req *vocabularypb.AddVocabularyToCollectionRequest) (*vocabularypb.AddVocabularyToCollectionResponse, error) {
-	resp, err := s.app.AddVocabularyToCollection(appcontext.NewGRPC(bgCtx), req)
-	if err != nil {
-		return nil, apperrors.ToGrpcError(bgCtx, err)
-	}
-	return resp, nil
-}
-
-func (s server) RemoveVocabularyFromCollection(bgCtx context.Context, req *vocabularypb.RemoveVocabularyFromCollectionRequest) (*vocabularypb.RemoveVocabularyFromCollectionResponse, error) {
-	resp, err := s.app.RemoveVocabularyFromCollection(appcontext.NewGRPC(bgCtx), req)
-	if err != nil {
-		return nil, apperrors.ToGrpcError(bgCtx, err)
-	}
-	return resp, nil
-}
-
 func (s server) CreateCommunitySentenceDraft(bgCtx context.Context, req *vocabularypb.CreateCommunitySentenceDraftRequest) (*vocabularypb.CreateCommunitySentenceDraftResponse, error) {
 	resp, err := s.app.CreateCommunitySentenceDraft(appcontext.NewGRPC(bgCtx), req)
 	if err != nil {

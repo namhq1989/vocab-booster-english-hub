@@ -7,8 +7,12 @@ var TypeNames = struct {
 	CreateVerbConjugation             string
 	AddOtherVocabularyToScrapingQueue string
 
+	UpdateUserExerciseCollectionStats string
+
 	// cronjob
 	AutoScrapingVocabulary string
+
+	UpdateExerciseCollectionStats string
 }{
 	NewVocabularyCreated:              "vocabulary.newVocabularyCreated",
 	NewVocabularyExampleCreated:       "vocabulary.newVocabularyExampleCreated",
@@ -16,6 +20,10 @@ var TypeNames = struct {
 	CreateVerbConjugation:             "vocabulary.createVerbConjugation",
 	AddOtherVocabularyToScrapingQueue: "vocabulary.addOtherVocabularyToScrapingQueue",
 
+	UpdateUserExerciseCollectionStats: "exercise.updateUserExerciseCollectionStats",
+
 	// cronjob
 	AutoScrapingVocabulary: "vocabulary.autoScrapingVocabulary",
+
+	UpdateExerciseCollectionStats: "exercise.updateExerciseCollectionStats",
 }

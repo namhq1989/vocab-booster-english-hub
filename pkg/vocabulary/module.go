@@ -23,15 +23,13 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 	}
 
 	var (
-		vocabularyRepository              = infrastructure.NewVocabularyRepository(mono.Database())
-		vocabularyExampleRepository       = infrastructure.NewVocabularyExampleRepository(mono.Database())
-		vocabularyScrapingItemRepository  = infrastructure.NewVocabularyScrapingItemRepository(mono.Database())
-		communitySentenceRepository       = infrastructure.NewCommunitySentenceRepository(mono.Database())
-		communitySentenceDraftRepository  = infrastructure.NewCommunitySentenceDraftRepository(mono.Database())
-		communitySentenceLikeRepository   = infrastructure.NewCommunitySentenceLikeRepository(mono.Database())
-		verbConjugationRepository         = infrastructure.NewVerbConjugationRepository(mono.Database())
-		collectionRepository              = infrastructure.NewCollectionRepository(mono.Database())
-		collectionAndVocabularyRepository = infrastructure.NewCollectionAndVocabularyRepository(mono.Database())
+		vocabularyRepository             = infrastructure.NewVocabularyRepository(mono.Database())
+		vocabularyExampleRepository      = infrastructure.NewVocabularyExampleRepository(mono.Database())
+		vocabularyScrapingItemRepository = infrastructure.NewVocabularyScrapingItemRepository(mono.Database())
+		communitySentenceRepository      = infrastructure.NewCommunitySentenceRepository(mono.Database())
+		communitySentenceDraftRepository = infrastructure.NewCommunitySentenceDraftRepository(mono.Database())
+		communitySentenceLikeRepository  = infrastructure.NewCommunitySentenceLikeRepository(mono.Database())
+		verbConjugationRepository        = infrastructure.NewVerbConjugationRepository(mono.Database())
 
 		aiRepository      = infrastructure.NewAIRepository(mono.AI(), mono.NLP())
 		scraperRepository = infrastructure.NewScraperRepository(mono.Scraper())
@@ -49,8 +47,6 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 			communitySentenceRepository,
 			communitySentenceDraftRepository,
 			communitySentenceLikeRepository,
-			collectionRepository,
-			collectionAndVocabularyRepository,
 			aiRepository,
 			scraperRepository,
 			ttsRepository,

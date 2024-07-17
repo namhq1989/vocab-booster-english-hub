@@ -14,6 +14,7 @@ var Common = struct {
 	InvalidTense              error
 	InvalidContent            error
 	InvalidRequiredVocabulary error
+	InvalidLanguage           error
 }{
 	Success:                   errors.New("success"),
 	BadRequest:                errors.New("bad_request"),
@@ -26,4 +27,5 @@ var Common = struct {
 	InvalidTense:              errors.New("invalid_tense"),
 	InvalidContent:            errors.New("invalid_content"),
 	InvalidRequiredVocabulary: errors.New("invalid_required_vocabulary"),
+	InvalidLanguage:           errors.New("invalid_language"),
 }

@@ -94,3 +94,11 @@ func (s server) GetUserStats(bgCtx context.Context, req *exercisepb.GetUserStats
 	}
 	return resp, nil
 }
+
+func (s server) GetExerciseCollections(bgCtx context.Context, req *exercisepb.GetExerciseCollectionsRequest) (*exercisepb.GetExerciseCollectionsResponse, error) {
+	resp, err := s.app.GetExerciseCollections(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
+}

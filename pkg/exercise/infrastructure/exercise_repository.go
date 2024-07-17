@@ -2,6 +2,8 @@ package infrastructure
 
 import (
 	"database/sql"
+	"strings"
+	"time"
 
 	"github.com/go-jet/jet/v2/postgres"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
@@ -135,8 +137,6 @@ func (r ExerciseRepository) PickRandomExercisesForUser(ctx *appcontext.AppContex
 		).
 		LIMIT(filter.NumOfExercises)
 
-	ctx.Logger().Print("sql", stmt.DebugSql())
-
 	var (
 		docs   = make([]mapping.UserExercise, 0)
 		result = make([]domain.UserExercise, 0)
@@ -157,4 +157,27 @@ func (r ExerciseRepository) PickRandomExercisesForUser(ctx *appcontext.AppContex
 		result = append(result, *ue)
 	}
 	return result, nil
+}
+
+func (r ExerciseRepository) CountExercisesByCriteria(ctx *appcontext.AppContext, criteria string, ts time.Time) (int64, error) {
+	whereCond := r.getTable().CreatedAt.GT(postgres.TimestampzT(ts))
+
+	if criteria != "" {
+		parts := strings.Split(criteria, "=")
+		if len(parts) == 2 {
+			if parts[0] == "level" {
+				whereCond = whereCond.AND(r.getTable().Level.EQ(postgres.String(parts[1])))
+			}
+		}
+	}
+
+	stmt := postgres.SELECT(
+		postgres.COUNT(r.getTable().ID).AS("count_result.total"),
+	).
+		FROM(r.getTable()).
+		WHERE(whereCond)
+
+	var result = database.CountResult{}
+	err := stmt.QueryContext(ctx.Context(), r.getDB(), &result)
+	return result.Total, err
 }

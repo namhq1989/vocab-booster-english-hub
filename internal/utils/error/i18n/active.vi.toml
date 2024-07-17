@@ -13,6 +13,7 @@ invalid_name = "Tên không hợp lệ"
 invalid_tense = "Thì không hợp lệ"
 invalid_content = "Nội dung không hợp lệ"
 invalid_required_vocabulary = "Từ vựng yêu cầu không hợp lệ"
+invalid_language = "Ngôn ngữ không hợp lệ"
 
 # vocabulary
 vocabulary_invalid_id = "Từ vựng không hợp lệ"

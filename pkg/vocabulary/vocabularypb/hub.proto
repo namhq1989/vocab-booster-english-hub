@@ -6,10 +6,6 @@ import "vocabularypb/message.proto";
 
 service VocabularyService {
   rpc SearchVocabulary(SearchVocabularyRequest) returns (SearchVocabularyResponse) {}
-  rpc CreateCollection(CreateCollectionRequest) returns (CreateCollectionResponse) {}
-  rpc UpdateCollection(UpdateCollectionRequest) returns (UpdateCollectionResponse) {}
-  rpc AddVocabularyToCollection(AddVocabularyToCollectionRequest) returns (AddVocabularyToCollectionResponse) {}
-  rpc RemoveVocabularyFromCollection(RemoveVocabularyFromCollectionRequest) returns (RemoveVocabularyFromCollectionResponse) {}
   rpc CreateCommunitySentenceDraft(CreateCommunitySentenceDraftRequest) returns (CreateCommunitySentenceDraftResponse) {}
   rpc UpdateCommunitySentenceDraft(UpdateCommunitySentenceDraftRequest) returns (UpdateCommunitySentenceDraftResponse) {}
   rpc PromoteCommunitySentenceDraft(PromoteCommunitySentenceDraftRequest) returns (PromoteCommunitySentenceDraftResponse) {}
@@ -29,50 +25,6 @@ message SearchVocabularyResponse {
   repeated string suggestions = 2;
   Vocabulary vocabulary = 3;
 }
-
-// CREATE COLLECTION
-
-message CreateCollectionRequest {
-  string userId = 1;
-  string name = 2;
-  string description = 3;
-}
-
-message CreateCollectionResponse {
-  string id = 1;
-}
-
-// UPDATE COLLECTION
-
-message UpdateCollectionRequest {
-  string collectionId = 1;
-  string name = 2;
-  string description = 3;
-}
-
-message UpdateCollectionResponse {
-  string id = 1;
-}
-
-// ADD VOCABULARY TO COLLECTION
-
-message AddVocabularyToCollectionRequest {
-  string userId = 1;
-  string collectionId = 2;
-  string vocabulary = 3;
-}
-
-message AddVocabularyToCollectionResponse {}
-
-// REMOVE VOCABULARY FROM COLLECTION
-
-message RemoveVocabularyFromCollectionRequest {
-  string userId = 1;
-  string collectionId = 2;
-  string vocabulary = 3;
-}
-
-message RemoveVocabularyFromCollectionResponse {}
 
 // CREATE COMMUNITY SENTENCE DRAFT
 

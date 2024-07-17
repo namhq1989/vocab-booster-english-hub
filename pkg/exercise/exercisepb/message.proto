@@ -23,3 +23,13 @@ message UserExercise {
   google.protobuf.Timestamp updatedAt = 12;
   google.protobuf.Timestamp nextReviewAt = 13;
 }
+
+
+message ExerciseCollection {
+  string id = 1;
+  string name = 2;
+  string slug = 3;
+  string translated = 4;
+  string image = 5;
+  int32 statsExercises = 7;
+}

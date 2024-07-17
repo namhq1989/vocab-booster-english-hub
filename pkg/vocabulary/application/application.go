@@ -11,11 +11,6 @@ type (
 	Hubs interface {
 		SearchVocabulary(ctx *appcontext.AppContext, req *vocabularypb.SearchVocabularyRequest) (*vocabularypb.SearchVocabularyResponse, error)
 
-		CreateCollection(ctx *appcontext.AppContext, req *vocabularypb.CreateCollectionRequest) (*vocabularypb.CreateCollectionResponse, error)
-		UpdateCollection(ctx *appcontext.AppContext, req *vocabularypb.UpdateCollectionRequest) (*vocabularypb.UpdateCollectionResponse, error)
-		AddVocabularyToCollection(ctx *appcontext.AppContext, req *vocabularypb.AddVocabularyToCollectionRequest) (*vocabularypb.AddVocabularyToCollectionResponse, error)
-		RemoveVocabularyFromCollection(ctx *appcontext.AppContext, req *vocabularypb.RemoveVocabularyFromCollectionRequest) (*vocabularypb.RemoveVocabularyFromCollectionResponse, error)
-
 		CreateCommunitySentenceDraft(ctx *appcontext.AppContext, req *vocabularypb.CreateCommunitySentenceDraftRequest) (*vocabularypb.CreateCommunitySentenceDraftResponse, error)
 		UpdateCommunitySentenceDraft(ctx *appcontext.AppContext, req *vocabularypb.UpdateCommunitySentenceDraftRequest) (*vocabularypb.UpdateCommunitySentenceDraftResponse, error)
 		PromoteCommunitySentenceDraft(ctx *appcontext.AppContext, req *vocabularypb.PromoteCommunitySentenceDraftRequest) (*vocabularypb.PromoteCommunitySentenceDraftResponse, error)
@@ -28,11 +23,6 @@ type (
 
 	appHubHandler struct {
 		hub.SearchVocabularyHandler
-
-		hub.CreateCollectionHandler
-		hub.UpdateCollectionHandler
-		hub.AddVocabularyToCollectionHandler
-		hub.RemoveVocabularyFromCollectionHandler
 
 		hub.CreateCommunitySentenceDraftHandler
 		hub.UpdateCommunitySentenceDraftHandler
@@ -53,8 +43,6 @@ func New(
 	communitySentenceRepository domain.CommunitySentenceRepository,
 	communitySentenceDraftRepository domain.CommunitySentenceDraftRepository,
 	communitySentenceLikeRepository domain.CommunitySentenceLikeRepository,
-	collectionRepository domain.CollectionRepository,
-	collectionAndVocabularyRepository domain.CollectionAndVocabularyRepository,
 	aiRepository domain.AIRepository,
 	scraperRepository domain.ScraperRepository,
 	ttsRepository domain.TTSRepository,
@@ -65,19 +53,6 @@ func New(
 	return &Application{
 		appHubHandler: appHubHandler{
 			SearchVocabularyHandler: hub.NewSearchVocabularyHandler(vocabularyRepository, vocabularyExampleRepository, aiRepository, scraperRepository, ttsRepository, nlpRepository, queueRepository, cachingRepository),
-
-			CreateCollectionHandler: hub.NewCreateCollectionHandler(collectionRepository),
-			UpdateCollectionHandler: hub.NewUpdateCollectionHandler(collectionRepository),
-			AddVocabularyToCollectionHandler: hub.NewAddVocabularyToCollectionHandler(
-				vocabularyRepository,
-				collectionRepository,
-				collectionAndVocabularyRepository,
-			),
-			RemoveVocabularyFromCollectionHandler: hub.NewRemoveVocabularyFromCollectionHandler(
-				vocabularyRepository,
-				collectionRepository,
-				collectionAndVocabularyRepository,
-			),
 
 			CreateCommunitySentenceDraftHandler: hub.NewCreateCommunitySentenceDraftHandler(
 				vocabularyRepository,

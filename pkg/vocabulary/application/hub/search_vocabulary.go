@@ -56,11 +56,13 @@ func (h SearchVocabularyHandler) SearchVocabulary(ctx *appcontext.AppContext, re
 	ctx.Logger().Text("find in caching first")
 	vocabulary, _ := h.cachingRepository.GetVocabularyByTerm(ctx, req.GetTerm())
 	if vocabulary != nil {
-		ctx.Logger().Text("vocabulary found in caching layer, find related data and response")
+		ctx.Logger().Text("vocabulary found in caching layer, find related data")
 		var examples = make([]domain.VocabularyExample, 0)
 		examples, _ = h.cachingRepository.GetVocabularyExamplesByVocabularyID(ctx, vocabulary.ID)
 		result.Found = true
 		result.Vocabulary = dto.ConvertVocabularyFromDomainToGrpc(*vocabulary, examples)
+
+		ctx.Logger().Text("done search vocabulary request")
 		return result, nil
 	}
 
