@@ -46,39 +46,26 @@ var _ App = (*Application)(nil)
 func New(
 	exerciseRepository domain.ExerciseRepository,
 	userExerciseStatusRepository domain.UserExerciseStatusRepository,
+	exerciseCollectionRepository domain.ExerciseCollectionRepository,
+	cachingRepository domain.CachingRepository,
 	queueRepository domain.QueueRepository,
-	service domain.Service,
 ) *Application {
 	return &Application{
 		appHubHandler: appHubHandler{
-			NewExerciseHandler: hub.NewNewExerciseHandler(exerciseRepository),
-			UpdateExerciseAudioHandler: hub.NewUpdateExerciseAudioHandler(
-				exerciseRepository,
-			),
+			NewExerciseHandler:         hub.NewNewExerciseHandler(exerciseRepository),
+			UpdateExerciseAudioHandler: hub.NewUpdateExerciseAudioHandler(exerciseRepository),
 			AnswerExerciseHandler: hub.NewAnswerExerciseHandler(
 				exerciseRepository,
 				userExerciseStatusRepository,
 				queueRepository,
 			),
-			GetUserExercisesHandler: hub.NewGetUserExercisesHandler(
-				exerciseRepository,
-			),
-			CountUserReadyToReviewExercisesHandler: hub.NewCountUserReadyToReviewExercisesHandler(
-				userExerciseStatusRepository,
-			),
-			GetUserReadyToReviewExercisesHandler: hub.NewGetUserReadyToReviewExercisesHandler(
-				userExerciseStatusRepository,
-			),
-			ChangeExerciseFavoriteHandler: hub.NewChangeExerciseFavoriteHandler(
-				userExerciseStatusRepository,
-			),
-			GetUserFavoriteExercisesHandler: hub.NewGetUserFavoriteExercisesHandler(
-				userExerciseStatusRepository,
-			),
-			GetUserStatsHandler: hub.NewGetUserStatsHandler(
-				userExerciseStatusRepository,
-			),
-			GetExerciseCollectionsHandler: hub.NewGetExerciseCollectionsHandler(service),
+			GetUserExercisesHandler:                hub.NewGetUserExercisesHandler(exerciseRepository),
+			CountUserReadyToReviewExercisesHandler: hub.NewCountUserReadyToReviewExercisesHandler(userExerciseStatusRepository),
+			GetUserReadyToReviewExercisesHandler:   hub.NewGetUserReadyToReviewExercisesHandler(userExerciseStatusRepository),
+			ChangeExerciseFavoriteHandler:          hub.NewChangeExerciseFavoriteHandler(userExerciseStatusRepository),
+			GetUserFavoriteExercisesHandler:        hub.NewGetUserFavoriteExercisesHandler(userExerciseStatusRepository),
+			GetUserStatsHandler:                    hub.NewGetUserStatsHandler(userExerciseStatusRepository),
+			GetExerciseCollectionsHandler:          hub.NewGetExerciseCollectionsHandler(exerciseCollectionRepository, cachingRepository),
 		},
 	}
 }

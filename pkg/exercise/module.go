@@ -31,7 +31,13 @@ func (m Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) erro
 		service = shared.NewService(exerciseCollectionRepository, cachingRepository)
 
 		// app
-		app = application.New(exerciseRepository, userExerciseStatusRepository, queueRepository, service)
+		app = application.New(
+			exerciseRepository,
+			userExerciseStatusRepository,
+			exerciseCollectionRepository,
+			cachingRepository,
+			queueRepository,
+		)
 	)
 
 	// grpc server

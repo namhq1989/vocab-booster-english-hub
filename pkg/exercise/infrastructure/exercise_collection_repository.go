@@ -103,3 +103,41 @@ func (r ExerciseCollectionRepository) FindExerciseCollections(ctx *appcontext.Ap
 	}
 	return result, nil
 }
+
+func (r ExerciseCollectionRepository) FindUserExerciseCollections(ctx *appcontext.AppContext, userID string) ([]domain.UserExerciseCollection, error) {
+	var (
+		ec   = r.getTable().AS("ec")
+		uecs = table.UserExerciseCollectionStatus.AS("uecs")
+	)
+
+	stmt := postgres.SELECT(
+		ec.AllColumns,
+		postgres.COALESCE(uecs.InteractedExercises, postgres.Int64(0)).AS("uecs.interacted_exercises"),
+	).
+		FROM(
+			ec.LEFT_JOIN(uecs, ec.ID.EQ(uecs.CollectionID).
+				AND(uecs.UserID.EQ(postgres.String(userID)))),
+		).
+		ORDER_BY(ec.Order.ASC())
+
+	var (
+		docs   = make([]mapping.UserExerciseCollection, 0)
+		result = make([]domain.UserExerciseCollection, 0)
+	)
+	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &docs); err != nil {
+		ctx.Logger().Print("err", err)
+		if r.db.IsNoRowsError(err) {
+			return result, nil
+		}
+		return result, err
+	}
+
+	var (
+		mapper = mapping.UserExerciseCollectionMapper{}
+	)
+	for _, doc := range docs {
+		uec, _ := mapper.FromModelToDomain(doc)
+		result = append(result, *uec)
+	}
+	return result, nil
+}

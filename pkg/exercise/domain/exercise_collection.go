@@ -15,6 +15,7 @@ type ExerciseCollectionRepository interface {
 	UpdateExerciseCollection(ctx *appcontext.AppContext, collection ExerciseCollection) error
 	CountExerciseCollections(ctx *appcontext.AppContext) (int64, error)
 	FindExerciseCollections(ctx *appcontext.AppContext) ([]ExerciseCollection, error)
+	FindUserExerciseCollections(ctx *appcontext.AppContext, userID string) ([]UserExerciseCollection, error)
 }
 
 type ExerciseCollection struct {
