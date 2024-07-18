@@ -19,3 +19,7 @@ func NewQueueRepository(queue queue.Operations) QueueRepository {
 func (r QueueRepository) UpdateUserExerciseCollectionStats(ctx *appcontext.AppContext, payload domain.QueueUpdateUserExerciseCollectionStatsPayload) error {
 	return queue.EnqueueTask(ctx, r.queue, queue.TypeNames.UpdateUserExerciseCollectionStats, payload, -1)
 }
+
+func (r QueueRepository) UpsertUserExerciseInteractedHistory(ctx *appcontext.AppContext, payload domain.QueueUpsertUserExerciseInteractedHistoryPayload) error {
+	return queue.EnqueueTask(ctx, r.queue, queue.TypeNames.UpsertUserExerciseInteractedHistory, payload, -1)
+}

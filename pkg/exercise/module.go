@@ -21,12 +21,13 @@ func (Module) Name() string {
 
 func (m Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error {
 	var (
-		exerciseRepository                     = infrastructure.NewExerciseRepository(mono.Database())
-		exerciseCollectionRepository           = infrastructure.NewExerciseCollectionRepository(mono.Database())
-		userExerciseStatusRepository           = infrastructure.NewUserExerciseStatusRepository(mono.Database())
-		userExerciseCollectionStatusRepository = infrastructure.NewUserExerciseCollectionStatusRepository(mono.Database())
-		queueRepository                        = infrastructure.NewQueueRepository(mono.Queue())
-		cachingRepository                      = infrastructure.NewCachingRepository(mono.Caching())
+		exerciseRepository                      = infrastructure.NewExerciseRepository(mono.Database())
+		exerciseCollectionRepository            = infrastructure.NewExerciseCollectionRepository(mono.Database())
+		userExerciseStatusRepository            = infrastructure.NewUserExerciseStatusRepository(mono.Database())
+		userExerciseCollectionStatusRepository  = infrastructure.NewUserExerciseCollectionStatusRepository(mono.Database())
+		userExerciseInteractedHistoryRepository = infrastructure.NewUserExerciseInteractedHistoryRepository(mono.Database())
+		queueRepository                         = infrastructure.NewQueueRepository(mono.Queue())
+		cachingRepository                       = infrastructure.NewCachingRepository(mono.Caching())
 
 		service = shared.NewService(exerciseCollectionRepository, cachingRepository)
 
@@ -35,6 +36,7 @@ func (m Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) erro
 			exerciseRepository,
 			userExerciseStatusRepository,
 			exerciseCollectionRepository,
+			userExerciseInteractedHistoryRepository,
 			cachingRepository,
 			queueRepository,
 			service,
@@ -52,6 +54,7 @@ func (m Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) erro
 		exerciseRepository,
 		exerciseCollectionRepository,
 		userExerciseCollectionStatusRepository,
+		userExerciseInteractedHistoryRepository,
 		cachingRepository,
 		service,
 	)

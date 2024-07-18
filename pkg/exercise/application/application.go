@@ -49,6 +49,7 @@ func New(
 	exerciseRepository domain.ExerciseRepository,
 	userExerciseStatusRepository domain.UserExerciseStatusRepository,
 	exerciseCollectionRepository domain.ExerciseCollectionRepository,
+	userExerciseInteractedHistoryRepository domain.UserExerciseInteractedHistoryRepository,
 	cachingRepository domain.CachingRepository,
 	queueRepository domain.QueueRepository,
 	service domain.Service,
@@ -69,7 +70,7 @@ func New(
 			GetUserFavoriteExercisesHandler:        hub.NewGetUserFavoriteExercisesHandler(userExerciseStatusRepository),
 			GetUserStatsHandler:                    hub.NewGetUserStatsHandler(userExerciseStatusRepository),
 			GetExerciseCollectionsHandler:          hub.NewGetExerciseCollectionsHandler(exerciseCollectionRepository, cachingRepository),
-			GetUserRecentExercisesChartHandler:     hub.NewGetUserRecentExercisesChartHandler(userExerciseStatusRepository),
+			GetUserRecentExercisesChartHandler:     hub.NewGetUserRecentExercisesChartHandler(userExerciseInteractedHistoryRepository),
 		},
 	}
 }

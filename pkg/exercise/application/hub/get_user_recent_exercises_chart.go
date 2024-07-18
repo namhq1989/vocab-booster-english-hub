@@ -8,14 +8,14 @@ import (
 )
 
 type GetUserRecentExercisesChartHandler struct {
-	userExerciseStatusRepository domain.UserExerciseStatusRepository
+	userExerciseInteractedHistory domain.UserExerciseInteractedHistoryRepository
 }
 
 func NewGetUserRecentExercisesChartHandler(
-	userExerciseStatusRepository domain.UserExerciseStatusRepository,
+	userExerciseInteractedHistory domain.UserExerciseInteractedHistoryRepository,
 ) GetUserRecentExercisesChartHandler {
 	return GetUserRecentExercisesChartHandler{
-		userExerciseStatusRepository: userExerciseStatusRepository,
+		userExerciseInteractedHistory: userExerciseInteractedHistory,
 	}
 }
 
@@ -23,7 +23,7 @@ func (h GetUserRecentExercisesChartHandler) GetUserRecentExercisesChart(ctx *app
 	ctx.Logger().Info("[hub] new get user recent exercises chart request", appcontext.Fields{"userID": req.GetUserId(), "from": req.GetFrom().AsTime(), "to": req.GetTo().AsTime()})
 
 	ctx.Logger().Text("find in db")
-	uaes, err := h.userExerciseStatusRepository.AggregateUserExercisesInTimeRange(ctx, req.GetUserId(), req.GetFrom().AsTime(), req.GetTo().AsTime())
+	uaes, err := h.userExerciseInteractedHistory.AggregateUserExercisesInTimeRange(ctx, req.GetUserId(), req.GetFrom().AsTime(), req.GetTo().AsTime())
 	if err != nil {
 		ctx.Logger().Error("failed to find in db", err, appcontext.Fields{})
 		return nil, err

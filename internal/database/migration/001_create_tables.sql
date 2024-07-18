@@ -161,6 +161,18 @@ CREATE TABLE user_exercise_statuses (
 
 CREATE INDEX idx_user_exercise_statuses_user_id_updated_at ON user_exercise_statuses(user_id, updated_at DESC);
 
+CREATE TABLE user_exercise_interacted_histories (
+    id TEXT PRIMARY KEY,
+    exercise_id TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    date TIMESTAMPTZ NOT NULL,
+
+    FOREIGN KEY(exercise_id) REFERENCES exercises(id),
+    UNIQUE (user_id, exercise_id, date)
+);
+
+CREATE INDEX idx_user_exercise_interacted_histories_user_id_exercise_id_date ON user_exercise_interacted_histories(user_id, exercise_id, date);
+
 -- EXERCISE COLLECTION --
 
 CREATE TABLE exercise_collections (

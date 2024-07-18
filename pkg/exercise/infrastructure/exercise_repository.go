@@ -141,8 +141,6 @@ func (r ExerciseRepository) PickRandomExercisesForUser(ctx *appcontext.AppContex
 		).
 		LIMIT(filter.NumOfExercises)
 
-	ctx.Logger().Print("sql", stmt.DebugSql())
-
 	var (
 		docs   = make([]mapping.UserExercise, 0)
 		result = make([]domain.UserExercise, 0)

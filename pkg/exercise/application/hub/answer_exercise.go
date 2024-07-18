@@ -100,5 +100,13 @@ func (h AnswerExerciseHandler) enqueueTask(ctx *appcontext.AppContext, ues domai
 		ctx.Logger().Text("user already complete this exercise before, skip adding task updateUserExerciseCollectionStats")
 	}
 
+	ctx.Logger().Text("add task upsertUserExerciseInteractedHistory")
+	if err := h.queueRepository.UpsertUserExerciseInteractedHistory(ctx, domain.QueueUpsertUserExerciseInteractedHistoryPayload{
+		UserID:     ues.UserID,
+		ExerciseID: ues.ExerciseID,
+	}); err != nil {
+		ctx.Logger().Error("failed to add task upsertUserExerciseInteractedHistory", err, appcontext.Fields{})
+	}
+
 	return nil
 }

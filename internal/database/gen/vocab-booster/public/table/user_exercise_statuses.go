@@ -21,11 +21,11 @@ type userExerciseStatusesTable struct {
 	ExerciseID    postgres.ColumnString
 	UserID        postgres.ColumnString
 	CorrectStreak postgres.ColumnInteger
+	AnswerCount   postgres.ColumnInteger
 	IsFavorite    postgres.ColumnBool
 	IsMastered    postgres.ColumnBool
 	UpdatedAt     postgres.ColumnTimestampz
 	NextReviewAt  postgres.ColumnTimestampz
-	AnswerCount   postgres.ColumnInteger
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -70,13 +70,13 @@ func newUserExerciseStatusesTableImpl(schemaName, tableName, alias string) userE
 		ExerciseIDColumn    = postgres.StringColumn("exercise_id")
 		UserIDColumn        = postgres.StringColumn("user_id")
 		CorrectStreakColumn = postgres.IntegerColumn("correct_streak")
+		AnswerCountColumn   = postgres.IntegerColumn("answer_count")
 		IsFavoriteColumn    = postgres.BoolColumn("is_favorite")
 		IsMasteredColumn    = postgres.BoolColumn("is_mastered")
 		UpdatedAtColumn     = postgres.TimestampzColumn("updated_at")
 		NextReviewAtColumn  = postgres.TimestampzColumn("next_review_at")
-		AnswerCountColumn   = postgres.IntegerColumn("answer_count")
-		allColumns          = postgres.ColumnList{IDColumn, ExerciseIDColumn, UserIDColumn, CorrectStreakColumn, IsFavoriteColumn, IsMasteredColumn, UpdatedAtColumn, NextReviewAtColumn, AnswerCountColumn}
-		mutableColumns      = postgres.ColumnList{ExerciseIDColumn, UserIDColumn, CorrectStreakColumn, IsFavoriteColumn, IsMasteredColumn, UpdatedAtColumn, NextReviewAtColumn, AnswerCountColumn}
+		allColumns          = postgres.ColumnList{IDColumn, ExerciseIDColumn, UserIDColumn, CorrectStreakColumn, AnswerCountColumn, IsFavoriteColumn, IsMasteredColumn, UpdatedAtColumn, NextReviewAtColumn}
+		mutableColumns      = postgres.ColumnList{ExerciseIDColumn, UserIDColumn, CorrectStreakColumn, AnswerCountColumn, IsFavoriteColumn, IsMasteredColumn, UpdatedAtColumn, NextReviewAtColumn}
 	)
 
 	return userExerciseStatusesTable{
@@ -87,11 +87,11 @@ func newUserExerciseStatusesTableImpl(schemaName, tableName, alias string) userE
 		ExerciseID:    ExerciseIDColumn,
 		UserID:        UserIDColumn,
 		CorrectStreak: CorrectStreakColumn,
+		AnswerCount:   AnswerCountColumn,
 		IsFavorite:    IsFavoriteColumn,
 		IsMastered:    IsMasteredColumn,
 		UpdatedAt:     UpdatedAtColumn,
 		NextReviewAt:  NextReviewAtColumn,
-		AnswerCount:   AnswerCountColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,
