@@ -17,7 +17,6 @@ type UserExerciseStatusRepository interface {
 	FindUserReadyToReviewExercises(ctx *appcontext.AppContext, filter UserExerciseFilter) ([]UserExercise, error)
 	FindUserFavoriteExercises(ctx *appcontext.AppContext, filter UserFavoriteExerciseFilter) ([]UserExercise, error)
 	FindUserStats(ctx *appcontext.AppContext, userID string) (*UserStats, error)
-	AggregateUserExercisesInTimeRange(ctx *appcontext.AppContext, userID string, from, to time.Time) ([]UserAggregatedExercise, error)
 }
 
 type UserExerciseStatus struct {

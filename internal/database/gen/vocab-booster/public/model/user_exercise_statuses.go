@@ -16,9 +16,9 @@ type UserExerciseStatuses struct {
 	ExerciseID    string
 	UserID        string
 	CorrectStreak int32
+	AnswerCount   int32
 	IsFavorite    bool
 	IsMastered    bool
 	UpdatedAt     time.Time
 	NextReviewAt  time.Time
-	AnswerCount   int32
 }

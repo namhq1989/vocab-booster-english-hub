@@ -11,9 +11,9 @@ import (
 	"time"
 )
 
-type UserVocabularies struct {
-	ID           string
-	UserID       string `sql:"primary_key"`
-	VocabularyID string `sql:"primary_key"`
-	CreatedAt    time.Time
+type UserExerciseInteractedHistories struct {
+	ID         string `sql:"primary_key"`
+	ExerciseID string
+	UserID     string
+	Date       time.Time
 }

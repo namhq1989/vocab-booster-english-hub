@@ -13,6 +13,7 @@ import (
 type (
 	Handlers interface {
 		UpdateUserExerciseCollectionStats(ctx *appcontext.AppContext, payload domain.QueueUpdateUserExerciseCollectionStatsPayload) error
+		UpsertUserExerciseInteractedHistory(ctx *appcontext.AppContext, payload domain.QueueUpsertUserExerciseInteractedHistoryPayload) error
 	}
 	Cronjob interface {
 		UpdateExerciseCollectionStats(ctx *appcontext.AppContext, _ domain.QueueUpdateExerciseCollectionStatsPayload) error
@@ -24,6 +25,7 @@ type (
 
 	workerHandlers struct {
 		UpdateUserExerciseCollectionStatsHandler
+		UpsertUserExerciseInteractedHistoryHandler
 	}
 	workerCronjob struct {
 		UpdateExerciseCollectionStatsHandler
@@ -42,6 +44,7 @@ func New(
 	exerciseRepository domain.ExerciseRepository,
 	exerciseCollectionRepository domain.ExerciseCollectionRepository,
 	userExerciseCollectionStatusRepository domain.UserExerciseCollectionStatusRepository,
+	userExerciseInteractedHistoryRepository domain.UserExerciseInteractedHistoryRepository,
 	cachingRepository domain.CachingRepository,
 	service domain.Service,
 ) Worker {
@@ -53,6 +56,9 @@ func New(
 				userExerciseCollectionStatusRepository,
 				cachingRepository,
 				service,
+			),
+			UpsertUserExerciseInteractedHistoryHandler: NewUpsertUserExerciseInteractedHistoryHandler(
+				userExerciseInteractedHistoryRepository,
 			),
 		},
 		workerCronjob: workerCronjob{
@@ -73,6 +79,10 @@ func (w Worker) Start() {
 
 	server.HandleFunc(w.queue.GenerateTypename(queue.TypeNames.UpdateUserExerciseCollectionStats), func(bgCtx context.Context, t *asynq.Task) error {
 		return queue.ProcessTask[domain.QueueUpdateUserExerciseCollectionStatsPayload](bgCtx, t, queue.ParsePayload[domain.QueueUpdateUserExerciseCollectionStatsPayload], w.UpdateUserExerciseCollectionStats)
+	})
+
+	server.HandleFunc(w.queue.GenerateTypename(queue.TypeNames.UpsertUserExerciseInteractedHistory), func(bgCtx context.Context, t *asynq.Task) error {
+		return queue.ProcessTask[domain.QueueUpsertUserExerciseInteractedHistoryPayload](bgCtx, t, queue.ParsePayload[domain.QueueUpsertUserExerciseInteractedHistoryPayload], w.UpsertUserExerciseInteractedHistory)
 	})
 
 	server.HandleFunc(w.queue.GenerateTypename(queue.TypeNames.UpdateExerciseCollectionStats), func(bgCtx context.Context, t *asynq.Task) error {
