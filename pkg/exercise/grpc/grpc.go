@@ -102,3 +102,11 @@ func (s server) GetExerciseCollections(bgCtx context.Context, req *exercisepb.Ge
 	}
 	return resp, nil
 }
+
+func (s server) GetUserRecentExercisesChart(bgCtx context.Context, req *exercisepb.GetUserRecentExercisesChartRequest) (*exercisepb.GetUserRecentExercisesChartResponse, error) {
+	resp, err := s.app.GetUserRecentExercisesChart(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
+}

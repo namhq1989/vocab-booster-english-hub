@@ -19,6 +19,7 @@ type (
 		GetUserFavoriteExercises(ctx *appcontext.AppContext, req *exercisepb.GetUserFavoriteExercisesRequest) (*exercisepb.GetUserFavoriteExercisesResponse, error)
 		GetUserStats(ctx *appcontext.AppContext, req *exercisepb.GetUserStatsRequest) (*exercisepb.GetUserStatsResponse, error)
 		GetExerciseCollections(ctx *appcontext.AppContext, req *exercisepb.GetExerciseCollectionsRequest) (*exercisepb.GetExerciseCollectionsResponse, error)
+		GetUserRecentExercisesChart(ctx *appcontext.AppContext, req *exercisepb.GetUserRecentExercisesChartRequest) (*exercisepb.GetUserRecentExercisesChartResponse, error)
 	}
 	App interface {
 		Hubs
@@ -35,6 +36,7 @@ type (
 		hub.GetUserFavoriteExercisesHandler
 		hub.GetUserStatsHandler
 		hub.GetExerciseCollectionsHandler
+		hub.GetUserRecentExercisesChartHandler
 	}
 	Application struct {
 		appHubHandler
@@ -67,6 +69,7 @@ func New(
 			GetUserFavoriteExercisesHandler:        hub.NewGetUserFavoriteExercisesHandler(userExerciseStatusRepository),
 			GetUserStatsHandler:                    hub.NewGetUserStatsHandler(userExerciseStatusRepository),
 			GetExerciseCollectionsHandler:          hub.NewGetExerciseCollectionsHandler(exerciseCollectionRepository, cachingRepository),
+			GetUserRecentExercisesChartHandler:     hub.NewGetUserRecentExercisesChartHandler(userExerciseStatusRepository),
 		},
 	}
 }

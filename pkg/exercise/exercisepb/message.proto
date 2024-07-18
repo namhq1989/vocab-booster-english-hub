@@ -34,3 +34,8 @@ message ExerciseCollection {
   int32 statsExercises = 7;
   int32 statsInteracted = 8;
 }
+
+message UserAggregatedExercise {
+  string date = 1;
+  int64 exercise = 2;
+}

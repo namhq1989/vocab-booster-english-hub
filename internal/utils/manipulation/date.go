@@ -22,5 +22,26 @@ func IsYesterday(t time.Time) bool {
 }
 
 func ToSQLTimestamp(t time.Time) string {
-	return t.Format("2006-01-02 15:04:05.999999-07:00")
+	return t.UTC().Format("2006-01-02 15:04:05.999999-00:00")
+}
+
+func ToSQLDate(t time.Time) string {
+	if t.Hour() > 0 || t.Minute() > 0 || t.Second() > 0 {
+		t = t.Add(24 * time.Hour).Truncate(24 * time.Hour)
+	}
+	return t.UTC().Format("2006-01-02")
+}
+
+func ToSQLDateFrom(t time.Time) string {
+	if t.Hour() > 0 || t.Minute() > 0 || t.Second() > 0 || t.Nanosecond() > 0 {
+		t = t.Add(24 * time.Hour).Truncate(24 * time.Hour)
+	} else {
+		t = t.Truncate(24 * time.Hour)
+	}
+	return t.UTC().Format("2006-01-02")
+}
+
+func ToSQLDateTo(t time.Time) string {
+	t = t.Truncate(24 * time.Hour)
+	return t.UTC().Format("2006-01-02")
 }

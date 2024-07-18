@@ -16,6 +16,7 @@ service ExerciseService {
   rpc GetUserFavoriteExercises(GetUserFavoriteExercisesRequest) returns (GetUserFavoriteExercisesResponse) {}
   rpc GetUserStats(GetUserStatsRequest) returns (GetUserStatsResponse) {}
   rpc GetExerciseCollections(GetExerciseCollectionsRequest) returns (GetExerciseCollectionsResponse) {}
+  rpc GetUserRecentExercisesChart(GetUserRecentExercisesChartRequest) returns (GetUserRecentExercisesChartResponse) {}
 }
 
 // NEW EXERCISE
@@ -135,4 +136,16 @@ message GetExerciseCollectionsRequest {
 
 message GetExerciseCollectionsResponse {
   repeated ExerciseCollection collections = 1;
+}
+
+// GET USER RECENT EXERCISES CHART
+
+message GetUserRecentExercisesChartRequest {
+  string userId = 1;
+  google.protobuf.Timestamp from = 2;
+  google.protobuf.Timestamp to = 3;
+}
+
+message GetUserRecentExercisesChartResponse {
+  repeated UserAggregatedExercise exercises = 1;
 }
