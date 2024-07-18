@@ -1,5 +1,7 @@
 -- Write your migrate up statements here
 
+ALTER DATABASE "vocab-booster" SET timezone TO 'UTC';
+
 CREATE SCHEMA IF NOT EXISTS public;
 
 -- VOCABULARY --
