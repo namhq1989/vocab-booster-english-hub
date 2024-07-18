@@ -83,8 +83,6 @@ func (r UserExerciseInteractedHistoryRepository) AggregateUserExercisesInTimeRan
 		},
 	)
 
-	// ctx.Logger().Print("sql", stmt.DebugSql())
-
 	var (
 		result = make([]domain.UserAggregatedExercise, 0)
 		docs   = make([]mapping.UserAggregatedExercise, 0)

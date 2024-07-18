@@ -1,25 +1,6 @@
 package manipulation
 
-import (
-	"fmt"
-	"time"
-)
-
-var (
-	serverTimezone = ""
-	serverLocation = time.Now().Location()
-)
-
-func GetServerTimezone() string {
-	if serverTimezone != "" {
-		return serverTimezone
-	}
-
-	now := time.Now()
-	_, offset := now.Zone()
-	serverTimezone = fmt.Sprintf("%+03d:%02d", offset/3600, offset%3600/60)
-	return serverTimezone
-}
+import "time"
 
 func StartOfToday() time.Time {
 	now := time.Now()
