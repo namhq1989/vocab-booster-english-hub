@@ -28,7 +28,7 @@ require (
 	github.com/namhq1989/vocab-booster-utilities v0.0.5
 	github.com/nicksnyder/go-i18n/v2 v2.4.0
 	github.com/redis/go-redis/v9 v9.5.3
-	github.com/sashabaranov/go-openai v1.24.1
+	github.com/sashabaranov/go-openai v1.27.0
 	go.mongodb.org/mongo-driver v1.16.0
 	golang.org/x/sync v0.7.0
 	golang.org/x/text v0.16.0
