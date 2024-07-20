@@ -13,12 +13,12 @@ import (
 
 func (t TTS) GenerateVocabularyExampleSound(ctx *appcontext.AppContext, exampleID, exampleContent string) (string, error) {
 	var (
-		fileName = fmt.Sprintf("%s.ogg", exampleID)
+		fileName = fmt.Sprintf("%s.mp3", exampleID)
 		voice    = t.randomVoice()
 	)
 
 	output, err := t.polly.SynthesizeSpeech(ctx.Context(), &polly.SynthesizeSpeechInput{
-		OutputFormat: types.OutputFormatOggVorbis,
+		OutputFormat: types.OutputFormatMp3,
 		Text:         aws.String(exampleContent),
 		VoiceId:      voice.Id,
 		Engine:       types.EngineNeural,
