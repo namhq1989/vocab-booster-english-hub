@@ -17,7 +17,7 @@ func (s Service) FindExerciseCollectionByID(ctx *appcontext.AppContext, collecti
 			return c.ID == collectionID
 		})
 		if collectionIndex != -1 {
-			ctx.Logger().ErrorText("collection found, respond")
+			ctx.Logger().Text("collection found, respond")
 			collection := (*cachingCollections)[collectionIndex]
 			return &collection, nil
 		} else {

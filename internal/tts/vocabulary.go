@@ -15,12 +15,12 @@ import (
 func (t TTS) GenerateVocabularySound(ctx *appcontext.AppContext, vocabulary string) (string, error) {
 	var (
 		slug     = manipulation.Slugify(vocabulary)
-		fileName = fmt.Sprintf("%s.ogg", slug)
+		fileName = fmt.Sprintf("%s.mp3", slug)
 		voice    = t.randomVoice()
 	)
 
 	output, err := t.polly.SynthesizeSpeech(ctx.Context(), &polly.SynthesizeSpeechInput{
-		OutputFormat: types.OutputFormatOggVorbis,
+		OutputFormat: types.OutputFormatMp3,
 		Text:         aws.String(vocabulary),
 		VoiceId:      voice.Id,
 		Engine:       types.EngineNeural,
