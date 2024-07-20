@@ -50,8 +50,7 @@ func (ai AI) GrammarEvaluation(ctx *appcontext.AppContext, payload GrammarEvalua
 	seed := randSource.Intn(10000)
 
 	resp, err := ai.openai.CreateChatCompletion(ctx.Context(), openai.ChatCompletionRequest{
-		Model: openai.GPT4o,
-		// Model:       openai.GPT3Dot5Turbo1106,
+		Model:       openai.GPT4oMini,
 		Messages:    []openai.ChatCompletionMessage{{Role: openai.ChatMessageRoleUser, Content: prompt}},
 		MaxTokens:   500,
 		Temperature: 0.6,

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
-
 	"github.com/sashabaranov/go-openai"
 )
 
