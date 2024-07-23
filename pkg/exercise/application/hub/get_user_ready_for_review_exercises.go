@@ -7,23 +7,23 @@ import (
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
 
-type GetUserReadyToReviewExercisesHandler struct {
+type GetUserReadyForReviewExercisesHandler struct {
 	userExerciseStatusRepository domain.UserExerciseStatusRepository
 }
 
-func NewGetUserReadyToReviewExercisesHandler(
+func NewGetUserReadyForReviewExercisesHandler(
 	userExerciseStatusRepository domain.UserExerciseStatusRepository,
-) GetUserReadyToReviewExercisesHandler {
-	return GetUserReadyToReviewExercisesHandler{
+) GetUserReadyForReviewExercisesHandler {
+	return GetUserReadyForReviewExercisesHandler{
 		userExerciseStatusRepository: userExerciseStatusRepository,
 	}
 }
 
-func (h GetUserReadyToReviewExercisesHandler) GetUserReadyToReviewExercises(ctx *appcontext.AppContext, req *exercisepb.GetUserReadyToReviewExercisesRequest) (*exercisepb.GetUserReadyToReviewExercisesResponse, error) {
-	ctx.Logger().Info("[hub] new get user ready to review exercises request", appcontext.Fields{"userID": req.GetUserId(), "lang": req.GetLang()})
+func (h GetUserReadyForReviewExercisesHandler) GetUserReadyForReviewExercises(ctx *appcontext.AppContext, req *exercisepb.GetUserReadyForReviewExercisesRequest) (*exercisepb.GetUserReadyForReviewExercisesResponse, error) {
+	ctx.Logger().Info("[hub] new get user ready for review exercises request", appcontext.Fields{"userID": req.GetUserId(), "lang": req.GetLang(), "timezone": req.GetTimezone()})
 
 	ctx.Logger().Text("new user exercise filter")
-	filter, err := domain.NewUserExerciseFilter(req.GetUserId(), "", req.GetLang())
+	filter, err := domain.NewUserExerciseFilter(req.GetUserId(), "", req.GetLang(), req.GetTimezone())
 	if err != nil {
 		ctx.Logger().Error("failed to create new user exercise filter", err, appcontext.Fields{})
 		return nil, err
@@ -39,7 +39,7 @@ func (h GetUserReadyToReviewExercisesHandler) GetUserReadyToReviewExercises(ctx 
 	result := dto.ConvertUserExercisesFromDomainToGrpc(exercises)
 	ctx.Logger().Text("done get user ready to review exercises request")
 
-	return &exercisepb.GetUserReadyToReviewExercisesResponse{
+	return &exercisepb.GetUserReadyForReviewExercisesResponse{
 		Exercises: result,
 	}, nil
 }

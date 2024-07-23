@@ -6,6 +6,7 @@ import (
 
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/manipulation"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 	"github.com/namhq1989/vocab-booster-utilities/language"
 )
@@ -72,7 +73,7 @@ func NewExercise(vocabularyExampleID, level, content, vocabulary, correctAnswer 
 		Vocabulary:          vocabulary,
 		CorrectAnswer:       correctAnswer,
 		Options:             options,
-		CreatedAt:           time.Now(),
+		CreatedAt:           manipulation.NowUTC(),
 	}, nil
 }
 

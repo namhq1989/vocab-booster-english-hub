@@ -3,9 +3,8 @@ package domain
 import (
 	"time"
 
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
-
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/pagetoken"
 )
 
@@ -29,10 +28,11 @@ type UserExerciseFilter struct {
 	UserID             string
 	CollectionCriteria string
 	Lang               string
+	Timezone           string
 	NumOfExercises     int64
 }
 
-func NewUserExerciseFilter(userID, collectionCriteria, lang string) (*UserExerciseFilter, error) {
+func NewUserExerciseFilter(userID, collectionCriteria, lang, timezone string) (*UserExerciseFilter, error) {
 	if !database.IsValidID(userID) {
 		return nil, apperrors.User.InvalidUserID
 	}
@@ -41,6 +41,7 @@ func NewUserExerciseFilter(userID, collectionCriteria, lang string) (*UserExerci
 		UserID:             userID,
 		CollectionCriteria: collectionCriteria,
 		Lang:               lang,
+		Timezone:           timezone,
 		NumOfExercises:     10,
 	}, nil
 }

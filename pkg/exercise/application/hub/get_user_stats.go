@@ -19,10 +19,10 @@ func NewGetUserStatsHandler(
 }
 
 func (h GetUserStatsHandler) GetUserStats(ctx *appcontext.AppContext, req *exercisepb.GetUserStatsRequest) (*exercisepb.GetUserStatsResponse, error) {
-	ctx.Logger().Info("[hub] new get user stats request", appcontext.Fields{"userID": req.GetUserId()})
+	ctx.Logger().Info("[hub] new get user stats request", appcontext.Fields{"userID": req.GetUserId(), "timezone": req.GetTimezone()})
 
 	ctx.Logger().Text("find in db")
-	stats, err := h.userExerciseStatusRepository.FindUserStats(ctx, req.GetUserId())
+	stats, err := h.userExerciseStatusRepository.FindUserStats(ctx, req.GetUserId(), req.GetTimezone())
 	if err != nil {
 		ctx.Logger().Error("failed to find in db", err, appcontext.Fields{})
 		return nil, err

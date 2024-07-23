@@ -5,10 +5,9 @@ import (
 	"time"
 
 	"github.com/go-jet/jet/v2/postgres"
-	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/manipulation"
-
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database/gen/vocab-booster/public/table"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/manipulation"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/domain"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/infrastructure/mapping"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
@@ -48,7 +47,7 @@ func (r UserExerciseInteractedHistoryRepository) UpsertUserExerciseInteractedHis
 	return err
 }
 
-func (r UserExerciseInteractedHistoryRepository) AggregateUserExercisesInTimeRange(ctx *appcontext.AppContext, userID string, from, to time.Time) ([]domain.UserAggregatedExercise, error) {
+func (r UserExerciseInteractedHistoryRepository) AggregateUserExercisesInTimeRange(ctx *appcontext.AppContext, userID, timezone string, from, to time.Time) ([]domain.UserAggregatedExercise, error) {
 	stmt := postgres.RawStatement(
 		`WITH RECURSIVE date_series AS (
 						SELECT 
@@ -69,17 +68,17 @@ func (r UserExerciseInteractedHistoryRepository) AggregateUserExercisesInTimeRan
 					LEFT JOIN 
 						user_exercise_interacted_histories ueih
 					ON 
-						DATE_TRUNC('day', ueih.date AT TIME ZONE $server_time_zone) = date_series.date
+						DATE_TRUNC('day', ueih.date AT TIME ZONE $timezone) = date_series.date
 						AND ueih.user_id = $userID::text
 					GROUP BY 
 						date_series.date
 					ORDER BY 
 						date_series.date;`,
 		postgres.RawArgs{
-			"$from_date":        manipulation.ToSQLDateFrom(from),
-			"$to_date":          manipulation.ToSQLDateTo(to),
-			"$server_time_zone": "Asia/Ho_Chi_Minh",
-			"$userID":           userID,
+			"$from_date": manipulation.ToSQLDateFrom(from, timezone),
+			"$to_date":   manipulation.ToSQLDateTo(to, timezone),
+			"$timezone":  timezone,
+			"$userID":    userID,
 		},
 	)
 

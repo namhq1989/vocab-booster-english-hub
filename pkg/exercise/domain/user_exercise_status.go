@@ -3,9 +3,9 @@ package domain
 import (
 	"time"
 
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
-
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/manipulation"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
 
@@ -13,10 +13,10 @@ type UserExerciseStatusRepository interface {
 	CreateUserExerciseStatus(ctx *appcontext.AppContext, status UserExerciseStatus) error
 	UpdateUserExerciseStatus(ctx *appcontext.AppContext, status UserExerciseStatus) error
 	FindUserExerciseStatus(ctx *appcontext.AppContext, exerciseID, userID string) (*UserExerciseStatus, error)
-	CountUserReadyToReviewExercises(ctx *appcontext.AppContext, userID string) (int64, error)
+	CountUserReadyToReviewExercises(ctx *appcontext.AppContext, userID, timezone string) (int64, error)
 	FindUserReadyToReviewExercises(ctx *appcontext.AppContext, filter UserExerciseFilter) ([]UserExercise, error)
 	FindUserFavoriteExercises(ctx *appcontext.AppContext, filter UserFavoriteExerciseFilter) ([]UserExercise, error)
-	FindUserStats(ctx *appcontext.AppContext, userID string) (*UserStats, error)
+	FindUserStats(ctx *appcontext.AppContext, userID, timezone string) (*UserStats, error)
 }
 
 type UserExerciseStatus struct {
@@ -51,8 +51,8 @@ func NewUserExerciseStatus(exerciseID, userID string) (*UserExerciseStatus, erro
 		CorrectStreak: 0,
 		IsFavorite:    false,
 		IsMastered:    false,
-		UpdatedAt:     time.Now(),
-		NextReviewAt:  time.Now(),
+		UpdatedAt:     manipulation.NowUTC(),
+		NextReviewAt:  manipulation.NowUTC(),
 	}, nil
 }
 
@@ -76,13 +76,13 @@ func (d *UserExerciseStatus) SetResult(isCorrect bool) error {
 
 	_ = d.SetNextReviewAt()
 	d.AnswerCount++
-	d.UpdatedAt = time.Now()
+	d.UpdatedAt = manipulation.NowUTC()
 	return nil
 }
 
 func (d *UserExerciseStatus) SetFavorite(value bool) error {
 	d.IsFavorite = value
-	d.UpdatedAt = time.Now()
+	d.UpdatedAt = manipulation.NowUTC()
 	return nil
 }
 
@@ -104,7 +104,7 @@ func (d *UserExerciseStatus) SetNextReviewAt() error {
 		nextReviewDuration = 30 * 24 * time.Hour
 	}
 
-	d.NextReviewAt = time.Now().Add(nextReviewDuration)
+	d.NextReviewAt = manipulation.NowUTC().Add(nextReviewDuration)
 	return nil
 }
 
