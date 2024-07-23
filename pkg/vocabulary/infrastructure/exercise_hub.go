@@ -16,13 +16,13 @@ func NewExerciseHub(client exercisepb.ExerciseServiceClient) ExerciseHub {
 	}
 }
 
-func (r ExerciseHub) CreateExercise(ctx *appcontext.AppContext, vocabularyExampleID, level, content, vocabulary, correctAnswer string, translated language.TranslatedLanguages, options []string) error {
+func (r ExerciseHub) CreateExercise(ctx *appcontext.AppContext, vocabularyExampleID, level string, content language.Multilingual, vocabulary, correctAnswer string, options []string) error {
 	_, err := r.client.NewExercise(ctx.Context(), &exercisepb.NewExerciseRequest{
 		VocabularyExampleId: vocabularyExampleID,
 		Level:               level,
-		Content:             content,
-		Translated: &exercisepb.TranslatedLanguages{
-			Vietnamese: translated.Vietnamese,
+		Content: &exercisepb.Multilingual{
+			English:    content.English,
+			Vietnamese: content.Vietnamese,
 		},
 		Vocabulary:    vocabulary,
 		CorrectAnswer: correctAnswer,

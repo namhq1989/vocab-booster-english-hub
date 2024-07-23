@@ -19,8 +19,7 @@ type VocabularyExample struct {
 	ID           string
 	VocabularyID string
 	Audio        string
-	Content      string
-	Translated   language.TranslatedLanguages
+	Content      language.Multilingual
 	MainWord     VocabularyMainWord
 	PosTags      []PosTag
 	Sentiment    Sentiment
@@ -34,8 +33,7 @@ type VocabularyMainWord struct {
 	Word       string
 	Base       string
 	Pos        PartOfSpeech
-	Definition string
-	Translated language.TranslatedLanguages
+	Definition language.Multilingual
 }
 
 func NewVocabularyExample(vocabularyID string) (*VocabularyExample, error) {
@@ -58,17 +56,16 @@ func (d *VocabularyExample) SetAudio(audio string) error {
 	return nil
 }
 
-func (d *VocabularyExample) SetContent(content string, translated language.TranslatedLanguages) error {
-	if content == "" {
+func (d *VocabularyExample) SetContent(content language.Multilingual) error {
+	if content.IsEmpty() {
 		return apperrors.Vocabulary.InvalidExampleContent
 	}
 
 	d.Content = content
-	d.Translated = translated
 	return nil
 }
 
-func (d *VocabularyExample) SetMainWordData(word, base, definition, pos string, translated language.TranslatedLanguages) error {
+func (d *VocabularyExample) SetMainWordData(word, base, pos string, definition language.Multilingual) error {
 	dPos := ToPartOfSpeech(pos)
 	if !dPos.IsValid() {
 		return apperrors.Vocabulary.InvalidPartOfSpeech
@@ -82,15 +79,14 @@ func (d *VocabularyExample) SetMainWordData(word, base, definition, pos string, 
 		return apperrors.Vocabulary.InvalidTerm
 	}
 
-	if definition == "" {
+	if definition.IsEmpty() {
 		return apperrors.Vocabulary.InvalidDefinition
 	}
 
 	d.MainWord.Pos = dPos
 	d.MainWord.Base = base
-	d.MainWord.Definition = definition
 	d.MainWord.Word = word
-	d.MainWord.Translated = translated
+	d.MainWord.Definition = definition
 	return nil
 }
 

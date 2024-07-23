@@ -5,14 +5,16 @@ import (
 	"github.com/namhq1989/vocab-booster-utilities/language"
 )
 
-// func ConvertTranslatedLanguagesToGrpcData(translatedLanguages language.TranslatedLanguages) *exercisepb.TranslatedLanguages {
-// 	return &exercisepb.TranslatedLanguages{
-// 		Vietnamese: translatedLanguages.Vietnamese,
-// 	}
-// }
+func ConvertMultilingualToGrpcData(multilingual language.Multilingual) *exercisepb.Multilingual {
+	return &exercisepb.Multilingual{
+		English:    multilingual.English,
+		Vietnamese: multilingual.Vietnamese,
+	}
+}
 
-func ConvertGrpcDataToTranslatedLanguages(data *exercisepb.TranslatedLanguages) language.TranslatedLanguages {
-	return language.TranslatedLanguages{
+func ConvertGrpcDataToMultilingual(data *exercisepb.Multilingual) language.Multilingual {
+	return language.Multilingual{
+		English:    data.GetEnglish(),
 		Vietnamese: data.GetVietnamese(),
 	}
 }

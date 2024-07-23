@@ -7,14 +7,17 @@ import (
 )
 
 func ConvertUserExerciseCollectionsFromDomainToGrpc(collections []domain.UserExerciseCollection, lang string) []*exercisepb.ExerciseCollection {
-	var result = make([]*exercisepb.ExerciseCollection, len(collections))
+	var (
+		result = make([]*exercisepb.ExerciseCollection, len(collections))
+	)
 
 	for index, collection := range collections {
+		name := collection.Name.GetLocalized(lang)
+
 		result[index] = &exercisepb.ExerciseCollection{
 			Id:              collection.ID,
-			Name:            collection.Name,
+			Name:            ConvertMultilingualToGrpcData(name),
 			Slug:            collection.Slug,
-			Translated:      collection.Translated.GetLanguageValue(lang),
 			StatsExercises:  int32(collection.StatsExercises),
 			StatsInteracted: int32(collection.StatsInteracted),
 			Image:           staticfiles.GetExerciseCollectionsEndpoint(collection.Image),

@@ -22,7 +22,6 @@ type exercisesTable struct {
 	Audio               postgres.ColumnString
 	Level               postgres.ColumnString
 	Content             postgres.ColumnString
-	Translated          postgres.ColumnString
 	Vocabulary          postgres.ColumnString
 	CorrectAnswer       postgres.ColumnString
 	Options             postgres.ColumnString
@@ -72,13 +71,12 @@ func newExercisesTableImpl(schemaName, tableName, alias string) exercisesTable {
 		AudioColumn               = postgres.StringColumn("audio")
 		LevelColumn               = postgres.StringColumn("level")
 		ContentColumn             = postgres.StringColumn("content")
-		TranslatedColumn          = postgres.StringColumn("translated")
 		VocabularyColumn          = postgres.StringColumn("vocabulary")
 		CorrectAnswerColumn       = postgres.StringColumn("correct_answer")
 		OptionsColumn             = postgres.StringColumn("options")
 		CreatedAtColumn           = postgres.TimestampzColumn("created_at")
-		allColumns                = postgres.ColumnList{IDColumn, VocabularyExampleIDColumn, AudioColumn, LevelColumn, ContentColumn, TranslatedColumn, VocabularyColumn, CorrectAnswerColumn, OptionsColumn, CreatedAtColumn}
-		mutableColumns            = postgres.ColumnList{VocabularyExampleIDColumn, AudioColumn, LevelColumn, ContentColumn, TranslatedColumn, VocabularyColumn, CorrectAnswerColumn, OptionsColumn, CreatedAtColumn}
+		allColumns                = postgres.ColumnList{IDColumn, VocabularyExampleIDColumn, AudioColumn, LevelColumn, ContentColumn, VocabularyColumn, CorrectAnswerColumn, OptionsColumn, CreatedAtColumn}
+		mutableColumns            = postgres.ColumnList{VocabularyExampleIDColumn, AudioColumn, LevelColumn, ContentColumn, VocabularyColumn, CorrectAnswerColumn, OptionsColumn, CreatedAtColumn}
 	)
 
 	return exercisesTable{
@@ -90,7 +88,6 @@ func newExercisesTableImpl(schemaName, tableName, alias string) exercisesTable {
 		Audio:               AudioColumn,
 		Level:               LevelColumn,
 		Content:             ContentColumn,
-		Translated:          TranslatedColumn,
 		Vocabulary:          VocabularyColumn,
 		CorrectAnswer:       CorrectAnswerColumn,
 		Options:             OptionsColumn,

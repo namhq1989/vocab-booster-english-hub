@@ -14,8 +14,7 @@ func (VocabularyExampleMapper) FromModelToDomain(example model.VocabularyExample
 		ID:           example.ID,
 		VocabularyID: example.VocabularyID,
 		Audio:        example.Audio,
-		Content:      example.Content,
-		Translated:   language.TranslatedLanguages{},
+		Content:      language.Multilingual{},
 		MainWord:     domain.VocabularyMainWord{},
 		PosTags:      make([]domain.PosTag, 0),
 		Sentiment:    domain.Sentiment{},
@@ -23,6 +22,10 @@ func (VocabularyExampleMapper) FromModelToDomain(example model.VocabularyExample
 		Verbs:        make([]domain.Verb, 0),
 		Level:        domain.ToSentenceLevel(example.Level),
 		CreatedAt:    example.CreatedAt,
+	}
+
+	if err := json.Unmarshal([]byte(example.Content), &result.Content); err != nil {
+		return nil, err
 	}
 
 	if err := json.Unmarshal([]byte(example.PosTags), &result.PosTags); err != nil {
@@ -34,10 +37,6 @@ func (VocabularyExampleMapper) FromModelToDomain(example model.VocabularyExample
 	}
 
 	if err := json.Unmarshal([]byte(example.Verbs), &result.Verbs); err != nil {
-		return nil, err
-	}
-
-	if err := json.Unmarshal([]byte(example.Translated), &result.Translated); err != nil {
 		return nil, err
 	}
 
@@ -57,8 +56,7 @@ func (VocabularyExampleMapper) FromDomainToModel(example domain.VocabularyExampl
 		ID:           example.ID,
 		VocabularyID: example.VocabularyID,
 		Audio:        example.Audio,
-		Content:      example.Content,
-		Translated:   "",
+		Content:      "",
 		MainWord:     "",
 		PosTags:      "",
 		Sentiment:    "",
@@ -68,10 +66,10 @@ func (VocabularyExampleMapper) FromDomainToModel(example domain.VocabularyExampl
 		CreatedAt:    example.CreatedAt,
 	}
 
-	if data, err := json.Marshal(example.Translated); err != nil {
+	if data, err := json.Marshal(example.Content); err != nil {
 		return nil, err
 	} else {
-		result.Translated = string(data)
+		result.Content = string(data)
 	}
 
 	mainWord := VocabularyMainWord{
@@ -79,7 +77,6 @@ func (VocabularyExampleMapper) FromDomainToModel(example domain.VocabularyExampl
 		Base:       example.MainWord.Base,
 		Pos:        example.MainWord.Pos.String(),
 		Definition: example.MainWord.Definition,
-		Translated: example.MainWord.Translated,
 	}
 	if data, err := json.Marshal(mainWord); err != nil {
 		return nil, err

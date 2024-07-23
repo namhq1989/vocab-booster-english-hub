@@ -21,7 +21,6 @@ type vocabularyExamplesTable struct {
 	VocabularyID postgres.ColumnString
 	Audio        postgres.ColumnString
 	Content      postgres.ColumnString
-	Translated   postgres.ColumnString
 	MainWord     postgres.ColumnString
 	PosTags      postgres.ColumnString
 	Sentiment    postgres.ColumnString
@@ -73,7 +72,6 @@ func newVocabularyExamplesTableImpl(schemaName, tableName, alias string) vocabul
 		VocabularyIDColumn = postgres.StringColumn("vocabulary_id")
 		AudioColumn        = postgres.StringColumn("audio")
 		ContentColumn      = postgres.StringColumn("content")
-		TranslatedColumn   = postgres.StringColumn("translated")
 		MainWordColumn     = postgres.StringColumn("main_word")
 		PosTagsColumn      = postgres.StringColumn("pos_tags")
 		SentimentColumn    = postgres.StringColumn("sentiment")
@@ -81,8 +79,8 @@ func newVocabularyExamplesTableImpl(schemaName, tableName, alias string) vocabul
 		VerbsColumn        = postgres.StringColumn("verbs")
 		LevelColumn        = postgres.StringColumn("level")
 		CreatedAtColumn    = postgres.TimestampzColumn("created_at")
-		allColumns         = postgres.ColumnList{IDColumn, VocabularyIDColumn, AudioColumn, ContentColumn, TranslatedColumn, MainWordColumn, PosTagsColumn, SentimentColumn, DependenciesColumn, VerbsColumn, LevelColumn, CreatedAtColumn}
-		mutableColumns     = postgres.ColumnList{VocabularyIDColumn, AudioColumn, ContentColumn, TranslatedColumn, MainWordColumn, PosTagsColumn, SentimentColumn, DependenciesColumn, VerbsColumn, LevelColumn, CreatedAtColumn}
+		allColumns         = postgres.ColumnList{IDColumn, VocabularyIDColumn, AudioColumn, ContentColumn, MainWordColumn, PosTagsColumn, SentimentColumn, DependenciesColumn, VerbsColumn, LevelColumn, CreatedAtColumn}
+		mutableColumns     = postgres.ColumnList{VocabularyIDColumn, AudioColumn, ContentColumn, MainWordColumn, PosTagsColumn, SentimentColumn, DependenciesColumn, VerbsColumn, LevelColumn, CreatedAtColumn}
 	)
 
 	return vocabularyExamplesTable{
@@ -93,7 +91,6 @@ func newVocabularyExamplesTableImpl(schemaName, tableName, alias string) vocabul
 		VocabularyID: VocabularyIDColumn,
 		Audio:        AudioColumn,
 		Content:      ContentColumn,
-		Translated:   TranslatedColumn,
 		MainWord:     MainWordColumn,
 		PosTags:      PosTagsColumn,
 		Sentiment:    SentimentColumn,

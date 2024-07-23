@@ -28,9 +28,8 @@ type Verb struct {
 }
 
 type VocabularyMainWord struct {
-	Word       string                       `json:"word"`
-	Base       string                       `json:"base"`
-	Pos        string                       `json:"pos"`
-	Definition string                       `json:"definition"`
-	Translated language.TranslatedLanguages `json:"translated"`
+	Word       string                `json:"word"`
+	Base       string                `json:"base"`
+	Pos        string                `json:"pos"`
+	Definition language.Multilingual `json:"definition"`
 }

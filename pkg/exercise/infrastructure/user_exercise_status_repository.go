@@ -120,7 +120,7 @@ func (r UserExerciseStatusRepository) FindUserReadyToReviewExercises(ctx *appcon
 	whereCond = whereCond.AND(ues.NextReviewAt.LT(postgres.TimestampzT(now)))
 
 	stmt := postgres.SELECT(
-		e.ID, e.Level, e.Audio, e.Vocabulary, e.Content, e.Translated, e.CorrectAnswer, e.Options,
+		e.ID, e.Level, e.Audio, e.Vocabulary, e.Content, e.CorrectAnswer, e.Options,
 		ues.CorrectStreak, ues.IsFavorite, ues.IsMastered, ues.NextReviewAt,
 	).
 		FROM(
@@ -147,7 +147,7 @@ func (r UserExerciseStatusRepository) FindUserFavoriteExercises(ctx *appcontext.
 	whereCond = whereCond.AND(ues.UpdatedAt.LT(postgres.TimestampzT(now)))
 
 	stmt := postgres.SELECT(
-		e.ID, e.Level, e.Audio, e.Vocabulary, e.Content, e.Translated, e.CorrectAnswer, e.Options,
+		e.ID, e.Level, e.Audio, e.Vocabulary, e.Content, e.CorrectAnswer, e.Options,
 		ues.CorrectStreak, ues.IsFavorite, ues.IsMastered, ues.NextReviewAt,
 	).
 		FROM(

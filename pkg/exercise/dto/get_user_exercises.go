@@ -7,17 +7,18 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func ConvertUserExercisesFromDomainToGrpc(exercises []domain.UserExercise) []*exercisepb.UserExercise {
+func ConvertUserExercisesFromDomainToGrpc(exercises []domain.UserExercise, lang string) []*exercisepb.UserExercise {
 	var result = make([]*exercisepb.UserExercise, len(exercises))
 
 	for index, exercise := range exercises {
+		content := exercise.Content.GetLocalized(lang)
+
 		result[index] = &exercisepb.UserExercise{
 			Id:            exercise.ID,
 			Level:         exercise.Level.String(),
 			Audio:         staticfiles.GetExampleEndpoint(exercise.Audio),
 			Vocabulary:    exercise.Vocabulary,
-			Content:       exercise.Content,
-			Translated:    exercise.Translated,
+			Content:       ConvertMultilingualToGrpcData(content),
 			CorrectAnswer: exercise.CorrectAnswer,
 			Options:       exercise.Options,
 			CorrectStreak: int32(exercise.CorrectStreak),

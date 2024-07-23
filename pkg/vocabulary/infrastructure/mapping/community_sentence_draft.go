@@ -14,13 +14,12 @@ func (CommunitySentenceDraftMapper) FromModelToDomain(sentence model.CommunitySe
 		ID:                 sentence.ID,
 		UserID:             sentence.UserID,
 		VocabularyID:       sentence.VocabularyID,
-		Content:            sentence.Content,
+		Content:            language.Multilingual{},
 		RequiredVocabulary: sentence.RequiredVocabulary,
 		RequiredTense:      domain.ToTense(sentence.RequiredTense),
 		IsCorrect:          sentence.IsCorrect,
 		ErrorCode:          domain.ToSentenceErrorCode(sentence.ErrorCode),
 		GrammarErrors:      make([]domain.SentenceGrammarError, 0),
-		Translated:         language.TranslatedLanguages{},
 		Sentiment:          domain.Sentiment{},
 		Clauses:            make([]domain.SentenceClause, 0),
 		CreatedAt:          sentence.CreatedAt,
@@ -31,7 +30,7 @@ func (CommunitySentenceDraftMapper) FromModelToDomain(sentence model.CommunitySe
 		return nil, err
 	}
 
-	if err := json.Unmarshal([]byte(sentence.Translated), &result.Translated); err != nil {
+	if err := json.Unmarshal([]byte(sentence.Content), &result.Content); err != nil {
 		return nil, err
 	}
 
@@ -51,13 +50,12 @@ func (CommunitySentenceDraftMapper) FromDomainToModel(sentence domain.CommunityS
 		ID:                 sentence.ID,
 		UserID:             sentence.UserID,
 		VocabularyID:       sentence.VocabularyID,
-		Content:            sentence.Content,
+		Content:            "",
 		RequiredVocabulary: sentence.RequiredVocabulary,
 		RequiredTense:      sentence.RequiredTense.String(),
 		IsCorrect:          sentence.IsCorrect,
 		ErrorCode:          sentence.ErrorCode.String(),
 		GrammarErrors:      "",
-		Translated:         "",
 		Sentiment:          "",
 		Clauses:            "",
 		CreatedAt:          sentence.CreatedAt,
@@ -68,7 +66,6 @@ func (CommunitySentenceDraftMapper) FromDomainToModel(sentence domain.CommunityS
 	for _, grammarError := range sentence.GrammarErrors {
 		grammarErrors = append(grammarErrors, SentenceGrammarError{
 			Message:     grammarError.Message,
-			Translated:  grammarError.Translated,
 			Segment:     grammarError.Segment,
 			Replacement: grammarError.Replacement,
 		})
@@ -79,10 +76,10 @@ func (CommunitySentenceDraftMapper) FromDomainToModel(sentence domain.CommunityS
 		result.GrammarErrors = string(data)
 	}
 
-	if data, err := json.Marshal(sentence.Translated); err != nil {
+	if data, err := json.Marshal(sentence.Content); err != nil {
 		return nil, err
 	} else {
-		result.Translated = string(data)
+		result.Content = string(data)
 	}
 
 	sentiment := Sentiment{

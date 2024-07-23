@@ -66,7 +66,7 @@ func (r NlpRepository) AnalyzeSentence(ctx *appcontext.AppContext, sentence stri
 	}, nil
 }
 
-func (r NlpRepository) TranslateDefinition(ctx *appcontext.AppContext, definition string) (*language.TranslatedLanguages, error) {
+func (r NlpRepository) TranslateDefinition(ctx *appcontext.AppContext, definition string) (*language.Multilingual, error) {
 	return r.nlp.Translate(ctx, definition)
 }
 
@@ -106,7 +106,7 @@ func (r NlpRepository) GrammarCheck(ctx *appcontext.AppContext, sentence string)
 
 	grammarErrors := make([]domain.SentenceGrammarError, 0)
 	for _, ge := range result.Errors {
-		sge, _ := domain.NewSentenceGrammarError(ge.Message, ge.Segment, ge.Replacement, ge.Translated)
+		sge, _ := domain.NewSentenceGrammarError(ge.Message, ge.Segment, ge.Replacement)
 		if sge != nil {
 			grammarErrors = append(grammarErrors, *sge)
 		}

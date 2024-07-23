@@ -20,12 +20,11 @@ type exerciseCollectionsTable struct {
 	ID                 postgres.ColumnString
 	Name               postgres.ColumnString
 	Slug               postgres.ColumnString
-	Translated         postgres.ColumnString
 	Criteria           postgres.ColumnString
 	IsFromSystem       postgres.ColumnBool
-	StatsExercises     postgres.ColumnInteger
 	Order              postgres.ColumnInteger
 	Image              postgres.ColumnString
+	StatsExercises     postgres.ColumnInteger
 	LastStatsUpdatedAt postgres.ColumnTimestampz
 
 	AllColumns     postgres.ColumnList
@@ -70,15 +69,14 @@ func newExerciseCollectionsTableImpl(schemaName, tableName, alias string) exerci
 		IDColumn                 = postgres.StringColumn("id")
 		NameColumn               = postgres.StringColumn("name")
 		SlugColumn               = postgres.StringColumn("slug")
-		TranslatedColumn         = postgres.StringColumn("translated")
 		CriteriaColumn           = postgres.StringColumn("criteria")
 		IsFromSystemColumn       = postgres.BoolColumn("is_from_system")
-		StatsExercisesColumn     = postgres.IntegerColumn("stats_exercises")
 		OrderColumn              = postgres.IntegerColumn("order")
 		ImageColumn              = postgres.StringColumn("image")
+		StatsExercisesColumn     = postgres.IntegerColumn("stats_exercises")
 		LastStatsUpdatedAtColumn = postgres.TimestampzColumn("last_stats_updated_at")
-		allColumns               = postgres.ColumnList{IDColumn, NameColumn, SlugColumn, TranslatedColumn, CriteriaColumn, IsFromSystemColumn, StatsExercisesColumn, OrderColumn, ImageColumn, LastStatsUpdatedAtColumn}
-		mutableColumns           = postgres.ColumnList{NameColumn, SlugColumn, TranslatedColumn, CriteriaColumn, IsFromSystemColumn, StatsExercisesColumn, OrderColumn, ImageColumn, LastStatsUpdatedAtColumn}
+		allColumns               = postgres.ColumnList{IDColumn, NameColumn, SlugColumn, CriteriaColumn, IsFromSystemColumn, OrderColumn, ImageColumn, StatsExercisesColumn, LastStatsUpdatedAtColumn}
+		mutableColumns           = postgres.ColumnList{NameColumn, SlugColumn, CriteriaColumn, IsFromSystemColumn, OrderColumn, ImageColumn, StatsExercisesColumn, LastStatsUpdatedAtColumn}
 	)
 
 	return exerciseCollectionsTable{
@@ -88,12 +86,11 @@ func newExerciseCollectionsTableImpl(schemaName, tableName, alias string) exerci
 		ID:                 IDColumn,
 		Name:               NameColumn,
 		Slug:               SlugColumn,
-		Translated:         TranslatedColumn,
 		Criteria:           CriteriaColumn,
 		IsFromSystem:       IsFromSystemColumn,
-		StatsExercises:     StatsExercisesColumn,
 		Order:              OrderColumn,
 		Image:              ImageColumn,
+		StatsExercises:     StatsExercisesColumn,
 		LastStatsUpdatedAt: LastStatsUpdatedAtColumn,
 
 		AllColumns:     allColumns,

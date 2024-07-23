@@ -7,13 +7,13 @@ import (
 
 type NlpRepository interface {
 	AnalyzeSentence(ctx *appcontext.AppContext, sentence string) (*NlpSentenceAnalysisResult, error)
-	TranslateDefinition(ctx *appcontext.AppContext, definition string) (*language.TranslatedLanguages, error)
+	TranslateDefinition(ctx *appcontext.AppContext, definition string) (*language.Multilingual, error)
 	EvaluateSentence(ctx *appcontext.AppContext, sentence, tense string, vocabulary []string) (*NlpSentenceEvaluationResult, error)
 	GrammarCheck(ctx *appcontext.AppContext, sentence string) ([]SentenceGrammarError, error)
 }
 
 type NlpSentenceAnalysisResult struct {
-	Translated   language.TranslatedLanguages
+	Translated   language.Multilingual
 	PosTags      []PosTag
 	Sentiment    Sentiment
 	Dependencies []Dependency
@@ -26,6 +26,6 @@ type NlpSentenceEvaluationResult struct {
 	IsVocabularyCorrect bool
 	IsTenseCorrect      bool
 	Sentiment           Sentiment
-	Translated          language.TranslatedLanguages
+	Translated          language.Multilingual
 	Clauses             []SentenceClause
 }

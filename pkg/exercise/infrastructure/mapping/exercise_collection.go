@@ -12,9 +12,8 @@ type ExerciseCollectionMapper struct{}
 func (ExerciseCollectionMapper) FromModelToDomain(collection model.ExerciseCollections) (*domain.ExerciseCollection, error) {
 	var result = &domain.ExerciseCollection{
 		ID:                 collection.ID,
-		Name:               collection.Name,
+		Name:               language.Multilingual{},
 		Slug:               collection.Slug,
-		Translated:         language.TranslatedLanguages{},
 		Criteria:           collection.Criteria,
 		IsFromSystem:       collection.IsFromSystem,
 		Image:              collection.Image,
@@ -23,7 +22,7 @@ func (ExerciseCollectionMapper) FromModelToDomain(collection model.ExerciseColle
 		LastStatsUpdatedAt: collection.LastStatsUpdatedAt,
 	}
 
-	if err := json.Unmarshal([]byte(collection.Translated), &result.Translated); err != nil {
+	if err := json.Unmarshal([]byte(collection.Name), &result.Name); err != nil {
 		return nil, err
 	}
 
@@ -33,9 +32,8 @@ func (ExerciseCollectionMapper) FromModelToDomain(collection model.ExerciseColle
 func (ExerciseCollectionMapper) FromDomainToModel(collection domain.ExerciseCollection) (*model.ExerciseCollections, error) {
 	var result = &model.ExerciseCollections{
 		ID:                 collection.ID,
-		Name:               collection.Name,
+		Name:               "",
 		Slug:               collection.Slug,
-		Translated:         "",
 		Criteria:           collection.Criteria,
 		IsFromSystem:       collection.IsFromSystem,
 		Image:              collection.Image,
@@ -44,10 +42,10 @@ func (ExerciseCollectionMapper) FromDomainToModel(collection domain.ExerciseColl
 		LastStatsUpdatedAt: collection.LastStatsUpdatedAt,
 	}
 
-	if data, err := json.Marshal(collection.Translated); err != nil {
+	if data, err := json.Marshal(collection.Name); err != nil {
 		return nil, err
 	} else {
-		result.Translated = string(data)
+		result.Name = string(data)
 	}
 
 	return result, nil

@@ -50,7 +50,7 @@ func (h PromoteCommunitySentenceDraftHandler) PromoteCommunitySentenceDraft(ctx 
 	}
 
 	ctx.Logger().Text("analyze draft sentence")
-	sentenceAnalysisResult, err := h.nlpRepository.AnalyzeSentence(ctx, draftSentence.Content)
+	sentenceAnalysisResult, err := h.nlpRepository.AnalyzeSentence(ctx, draftSentence.Content.English)
 	if err != nil {
 		ctx.Logger().Error("failed to analyze draft sentence", err, appcontext.Fields{})
 		return nil, err
@@ -98,11 +98,6 @@ func (PromoteCommunitySentenceDraftHandler) setSentenceData(ctx *appcontext.AppC
 
 	if err := sentence.SetRequiredVocabulary(draft.RequiredVocabulary); err != nil {
 		ctx.Logger().Error("failed to set required vocabulary", err, appcontext.Fields{})
-		return err
-	}
-
-	if err := sentence.SetTranslated(draft.Translated); err != nil {
-		ctx.Logger().Error("failed to set translated", err, appcontext.Fields{})
 		return err
 	}
 

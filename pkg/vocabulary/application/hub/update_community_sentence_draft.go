@@ -5,6 +5,7 @@ import (
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
+	"github.com/namhq1989/vocab-booster-utilities/language"
 )
 
 type UpdateCommunitySentenceDraftHandler struct {
@@ -79,7 +80,9 @@ func (h UpdateCommunitySentenceDraftHandler) UpdateCommunitySentenceDraft(ctx *a
 
 func (UpdateCommunitySentenceDraftHandler) hasGrammarErrors(ctx *appcontext.AppContext, sentence *domain.CommunitySentenceDraft, content string, grammarErrors []domain.SentenceGrammarError) error {
 	ctx.Logger().Text("set sentence data")
-	if err := sentence.SetContent(content); err != nil {
+	if err := sentence.SetContent(language.Multilingual{
+		English: content,
+	}); err != nil {
 		ctx.Logger().Error("failed to set content", err, appcontext.Fields{})
 		return err
 	}
@@ -101,7 +104,7 @@ func (h UpdateCommunitySentenceDraftHandler) noGrammarErrors(ctx *appcontext.App
 	}
 
 	ctx.Logger().Text("set sentence data")
-	if err = sentence.SetContent(content); err != nil {
+	if err = sentence.SetContent(sentenceEvaluationResult.Translated); err != nil {
 		ctx.Logger().Error("failed to set content", err, appcontext.Fields{})
 		return err
 	}
@@ -118,11 +121,6 @@ func (h UpdateCommunitySentenceDraftHandler) noGrammarErrors(ctx *appcontext.App
 
 	if err = sentence.SetClauses(sentenceEvaluationResult.Clauses); err != nil {
 		ctx.Logger().Error("failed to set clauses", err, appcontext.Fields{})
-		return err
-	}
-
-	if err = sentence.SetTranslated(sentenceEvaluationResult.Translated); err != nil {
-		ctx.Logger().Error("failed to set translated", err, appcontext.Fields{})
 		return err
 	}
 

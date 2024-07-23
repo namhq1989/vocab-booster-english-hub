@@ -62,7 +62,7 @@ func (r AIRepository) GetVocabularyData(ctx *appcontext.AppContext, vocabulary s
 	}, nil
 }
 
-func (r AIRepository) GrammarEvaluation(ctx *appcontext.AppContext, sentence, _ string) ([]domain.SentenceGrammarError, error) {
+func (r AIRepository) GrammarEvaluation(ctx *appcontext.AppContext, sentence string) ([]domain.SentenceGrammarError, error) {
 	result, err := r.ai.GrammarEvaluation(ctx, ai.GrammarEvaluationPayload{
 		Sentence: sentence,
 	})
@@ -74,7 +74,7 @@ func (r AIRepository) GrammarEvaluation(ctx *appcontext.AppContext, sentence, _ 
 	for _, ge := range result.Errors {
 		translated, _ := r.translateGrammarErrorMessage(ctx, ge.Message)
 		if translated != nil {
-			sge, _ := domain.NewSentenceGrammarError(ge.Message, ge.Segment, ge.Replacement, *translated)
+			sge, _ := domain.NewSentenceGrammarError(*translated, ge.Segment, ge.Replacement)
 			if sge != nil {
 				grammarErrors = append(grammarErrors, *sge)
 			}
@@ -84,7 +84,7 @@ func (r AIRepository) GrammarEvaluation(ctx *appcontext.AppContext, sentence, _ 
 	return grammarErrors, nil
 }
 
-func (r AIRepository) translateGrammarErrorMessage(ctx *appcontext.AppContext, message string) (*language.TranslatedLanguages, error) {
+func (r AIRepository) translateGrammarErrorMessage(ctx *appcontext.AppContext, message string) (*language.Multilingual, error) {
 	re := regexp.MustCompile(`'[^']+'`)
 	keywords := re.FindAllString(message, -1)
 
@@ -104,7 +104,5 @@ func (r AIRepository) translateGrammarErrorMessage(ctx *appcontext.AppContext, m
 		translatedResult.Vietnamese = strings.Replace(translatedResult.Vietnamese, placeholder, keyword, 1)
 	}
 
-	return &language.TranslatedLanguages{
-		Vietnamese: translatedResult.Vietnamese,
-	}, nil
+	return translatedResult, nil
 }

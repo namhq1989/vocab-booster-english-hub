@@ -26,14 +26,13 @@ type Exercise struct {
 	Level               ExerciseLevel
 	Audio               string
 	Vocabulary          string
-	Content             string
-	Translated          language.TranslatedLanguages
+	Content             language.Multilingual
 	CorrectAnswer       string
 	Options             []string
 	CreatedAt           time.Time
 }
 
-func NewExercise(vocabularyExampleID, level, content, vocabulary, correctAnswer string, translated language.TranslatedLanguages, options []string) (*Exercise, error) {
+func NewExercise(vocabularyExampleID, level string, content language.Multilingual, vocabulary, correctAnswer string, options []string) (*Exercise, error) {
 	if vocabularyExampleID == "" {
 		return nil, apperrors.Exercise.InvalidExerciseID
 	}
@@ -43,7 +42,7 @@ func NewExercise(vocabularyExampleID, level, content, vocabulary, correctAnswer 
 		return nil, apperrors.Exercise.InvalidLevel
 	}
 
-	if content == "" {
+	if content.IsEmpty() {
 		return nil, apperrors.Exercise.InvalidContent
 	}
 
@@ -69,7 +68,6 @@ func NewExercise(vocabularyExampleID, level, content, vocabulary, correctAnswer 
 		Level:               dLevel,
 		Audio:               "",
 		Content:             content,
-		Translated:          translated,
 		Vocabulary:          vocabulary,
 		CorrectAnswer:       correctAnswer,
 		Options:             options,

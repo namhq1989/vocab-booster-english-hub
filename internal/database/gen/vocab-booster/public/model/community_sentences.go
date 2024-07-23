@@ -19,13 +19,12 @@ type CommunitySentences struct {
 	Content            string
 	RequiredVocabulary database.StringArray
 	RequiredTense      string
-	Translated         string
 	Sentiment          string
 	Clauses            string
-	StatsLike          int32
-	CreatedAt          time.Time
 	PosTags            string
 	Dependencies       string
 	Verbs              string
 	Level              string
+	StatsLike          int32
+	CreatedAt          time.Time
 }

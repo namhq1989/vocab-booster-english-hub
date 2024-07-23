@@ -4,11 +4,11 @@
 
 CREATE OR REPLACE FUNCTION validate_vocabulary_example() RETURNS TRIGGER AS $$
 BEGIN
-    -- Validate translated JSONB
+    -- Validate content JSONB
     IF NOT (
-        jsonb_typeof(NEW.translated) = 'object'
+        jsonb_typeof(NEW.content) = 'object'
     ) THEN
-        RAISE EXCEPTION 'Invalid translated JSONB structure';
+        RAISE EXCEPTION 'Invalid content JSONB structure';
 END IF;
 
     -- Validate main_word JSONB
@@ -16,8 +16,7 @@ END IF;
         jsonb_typeof(NEW.main_word->'word') = 'string' AND
         jsonb_typeof(NEW.main_word->'base') = 'string' AND
         jsonb_typeof(NEW.main_word->'pos') = 'string' AND
-        jsonb_typeof(NEW.main_word->'definition') = 'string' AND
-        jsonb_typeof(NEW.main_word->'translated') = 'object'
+        jsonb_typeof(NEW.main_word->'definition') = 'object'
     ) THEN
         RAISE EXCEPTION 'Invalid main_word JSONB structure';
 END IF;
@@ -63,11 +62,11 @@ CREATE TRIGGER validate_vocabulary_example_trigger
 
 CREATE OR REPLACE FUNCTION validate_community_sentence() RETURNS TRIGGER AS $$
 BEGIN
-    -- Validate translated JSONB
+    -- Validate content JSONB
     IF NOT (
-        jsonb_typeof(NEW.translated) = 'object'
+        jsonb_typeof(NEW.content) = 'object'
     ) THEN
-        RAISE EXCEPTION 'Invalid translated JSONB structure';
+        RAISE EXCEPTION 'Invalid content JSONB structure';
 END IF;
 
     -- Validate sentiment JSONB
@@ -97,11 +96,11 @@ CREATE TRIGGER validate_community_sentence_trigger
 
 CREATE OR REPLACE FUNCTION validate_community_sentence_draft() RETURNS TRIGGER AS $$
 BEGIN
-    -- Validate translated JSONB
+    -- Validate content JSONB
     IF NOT (
-        jsonb_typeof(NEW.translated) = 'object'
+        jsonb_typeof(NEW.content) = 'object'
     ) THEN
-        RAISE EXCEPTION 'Invalid translated JSONB structure';
+        RAISE EXCEPTION 'Invalid content JSONB structure';
 END IF;
 
     -- Validate sentiment JSONB

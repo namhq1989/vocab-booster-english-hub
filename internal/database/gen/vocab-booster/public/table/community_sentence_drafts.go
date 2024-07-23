@@ -25,12 +25,11 @@ type communitySentenceDraftsTable struct {
 	RequiredTense      postgres.ColumnString
 	IsCorrect          postgres.ColumnBool
 	GrammarErrors      postgres.ColumnString
-	Translated         postgres.ColumnString
+	ErrorCode          postgres.ColumnString
 	Sentiment          postgres.ColumnString
 	Clauses            postgres.ColumnString
 	CreatedAt          postgres.ColumnTimestampz
 	UpdatedAt          postgres.ColumnTimestampz
-	ErrorCode          postgres.ColumnString
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -79,14 +78,13 @@ func newCommunitySentenceDraftsTableImpl(schemaName, tableName, alias string) co
 		RequiredTenseColumn      = postgres.StringColumn("required_tense")
 		IsCorrectColumn          = postgres.BoolColumn("is_correct")
 		GrammarErrorsColumn      = postgres.StringColumn("grammar_errors")
-		TranslatedColumn         = postgres.StringColumn("translated")
+		ErrorCodeColumn          = postgres.StringColumn("error_code")
 		SentimentColumn          = postgres.StringColumn("sentiment")
 		ClausesColumn            = postgres.StringColumn("clauses")
 		CreatedAtColumn          = postgres.TimestampzColumn("created_at")
 		UpdatedAtColumn          = postgres.TimestampzColumn("updated_at")
-		ErrorCodeColumn          = postgres.StringColumn("error_code")
-		allColumns               = postgres.ColumnList{IDColumn, UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, IsCorrectColumn, GrammarErrorsColumn, TranslatedColumn, SentimentColumn, ClausesColumn, CreatedAtColumn, UpdatedAtColumn, ErrorCodeColumn}
-		mutableColumns           = postgres.ColumnList{UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, IsCorrectColumn, GrammarErrorsColumn, TranslatedColumn, SentimentColumn, ClausesColumn, CreatedAtColumn, UpdatedAtColumn, ErrorCodeColumn}
+		allColumns               = postgres.ColumnList{IDColumn, UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, IsCorrectColumn, GrammarErrorsColumn, ErrorCodeColumn, SentimentColumn, ClausesColumn, CreatedAtColumn, UpdatedAtColumn}
+		mutableColumns           = postgres.ColumnList{UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, IsCorrectColumn, GrammarErrorsColumn, ErrorCodeColumn, SentimentColumn, ClausesColumn, CreatedAtColumn, UpdatedAtColumn}
 	)
 
 	return communitySentenceDraftsTable{
@@ -101,12 +99,11 @@ func newCommunitySentenceDraftsTableImpl(schemaName, tableName, alias string) co
 		RequiredTense:      RequiredTenseColumn,
 		IsCorrect:          IsCorrectColumn,
 		GrammarErrors:      GrammarErrorsColumn,
-		Translated:         TranslatedColumn,
+		ErrorCode:          ErrorCodeColumn,
 		Sentiment:          SentimentColumn,
 		Clauses:            ClausesColumn,
 		CreatedAt:          CreatedAtColumn,
 		UpdatedAt:          UpdatedAtColumn,
-		ErrorCode:          ErrorCodeColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

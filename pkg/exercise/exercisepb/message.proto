@@ -4,35 +4,34 @@ package exercisepb;
 
 import "google/protobuf/timestamp.proto";
 
-message TranslatedLanguages {
-  string vietnamese = 1;
+message Multilingual {
+  string english = 1;
+  string vietnamese = 2;
 }
 
 message UserExercise {
   string id = 1;
   string audio = 2;
   string level = 3;
-  string content = 4;
-  string translated = 5;
-  string vocabulary = 6;
-  string correctAnswer = 7;
-  repeated string options = 8;
-  int32 correctStreak = 9;
-  bool isFavorite = 10;
-  bool isMastered = 11;
-  google.protobuf.Timestamp updatedAt = 12;
-  google.protobuf.Timestamp nextReviewAt = 13;
+  Multilingual content = 4;
+  string vocabulary = 5;
+  string correctAnswer = 6;
+  repeated string options = 7;
+  int32 correctStreak = 8;
+  bool isFavorite = 9;
+  bool isMastered = 10;
+  google.protobuf.Timestamp updatedAt = 11;
+  google.protobuf.Timestamp nextReviewAt = 12;
 }
 
 
 message ExerciseCollection {
   string id = 1;
-  string name = 2;
+  Multilingual name = 2;
   string slug = 3;
-  string translated = 4;
-  string image = 5;
-  int32 statsExercises = 7;
-  int32 statsInteracted = 8;
+  string image = 4;
+  int32 statsExercises = 5;
+  int32 statsInteracted = 6;
 }
 
 message UserAggregatedExercise {

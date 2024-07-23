@@ -17,16 +17,15 @@ type UserExerciseCollectionMapper struct{}
 func (UserExerciseCollectionMapper) FromModelToDomain(uec UserExerciseCollection) (*domain.UserExerciseCollection, error) {
 	var result = &domain.UserExerciseCollection{
 		ID:              uec.Collection.ID,
-		Name:            uec.Collection.Name,
+		Name:            language.Multilingual{},
 		Slug:            uec.Collection.Slug,
-		Translated:      language.TranslatedLanguages{},
 		Image:           uec.Collection.Image,
 		Order:           int(uec.Collection.Order),
 		StatsExercises:  int(uec.Collection.StatsExercises),
 		StatsInteracted: int(uec.Status.InteractedExercises),
 	}
 
-	if err := json.Unmarshal([]byte(uec.Collection.Translated), &result.Translated); err != nil {
+	if err := json.Unmarshal([]byte(uec.Collection.Name), &result.Name); err != nil {
 		return nil, err
 	}
 

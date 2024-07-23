@@ -27,7 +27,7 @@ func (w CreateVocabularyExampleAudioHandler) CreateVocabularyExampleAudio(ctx *a
 	ctx.Logger().Info("generate sound for vocabulary example", appcontext.Fields{"exampleID": payload.Example.ID, "content": payload.Example.Content})
 	example := payload.Example
 
-	result, err := w.ttsRepository.GenerateVocabularyExampleSound(ctx, example.ID, example.Content)
+	result, err := w.ttsRepository.GenerateVocabularyExampleSound(ctx, example.ID, example.Content.English)
 	if err != nil {
 		ctx.Logger().Error("failed to generate sound for vocabulary example", err, appcontext.Fields{})
 		return err

@@ -3,9 +3,8 @@ package domain
 import (
 	"time"
 
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
-
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/pagetoken"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 	"github.com/namhq1989/vocab-booster-utilities/language"
@@ -22,10 +21,9 @@ type CommunitySentence struct {
 	ID                 string
 	UserID             string
 	VocabularyID       string
-	Content            string
+	Content            language.Multilingual
 	RequiredVocabulary []string
 	RequiredTense      Tense
-	Translated         language.TranslatedLanguages
 	Clauses            []SentenceClause
 	PosTags            []PosTag
 	Sentiment          Sentiment
@@ -53,8 +51,8 @@ func NewCommunitySentence(userID, vocabularyID string) (*CommunitySentence, erro
 	}, nil
 }
 
-func (s *CommunitySentence) SetContent(content string) error {
-	if content == "" {
+func (s *CommunitySentence) SetContent(content language.Multilingual) error {
+	if content.IsEmpty() {
 		return apperrors.Common.InvalidContent
 	}
 
@@ -83,11 +81,6 @@ func (s *CommunitySentence) SetRequiredTense(tense string) error {
 
 func (s *CommunitySentence) SetClauses(clauses []SentenceClause) error {
 	s.Clauses = clauses
-	return nil
-}
-
-func (s *CommunitySentence) SetTranslated(translated language.TranslatedLanguages) error {
-	s.Translated = translated
 	return nil
 }
 
@@ -174,6 +167,5 @@ func NewVocabularyCommunitySentenceFilter(userID, vocabularyID, lang, pageToken 
 
 type ExtendedCommunitySentence struct {
 	CommunitySentence
-	Translated string
-	IsLiked    bool
+	IsLiked bool
 }

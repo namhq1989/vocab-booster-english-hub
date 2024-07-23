@@ -6,12 +6,12 @@ import (
 )
 
 type SentenceAnalysisResult struct {
-	Translated   language.TranslatedLanguages `json:"translated"`
-	PosTags      []PosTag                     `json:"pos_tags"`
-	Sentiment    Sentiment                    `json:"sentiment"`
-	Dependencies []Dependency                 `json:"dependencies"`
-	Verbs        []Verb                       `json:"verbs"`
-	Level        string                       `json:"level"`
+	Translated   language.Multilingual `json:"translated"`
+	PosTags      []PosTag              `json:"pos_tags"`
+	Sentiment    Sentiment             `json:"sentiment"`
+	Dependencies []Dependency          `json:"dependencies"`
+	Verbs        []Verb                `json:"verbs"`
+	Level        string                `json:"level"`
 }
 
 type PosTag struct {

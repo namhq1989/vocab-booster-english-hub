@@ -10,10 +10,9 @@ type GrammarCheckResult struct {
 }
 
 type GrammarCheckError struct {
-	Message     string                       `json:"message"`
-	Translated  language.TranslatedLanguages `json:"translated"`
-	Segment     string                       `json:"segment"`
-	Replacement string                       `json:"replacement"`
+	Message     language.Multilingual `json:"message"`
+	Segment     string                `json:"segment"`
+	Replacement string                `json:"replacement"`
 }
 
 func (n NLP) GrammarCheck(_ *appcontext.AppContext, sentence string) (result *GrammarCheckResult, err error) {

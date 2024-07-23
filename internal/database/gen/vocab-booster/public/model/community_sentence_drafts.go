@@ -21,10 +21,9 @@ type CommunitySentenceDrafts struct {
 	RequiredTense      string
 	IsCorrect          bool
 	GrammarErrors      string
-	Translated         string
+	ErrorCode          string
 	Sentiment          string
 	Clauses            string
 	CreatedAt          time.Time
 	UpdatedAt          time.Time
-	ErrorCode          string
 }

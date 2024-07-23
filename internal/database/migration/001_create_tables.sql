@@ -26,8 +26,7 @@ CREATE TABLE vocabulary_examples (
     id TEXT PRIMARY KEY,
     vocabulary_id TEXT NOT NULL,
     audio VARCHAR(50) NOT NULL,
-    content TEXT NOT NULL,
-    translated JSONB NOT NULL,
+    content JSONB NOT NULL, -- Multilingual
     main_word JSONB NOT NULL,
     pos_tags JSONB NOT NULL DEFAULT '{}',
     sentiment JSONB NOT NULL,
@@ -67,10 +66,9 @@ CREATE TABLE community_sentences (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
     vocabulary_id TEXT NOT NULL,
-    content TEXT NOT NULL,
+    content JSONB NOT NULL, -- Multilingual
     required_vocabulary TEXT[] NOT NULL DEFAULT '{}',
     required_tense TEXT NOT NULL,
-    translated JSONB NOT NULL,
     sentiment JSONB NOT NULL,
     clauses JSONB NOT NULL DEFAULT '{}',
     pos_tags JSONB NOT NULL DEFAULT '{}',
@@ -90,13 +88,12 @@ CREATE TABLE community_sentence_drafts (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
     vocabulary_id TEXT NOT NULL,
-    content TEXT NOT NULL,
+    content JSONB NOT NULL, -- Multilingual
     required_vocabulary TEXT[] NOT NULL DEFAULT '{}',
     required_tense TEXT NOT NULL,
     is_correct BOOLEAN NOT NULL,
     grammar_errors JSONB NOT NULL DEFAULT '{}',
     error_code VARCHAR(30) NOT NULL,
-    translated JSONB NOT NULL,
     sentiment JSONB NOT NULL,
     clauses JSONB NOT NULL DEFAULT '{}',
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
@@ -128,8 +125,7 @@ CREATE TABLE exercises (
     vocabulary_example_id TEXT NOT NULL,
     audio VARCHAR(50) NOT NULL,
     level VARCHAR(20) NOT NULL,
-    content TEXT NOT NULL,
-    translated JSONB NOT NULL,
+    content JSONB NOT NULL, -- Multilingual
     vocabulary VARCHAR(30) NOT NULL,
     correct_answer VARCHAR(30) NOT NULL,
     options TEXT[] NOT NULL DEFAULT '{}',
@@ -177,9 +173,8 @@ CREATE INDEX idx_user_exercise_interacted_histories_user_id_exercise_id_date ON 
 
 CREATE TABLE exercise_collections (
     id TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
+    name JSONB NOT NULL, -- Multilingual
     slug TEXT NOT NULL,
-    translated JSONB NOT NULL,
     criteria TEXT NOT NULL DEFAULT '',
     is_from_system BOOLEAN NOT NULL DEFAULT FALSE,
     "order" INTEGER NOT NULL DEFAULT 0,
