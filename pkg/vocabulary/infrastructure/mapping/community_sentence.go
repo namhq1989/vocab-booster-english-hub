@@ -160,7 +160,7 @@ type ExtendedCommunitySentence struct {
 
 type ExtendedCommunitySentenceMapper struct{}
 
-func (ExtendedCommunitySentenceMapper) FromModelToDomain(sentence ExtendedCommunitySentence, lang string) (*domain.ExtendedCommunitySentence, error) {
+func (ExtendedCommunitySentenceMapper) FromModelToDomain(sentence ExtendedCommunitySentence) (*domain.ExtendedCommunitySentence, error) {
 	var sentenceMapper = CommunitySentenceMapper{}
 	communitySentence, err := sentenceMapper.FromModelToDomain(sentence.Sentence)
 	if err != nil {
