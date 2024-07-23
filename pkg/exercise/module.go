@@ -87,12 +87,12 @@ func (Module) createExerciseCollections(
 	if totalCollections == 0 {
 		collections := []domain.ExerciseCollection{
 			{
-				ID:   database.NewStringID(),
-				Name: "All",
-				Slug: "all",
-				Translated: language.TranslatedLanguages{
+				ID: database.NewStringID(),
+				Name: language.Multilingual{
+					English:    "All",
 					Vietnamese: "Tất cả",
 				},
+				Slug:           "all",
 				Criteria:       "",
 				IsFromSystem:   true,
 				StatsExercises: 0,
@@ -100,12 +100,12 @@ func (Module) createExerciseCollections(
 				Image:          "all.svg",
 			},
 			{
-				ID:   database.NewStringID(),
-				Name: "Beginner",
-				Slug: "beginner",
-				Translated: language.TranslatedLanguages{
+				ID: database.NewStringID(),
+				Name: language.Multilingual{
+					English:    "Beginner",
 					Vietnamese: "Mới toe",
 				},
+				Slug:           "beginner",
 				Criteria:       "level=beginner",
 				IsFromSystem:   true,
 				StatsExercises: 0,
@@ -113,12 +113,12 @@ func (Module) createExerciseCollections(
 				Image:          "beginner.svg",
 			},
 			{
-				ID:   database.NewStringID(),
-				Name: "Intermediate",
-				Slug: "intermediate",
-				Translated: language.TranslatedLanguages{
+				ID: database.NewStringID(),
+				Name: language.Multilingual{
+					English:    "Intermediate",
 					Vietnamese: "Tầm trung",
 				},
+				Slug:           "intermediate",
 				Criteria:       "level=intermediate",
 				IsFromSystem:   true,
 				StatsExercises: 0,
@@ -126,12 +126,12 @@ func (Module) createExerciseCollections(
 				Image:          "intermediate.svg",
 			},
 			{
-				ID:   database.NewStringID(),
-				Name: "Advanced",
-				Slug: "advanced",
-				Translated: language.TranslatedLanguages{
+				ID: database.NewStringID(),
+				Name: language.Multilingual{
+					English:    "Advanced",
 					Vietnamese: "Rành rọt",
 				},
+				Slug:           "advanced",
 				Criteria:       "level=advanced",
 				IsFromSystem:   true,
 				StatsExercises: 0,

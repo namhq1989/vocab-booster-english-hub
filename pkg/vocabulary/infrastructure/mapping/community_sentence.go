@@ -14,10 +14,9 @@ func (CommunitySentenceMapper) FromModelToDomain(sentence model.CommunitySentenc
 		ID:                 sentence.ID,
 		UserID:             sentence.UserID,
 		VocabularyID:       sentence.VocabularyID,
-		Content:            sentence.Content,
+		Content:            language.Multilingual{},
 		RequiredVocabulary: sentence.RequiredVocabulary,
 		RequiredTense:      domain.ToTense(sentence.RequiredTense),
-		Translated:         language.TranslatedLanguages{},
 		Clauses:            make([]domain.SentenceClause, 0),
 		PosTags:            make([]domain.PosTag, 0),
 		Sentiment:          domain.Sentiment{},
@@ -28,7 +27,7 @@ func (CommunitySentenceMapper) FromModelToDomain(sentence model.CommunitySentenc
 		CreatedAt:          sentence.CreatedAt,
 	}
 
-	if err := json.Unmarshal([]byte(sentence.Translated), &result.Translated); err != nil {
+	if err := json.Unmarshal([]byte(sentence.Content), &result.Content); err != nil {
 		return nil, err
 	}
 
@@ -60,10 +59,9 @@ func (CommunitySentenceMapper) FromDomainToModel(sentence domain.CommunitySenten
 		ID:                 sentence.ID,
 		UserID:             sentence.UserID,
 		VocabularyID:       sentence.VocabularyID,
-		Content:            sentence.Content,
+		Content:            "",
 		RequiredVocabulary: sentence.RequiredVocabulary,
 		RequiredTense:      sentence.RequiredTense.String(),
-		Translated:         "",
 		Sentiment:          "",
 		Clauses:            "",
 		StatsLike:          int32(sentence.StatsLike),
@@ -74,10 +72,10 @@ func (CommunitySentenceMapper) FromDomainToModel(sentence domain.CommunitySenten
 		Level:              sentence.Level.String(),
 	}
 
-	if data, err := json.Marshal(sentence.Translated); err != nil {
+	if data, err := json.Marshal(sentence.Content); err != nil {
 		return nil, err
 	} else {
-		result.Translated = string(data)
+		result.Content = string(data)
 	}
 
 	clauses := make([]SentenceClause, 0)
@@ -162,7 +160,7 @@ type ExtendedCommunitySentence struct {
 
 type ExtendedCommunitySentenceMapper struct{}
 
-func (ExtendedCommunitySentenceMapper) FromModelToDomain(sentence ExtendedCommunitySentence, lang string) (*domain.ExtendedCommunitySentence, error) {
+func (ExtendedCommunitySentenceMapper) FromModelToDomain(sentence ExtendedCommunitySentence) (*domain.ExtendedCommunitySentence, error) {
 	var sentenceMapper = CommunitySentenceMapper{}
 	communitySentence, err := sentenceMapper.FromModelToDomain(sentence.Sentence)
 	if err != nil {
@@ -171,7 +169,6 @@ func (ExtendedCommunitySentenceMapper) FromModelToDomain(sentence ExtendedCommun
 
 	return &domain.ExtendedCommunitySentence{
 		CommunitySentence: *communitySentence,
-		Translated:        communitySentence.Translated.GetLanguageValue(lang),
 		IsLiked:           sentence.IsLiked,
 	}, nil
 }

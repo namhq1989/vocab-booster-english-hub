@@ -16,14 +16,13 @@ func (ExerciseMapper) FromModelToDomain(exercise model.Exercises) (*domain.Exerc
 		Level:               domain.ToExerciseLevel(exercise.Level),
 		Audio:               exercise.Audio,
 		Vocabulary:          exercise.Vocabulary,
-		Content:             exercise.Content,
-		Translated:          language.TranslatedLanguages{},
+		Content:             language.Multilingual{},
 		CorrectAnswer:       exercise.CorrectAnswer,
 		Options:             exercise.Options,
 		CreatedAt:           exercise.CreatedAt,
 	}
 
-	if err := json.Unmarshal([]byte(exercise.Translated), &result.Translated); err != nil {
+	if err := json.Unmarshal([]byte(exercise.Content), &result.Content); err != nil {
 		return nil, err
 	}
 
@@ -37,17 +36,16 @@ func (ExerciseMapper) FromDomainToModel(exercise domain.Exercise) (*model.Exerci
 		Level:               exercise.Level.String(),
 		Audio:               exercise.Audio,
 		Vocabulary:          exercise.Vocabulary,
-		Content:             exercise.Content,
-		Translated:          "",
+		Content:             "",
 		CorrectAnswer:       exercise.CorrectAnswer,
 		Options:             exercise.Options,
 		CreatedAt:           exercise.CreatedAt,
 	}
 
-	if data, err := json.Marshal(exercise.Translated); err != nil {
+	if data, err := json.Marshal(exercise.Content); err != nil {
 		return nil, err
 	} else {
-		result.Translated = string(data)
+		result.Content = string(data)
 	}
 
 	return result, nil

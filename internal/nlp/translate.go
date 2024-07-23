@@ -5,7 +5,7 @@ import (
 	"github.com/namhq1989/vocab-booster-utilities/language"
 )
 
-func (n NLP) Translate(_ *appcontext.AppContext, term string) (result *language.TranslatedLanguages, err error) {
+func (n NLP) Translate(_ *appcontext.AppContext, term string) (result *language.Multilingual, err error) {
 	_, err = n.httpClient.R().
 		SetBody(map[string]interface{}{
 			"term": term,

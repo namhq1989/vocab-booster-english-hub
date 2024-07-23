@@ -50,10 +50,9 @@ func ConvertCommunitySentencesFromDomainToGrpc(sentences []domain.ExtendedCommun
 		result[index] = &vocabularypb.CommunitySentence{
 			Id:                 sentence.ID,
 			VocabularyId:       sentence.VocabularyID,
-			Content:            sentence.Content,
+			Content:            ConvertMultilingualToGrpcData(sentence.Content),
 			RequiredVocabulary: sentence.RequiredVocabulary,
 			RequiredTense:      sentence.RequiredTense.String(),
-			Translated:         sentence.Translated,
 			Clauses:            clauses,
 			PosTags:            posTags,
 			Sentiment: &vocabularypb.Sentiment{

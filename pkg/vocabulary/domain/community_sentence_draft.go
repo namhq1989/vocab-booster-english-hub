@@ -21,13 +21,12 @@ type CommunitySentenceDraft struct {
 	ID                 string
 	UserID             string
 	VocabularyID       string
-	Content            string
+	Content            language.Multilingual
 	RequiredVocabulary []string
 	RequiredTense      Tense
 	IsCorrect          bool
 	ErrorCode          SentenceErrorCode
 	GrammarErrors      []SentenceGrammarError
-	Translated         language.TranslatedLanguages
 	Sentiment          Sentiment
 	Clauses            []SentenceClause
 	CreatedAt          time.Time
@@ -52,8 +51,8 @@ func NewCommunitySentenceDraft(userID, vocabularyID string) (*CommunitySentenceD
 	}, nil
 }
 
-func (s *CommunitySentenceDraft) SetContent(content string) error {
-	if content == "" {
+func (s *CommunitySentenceDraft) SetContent(content language.Multilingual) error {
+	if content.IsEmpty() {
 		return apperrors.Common.InvalidContent
 	}
 
@@ -97,11 +96,6 @@ func (s *CommunitySentenceDraft) SetClauses(clauses []SentenceClause) error {
 func (s *CommunitySentenceDraft) SetSentiment(polarity, subjectivity float64) error {
 	s.Sentiment.Polarity = polarity
 	s.Sentiment.Subjectivity = subjectivity
-	return nil
-}
-
-func (s *CommunitySentenceDraft) SetTranslated(translated language.TranslatedLanguages) error {
-	s.Translated = translated
 	return nil
 }
 

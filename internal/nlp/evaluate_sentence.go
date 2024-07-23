@@ -6,12 +6,12 @@ import (
 )
 
 type EvaluateSentenceResult struct {
-	IsEnglish           bool                         `json:"is_english"`
-	IsVocabularyCorrect bool                         `json:"is_vocabulary_correct"`
-	IsTenseCorrect      bool                         `json:"is_tense_correct"`
-	Sentiment           Sentiment                    `json:"sentiment"`
-	Translated          language.TranslatedLanguages `json:"translated"`
-	Clauses             []EvaluateSentenceClause     `json:"clauses"`
+	IsEnglish           bool                     `json:"is_english"`
+	IsVocabularyCorrect bool                     `json:"is_vocabulary_correct"`
+	IsTenseCorrect      bool                     `json:"is_tense_correct"`
+	Sentiment           Sentiment                `json:"sentiment"`
+	Translated          language.Multilingual    `json:"translated"`
+	Clauses             []EvaluateSentenceClause `json:"clauses"`
 }
 
 type EvaluateSentenceClause struct {

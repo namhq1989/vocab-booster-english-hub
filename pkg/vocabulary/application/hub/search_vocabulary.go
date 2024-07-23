@@ -9,7 +9,6 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/dto"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
-	"github.com/namhq1989/vocab-booster-utilities/language"
 )
 
 type SearchVocabularyHandler struct {
@@ -218,7 +217,7 @@ func (h SearchVocabularyHandler) analyzeExamples(ctx *appcontext.AppContext, voc
 				return
 			}
 
-			if err = example.SetContent(e.Example, analysisResult.Translated); err != nil {
+			if err = example.SetContent(analysisResult.Translated); err != nil {
 				ctx.Logger().Error("failed to set vocabulary example's content", err, appcontext.Fields{"content": e.Example, "translated": analysisResult.Translated})
 				return
 			}
@@ -248,17 +247,14 @@ func (h SearchVocabularyHandler) analyzeExamples(ctx *appcontext.AppContext, voc
 				return
 			}
 
-			translatedDefinition := language.TranslatedLanguages{}
 			mainWordDefinitionTranslated, err := h.nlpRepository.TranslateDefinition(ctx, e.Definition)
 			if err != nil {
 				ctx.Logger().Error("failed to translate main word definition", err, appcontext.Fields{"definition": e.Definition})
 			} else {
-				translatedDefinition = *mainWordDefinitionTranslated
-			}
-
-			if err = example.SetMainWordData(e.Word, vocabulary.Term, e.Definition, e.Pos, translatedDefinition); err != nil {
-				ctx.Logger().Error("failed to set vocabulary example's word data", err, appcontext.Fields{"word": e.Word, "definition": e.Definition, "pos": e.Pos})
-				return
+				if err = example.SetMainWordData(e.Word, vocabulary.Term, e.Pos, *mainWordDefinitionTranslated); err != nil {
+					ctx.Logger().Error("failed to set vocabulary example's word data", err, appcontext.Fields{"word": e.Word, "definition": e.Definition, "pos": e.Pos})
+					return
+				}
 			}
 
 			result[i] = *example

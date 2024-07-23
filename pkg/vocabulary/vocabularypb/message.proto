@@ -4,8 +4,9 @@ package vocabularypb;
 
 import "google/protobuf/timestamp.proto";
 
-message TranslatedLanguages {
-  string vietnamese = 1;
+message Multilingual {
+  string english = 1;
+  string vietnamese = 2;
 }
 
 message Vocabulary {
@@ -23,21 +24,19 @@ message Vocabulary {
 message VocabularyExample {
   string id = 1;
   string vocabularyId = 2;
-  string content = 3;
-  TranslatedLanguages translated = 4;
-  VocabularyMainWord mainWord = 5;
-  repeated PosTag posTags = 6;
-  Sentiment sentiment = 7;
-  repeated Dependency dependencies = 8;
-  repeated Verb verbs = 9;
+  Multilingual content = 3;
+  VocabularyMainWord mainWord = 4;
+  repeated PosTag posTags = 5;
+  Sentiment sentiment = 6;
+  repeated Dependency dependencies = 7;
+  repeated Verb verbs = 8;
 }
 
 message VocabularyMainWord {
   string word = 1;
   string base = 2;
   string pos = 3;
-  string definition = 4;
-  TranslatedLanguages translated = 5;
+  Multilingual definition = 4;
 }
 
 message PosTag {
@@ -80,17 +79,16 @@ message SentenceGrammarError {
 message CommunitySentence {
   string id = 1;
   string vocabularyId = 2;
-  string content = 3;
+  Multilingual content = 3;
   repeated string requiredVocabulary = 4;
   string requiredTense = 5;
-  string translated = 6;
-  repeated SentenceClause clauses = 8;
-  repeated PosTag posTags = 9;
-  Sentiment sentiment = 10;
-  repeated Dependency dependencies = 11;
-  repeated Verb verbs = 12;
-  string level = 13;
-  int32 statsLike = 14;
-  bool isLiked = 15;
-  google.protobuf.Timestamp createdAt = 16;
+  repeated SentenceClause clauses = 6;
+  repeated PosTag posTags = 7;
+  Sentiment sentiment = 8;
+  repeated Dependency dependencies = 9;
+  repeated Verb verbs = 10;
+  string level = 11;
+  int32 statsLike = 12;
+  bool isLiked = 13;
+  google.protobuf.Timestamp createdAt = 14;
 }

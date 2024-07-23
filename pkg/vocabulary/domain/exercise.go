@@ -6,6 +6,6 @@ import (
 )
 
 type ExerciseHub interface {
-	CreateExercise(ctx *appcontext.AppContext, vocabularyExampleID, level, content, vocabulary, correctAnswer string, translated language.TranslatedLanguages, options []string) error
+	CreateExercise(ctx *appcontext.AppContext, vocabularyExampleID, level string, content language.Multilingual, vocabulary, correctAnswer string, options []string) error
 	UpdateExerciseAudio(ctx *appcontext.AppContext, vocabularyExampleID, audio string) error
 }

@@ -129,7 +129,7 @@ func (r ExerciseRepository) PickRandomExercisesForUser(ctx *appcontext.AppContex
 	}
 
 	stmt := postgres.SELECT(
-		e.ID, e.Level, e.Audio, e.Vocabulary, e.Content, e.Translated, e.CorrectAnswer, e.Options,
+		e.ID, e.Level, e.Audio, e.Vocabulary, e.Content, e.CorrectAnswer, e.Options,
 		ues.CorrectStreak, ues.IsFavorite, ues.IsMastered, ues.NextReviewAt,
 	).
 		FROM(

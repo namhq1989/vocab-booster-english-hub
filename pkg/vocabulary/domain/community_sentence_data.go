@@ -25,17 +25,15 @@ func NewSentenceClause(clause, tense string, isPrimaryTense bool) (*SentenceClau
 }
 
 type SentenceGrammarError struct {
-	Message     string
-	Translated  language.TranslatedLanguages
+	Message     language.Multilingual
 	Segment     string
 	Replacement string
 }
 
-func NewSentenceGrammarError(message, segment, replacement string, translated language.TranslatedLanguages) (*SentenceGrammarError, error) {
+func NewSentenceGrammarError(message language.Multilingual, segment, replacement string) (*SentenceGrammarError, error) {
 	return &SentenceGrammarError{
 		Message:     message,
 		Segment:     segment,
 		Replacement: replacement,
-		Translated:  translated,
 	}, nil
 }

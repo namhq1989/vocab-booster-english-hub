@@ -25,7 +25,7 @@ tasks:
 
   db-migrate:
     cmds:
-      - TERN_CONFIG=internal/database/migration/tern.conf TERN_MIGRATIONS=internal/database/migration tern migrate
+      - doppler run -- sh -c "TERN_CONFIG=internal/database/migration/tern.conf TERN_MIGRATIONS=internal/database/migration tern migrate"
 
   mock-gen:
     cmds:

@@ -18,7 +18,6 @@ type Exercises struct {
 	Audio               string
 	Level               string
 	Content             string
-	Translated          string
 	Vocabulary          string
 	CorrectAnswer       string
 	Options             database.StringArray

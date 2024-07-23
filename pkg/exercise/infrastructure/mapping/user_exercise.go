@@ -16,8 +16,8 @@ type UserExercise struct {
 type UserExerciseMapper struct{}
 
 func (UserExerciseMapper) FromModelToDomain(ue UserExercise, lang string) (*domain.UserExercise, error) {
-	var translated language.TranslatedLanguages
-	if err := json.Unmarshal([]byte(ue.Exercise.Translated), &translated); err != nil {
+	var multilingual language.Multilingual
+	if err := json.Unmarshal([]byte(ue.Exercise.Content), &multilingual); err != nil {
 		return nil, err
 	}
 
@@ -26,8 +26,7 @@ func (UserExerciseMapper) FromModelToDomain(ue UserExercise, lang string) (*doma
 		Level:         domain.ToExerciseLevel(ue.Exercise.Level),
 		Audio:         ue.Exercise.Audio,
 		Vocabulary:    ue.Exercise.Vocabulary,
-		Content:       ue.Exercise.Content,
-		Translated:    translated.GetLanguageValue(lang),
+		Content:       multilingual.GetLocalized(lang),
 		CorrectAnswer: ue.Exercise.CorrectAnswer,
 		Options:       ue.Exercise.Options,
 		CorrectStreak: int(ue.Status.CorrectStreak),

@@ -15,11 +15,10 @@ type ExerciseCollections struct {
 	ID                 string `sql:"primary_key"`
 	Name               string
 	Slug               string
-	Translated         string
 	Criteria           string
 	IsFromSystem       bool
-	StatsExercises     int32
 	Order              int32
 	Image              string
+	StatsExercises     int32
 	LastStatsUpdatedAt time.Time
 }

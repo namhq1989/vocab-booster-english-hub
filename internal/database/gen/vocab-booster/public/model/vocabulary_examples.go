@@ -16,7 +16,6 @@ type VocabularyExamples struct {
 	VocabularyID string
 	Audio        string
 	Content      string
-	Translated   string
 	MainWord     string
 	PosTags      string
 	Sentiment    string

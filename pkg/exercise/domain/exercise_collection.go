@@ -21,9 +21,8 @@ type ExerciseCollectionRepository interface {
 
 type ExerciseCollection struct {
 	ID                 string
-	Name               string
+	Name               language.Multilingual
 	Slug               string
-	Translated         language.TranslatedLanguages
 	Criteria           string
 	IsFromSystem       bool
 	Order              int
@@ -32,20 +31,15 @@ type ExerciseCollection struct {
 	LastStatsUpdatedAt time.Time
 }
 
-func NewExerciseCollection(name string, translated language.TranslatedLanguages, criteria string, isFromSystem bool, order int, image string) (*ExerciseCollection, error) {
-	if name == "" {
+func NewExerciseCollection(name language.Multilingual, criteria string, isFromSystem bool, order int, image string) (*ExerciseCollection, error) {
+	if name.IsEmpty() {
 		return nil, apperrors.Common.InvalidName
-	}
-
-	if translated.IsEmpty() {
-		return nil, apperrors.Common.InvalidLanguage
 	}
 
 	return &ExerciseCollection{
 		ID:                 database.NewStringID(),
 		Name:               name,
-		Slug:               manipulation.Slugify(name),
-		Translated:         translated,
+		Slug:               manipulation.Slugify(name.English),
 		Criteria:           criteria,
 		IsFromSystem:       isFromSystem,
 		Order:              order,

@@ -25,7 +25,7 @@ func (h NewExerciseHandler) NewExercise(ctx *appcontext.AppContext, req *exercis
 	})
 
 	ctx.Logger().Text("create new exercise model")
-	exercise, err := domain.NewExercise(req.GetVocabularyExampleId(), req.GetLevel(), req.GetContent(), req.GetVocabulary(), req.GetCorrectAnswer(), dto.ConvertGrpcDataToTranslatedLanguages(req.GetTranslated()), req.GetOptions())
+	exercise, err := domain.NewExercise(req.GetVocabularyExampleId(), req.GetLevel(), dto.ConvertGrpcDataToMultilingual(req.GetContent()), req.GetVocabulary(), req.GetCorrectAnswer(), req.GetOptions())
 	if err != nil {
 		ctx.Logger().Error("failed to create new exercise model", err, appcontext.Fields{})
 		return nil, err

@@ -6,6 +6,7 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/pagetoken"
+	"github.com/namhq1989/vocab-booster-utilities/language"
 )
 
 type UserExercise struct {
@@ -13,8 +14,7 @@ type UserExercise struct {
 	Level         ExerciseLevel
 	Audio         string
 	Vocabulary    string
-	Content       string
-	Translated    string
+	Content       language.Multilingual
 	CorrectAnswer string
 	Options       []string
 	CorrectStreak int
