@@ -13,8 +13,7 @@ type (
 		UpdateExerciseAudio(ctx *appcontext.AppContext, req *exercisepb.UpdateExerciseAudioRequest) (*exercisepb.UpdateExerciseAudioResponse, error)
 		AnswerExercise(ctx *appcontext.AppContext, req *exercisepb.AnswerExerciseRequest) (*exercisepb.AnswerExerciseResponse, error)
 		GetUserExercises(ctx *appcontext.AppContext, req *exercisepb.GetUserExercisesRequest) (*exercisepb.GetUserExercisesResponse, error)
-		CountUserReadyToReviewExercises(ctx *appcontext.AppContext, req *exercisepb.CountUserReadyToReviewExercisesRequest) (*exercisepb.CountUserReadyToReviewExercisesResponse, error)
-		GetUserReadyToReviewExercises(ctx *appcontext.AppContext, req *exercisepb.GetUserReadyToReviewExercisesRequest) (*exercisepb.GetUserReadyToReviewExercisesResponse, error)
+		GetUserReadyForReviewExercises(ctx *appcontext.AppContext, req *exercisepb.GetUserReadyForReviewExercisesRequest) (*exercisepb.GetUserReadyForReviewExercisesResponse, error)
 		ChangeExerciseFavorite(ctx *appcontext.AppContext, req *exercisepb.ChangeExerciseFavoriteRequest) (*exercisepb.ChangeExerciseFavoriteResponse, error)
 		GetUserFavoriteExercises(ctx *appcontext.AppContext, req *exercisepb.GetUserFavoriteExercisesRequest) (*exercisepb.GetUserFavoriteExercisesResponse, error)
 		GetUserStats(ctx *appcontext.AppContext, req *exercisepb.GetUserStatsRequest) (*exercisepb.GetUserStatsResponse, error)
@@ -30,8 +29,7 @@ type (
 		hub.UpdateExerciseAudioHandler
 		hub.AnswerExerciseHandler
 		hub.GetUserExercisesHandler
-		hub.CountUserReadyToReviewExercisesHandler
-		hub.GetUserReadyToReviewExercisesHandler
+		hub.GetUserReadyForReviewExercisesHandler
 		hub.ChangeExerciseFavoriteHandler
 		hub.GetUserFavoriteExercisesHandler
 		hub.GetUserStatsHandler
@@ -63,14 +61,13 @@ func New(
 				userExerciseStatusRepository,
 				queueRepository,
 			),
-			GetUserExercisesHandler:                hub.NewGetUserExercisesHandler(exerciseRepository, service),
-			CountUserReadyToReviewExercisesHandler: hub.NewCountUserReadyToReviewExercisesHandler(userExerciseStatusRepository),
-			GetUserReadyToReviewExercisesHandler:   hub.NewGetUserReadyToReviewExercisesHandler(userExerciseStatusRepository),
-			ChangeExerciseFavoriteHandler:          hub.NewChangeExerciseFavoriteHandler(userExerciseStatusRepository),
-			GetUserFavoriteExercisesHandler:        hub.NewGetUserFavoriteExercisesHandler(userExerciseStatusRepository),
-			GetUserStatsHandler:                    hub.NewGetUserStatsHandler(userExerciseStatusRepository),
-			GetExerciseCollectionsHandler:          hub.NewGetExerciseCollectionsHandler(exerciseCollectionRepository, cachingRepository),
-			GetUserRecentExercisesChartHandler:     hub.NewGetUserRecentExercisesChartHandler(userExerciseInteractedHistoryRepository),
+			GetUserExercisesHandler:               hub.NewGetUserExercisesHandler(exerciseRepository, service),
+			GetUserReadyForReviewExercisesHandler: hub.NewGetUserReadyForReviewExercisesHandler(userExerciseStatusRepository),
+			ChangeExerciseFavoriteHandler:         hub.NewChangeExerciseFavoriteHandler(userExerciseStatusRepository),
+			GetUserFavoriteExercisesHandler:       hub.NewGetUserFavoriteExercisesHandler(userExerciseStatusRepository),
+			GetUserStatsHandler:                   hub.NewGetUserStatsHandler(userExerciseStatusRepository),
+			GetExerciseCollectionsHandler:         hub.NewGetExerciseCollectionsHandler(exerciseCollectionRepository, cachingRepository),
+			GetUserRecentExercisesChartHandler:    hub.NewGetUserRecentExercisesChartHandler(userExerciseInteractedHistoryRepository),
 		},
 	}
 }

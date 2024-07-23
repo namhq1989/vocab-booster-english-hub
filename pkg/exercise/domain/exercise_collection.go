@@ -51,12 +51,12 @@ func NewExerciseCollection(name string, translated language.TranslatedLanguages,
 		Order:              order,
 		Image:              image,
 		StatsExercises:     0,
-		LastStatsUpdatedAt: time.Now(),
+		LastStatsUpdatedAt: manipulation.NowUTC(),
 	}, nil
 }
 
 func (d *ExerciseCollection) IncreaseStatsExercises(num int) error {
 	d.StatsExercises += num
-	d.LastStatsUpdatedAt = time.Now()
+	d.LastStatsUpdatedAt = manipulation.NowUTC()
 	return nil
 }

@@ -11,7 +11,7 @@ import (
 
 type UserExerciseInteractedHistoryRepository interface {
 	UpsertUserExerciseInteractedHistory(ctx *appcontext.AppContext, history UserExerciseInteractedHistory) error
-	AggregateUserExercisesInTimeRange(ctx *appcontext.AppContext, userID string, from, to time.Time) ([]UserAggregatedExercise, error)
+	AggregateUserExercisesInTimeRange(ctx *appcontext.AppContext, userID, timezone string, from, to time.Time) ([]UserAggregatedExercise, error)
 }
 
 type UserExerciseInteractedHistory struct {
@@ -34,6 +34,6 @@ func NewUserExerciseInteractedHistory(userID, exerciseID string) (*UserExerciseI
 		ID:         database.NewStringID(),
 		ExerciseID: exerciseID,
 		UserID:     userID,
-		Date:       manipulation.StartOfToday(),
+		Date:       manipulation.StartOfToday(""),
 	}, nil
 }

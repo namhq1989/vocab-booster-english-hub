@@ -21,7 +21,9 @@ func NewGetUserExercisesHandler(exerciseRepository domain.ExerciseRepository, se
 }
 
 func (h GetUserExercisesHandler) GetUserExercises(ctx *appcontext.AppContext, req *exercisepb.GetUserExercisesRequest) (*exercisepb.GetUserExercisesResponse, error) {
-	ctx.Logger().Info("[hub] new get user exercises request", appcontext.Fields{"userID": req.GetUserId(), "collectionID": req.GetCollectionId(), "lang": req.GetLang()})
+	ctx.Logger().Info("[hub] new get user exercises request", appcontext.Fields{
+		"userID": req.GetUserId(), "collectionID": req.GetCollectionId(), "lang": req.GetLang(),
+	})
 
 	ctx.Logger().Text("get collection by id")
 	collection, err := h.service.FindExerciseCollectionByID(ctx, req.GetCollectionId())
@@ -35,7 +37,7 @@ func (h GetUserExercisesHandler) GetUserExercises(ctx *appcontext.AppContext, re
 	}
 
 	ctx.Logger().Text("new user exercise filter")
-	filter, err := domain.NewUserExerciseFilter(req.GetUserId(), collection.Criteria, req.GetLang())
+	filter, err := domain.NewUserExerciseFilter(req.GetUserId(), collection.Criteria, req.GetLang(), "")
 	if err != nil {
 		ctx.Logger().Error("failed to create new user exercise filter", err, appcontext.Fields{})
 		return nil, err

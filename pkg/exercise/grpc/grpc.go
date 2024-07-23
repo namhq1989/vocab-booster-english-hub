@@ -3,9 +3,8 @@ package grpc
 import (
 	"context"
 
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
-
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/exercisepb"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/application"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 	"google.golang.org/grpc"
@@ -55,16 +54,8 @@ func (s server) GetUserExercises(bgCtx context.Context, req *exercisepb.GetUserE
 	return resp, nil
 }
 
-func (s server) CountUserReadyToReviewExercises(bgCtx context.Context, req *exercisepb.CountUserReadyToReviewExercisesRequest) (*exercisepb.CountUserReadyToReviewExercisesResponse, error) {
-	resp, err := s.app.CountUserReadyToReviewExercises(appcontext.NewGRPC(bgCtx), req)
-	if err != nil {
-		return nil, apperrors.ToGrpcError(bgCtx, err)
-	}
-	return resp, nil
-}
-
-func (s server) GetUserReadyToReviewExercises(bgCtx context.Context, req *exercisepb.GetUserReadyToReviewExercisesRequest) (*exercisepb.GetUserReadyToReviewExercisesResponse, error) {
-	resp, err := s.app.GetUserReadyToReviewExercises(appcontext.NewGRPC(bgCtx), req)
+func (s server) GetUserReadyForReviewExercises(bgCtx context.Context, req *exercisepb.GetUserReadyForReviewExercisesRequest) (*exercisepb.GetUserReadyForReviewExercisesResponse, error) {
+	resp, err := s.app.GetUserReadyForReviewExercises(appcontext.NewGRPC(bgCtx), req)
 	if err != nil {
 		return nil, apperrors.ToGrpcError(bgCtx, err)
 	}

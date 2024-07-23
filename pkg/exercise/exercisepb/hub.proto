@@ -10,8 +10,7 @@ service ExerciseService {
   rpc AnswerExercise(AnswerExerciseRequest) returns (AnswerExerciseResponse) {}
   rpc UpdateExerciseAudio(UpdateExerciseAudioRequest) returns (UpdateExerciseAudioResponse) {}
   rpc GetUserExercises(GetUserExercisesRequest) returns (GetUserExercisesResponse) {}
-  rpc CountUserReadyToReviewExercises(CountUserReadyToReviewExercisesRequest) returns (CountUserReadyToReviewExercisesResponse) {}
-  rpc GetUserReadyToReviewExercises(GetUserReadyToReviewExercisesRequest) returns (GetUserReadyToReviewExercisesResponse) {}
+  rpc GetUserReadyForReviewExercises(GetUserReadyForReviewExercisesRequest) returns (GetUserReadyForReviewExercisesResponse) {}
   rpc ChangeExerciseFavorite(ChangeExerciseFavoriteRequest) returns (ChangeExerciseFavoriteResponse) {}
   rpc GetUserFavoriteExercises(GetUserFavoriteExercisesRequest) returns (GetUserFavoriteExercisesResponse) {}
   rpc GetUserStats(GetUserStatsRequest) returns (GetUserStatsResponse) {}
@@ -69,24 +68,15 @@ message GetUserExercisesResponse {
   repeated UserExercise exercises = 1;
 }
 
-// COUNT USER READY TO REVIEW EXERCISES
+// GET USER READY FOR REVIEW EXERCISES
 
-message CountUserReadyToReviewExercisesRequest {
-  string userId = 1;
-}
-
-message CountUserReadyToReviewExercisesResponse {
-  int32 total = 1;
-}
-
-// GET USER READY TO REVIEW EXERCISES
-
-message GetUserReadyToReviewExercisesRequest {
+message GetUserReadyForReviewExercisesRequest {
   string userId = 1;
   string lang = 2;
+  string timezone = 3;
 }
 
-message GetUserReadyToReviewExercisesResponse {
+message GetUserReadyForReviewExercisesResponse {
   repeated UserExercise exercises = 1;
 }
 
@@ -120,6 +110,7 @@ message GetUserFavoriteExercisesResponse {
 
 message GetUserStatsRequest {
   string userId = 1;
+  string timezone = 2;
 }
 
 message GetUserStatsResponse {
@@ -142,8 +133,9 @@ message GetExerciseCollectionsResponse {
 
 message GetUserRecentExercisesChartRequest {
   string userId = 1;
-  google.protobuf.Timestamp from = 2;
-  google.protobuf.Timestamp to = 3;
+  string timezone = 2;
+  google.protobuf.Timestamp from = 3;
+  google.protobuf.Timestamp to = 4;
 }
 
 message GetUserRecentExercisesChartResponse {

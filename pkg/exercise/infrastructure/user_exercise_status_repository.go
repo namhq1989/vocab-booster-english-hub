@@ -2,7 +2,6 @@ package infrastructure
 
 import (
 	"database/sql"
-	"time"
 
 	"github.com/go-jet/jet/v2/postgres"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
@@ -93,8 +92,8 @@ func (r UserExerciseStatusRepository) FindUserExerciseStatus(ctx *appcontext.App
 	return result, nil
 }
 
-func (r UserExerciseStatusRepository) CountUserReadyToReviewExercises(ctx *appcontext.AppContext, userID string) (int64, error) {
-	var now = time.Now()
+func (r UserExerciseStatusRepository) CountUserReadyToReviewExercises(ctx *appcontext.AppContext, userID, timezone string) (int64, error) {
+	var now = manipulation.Now(timezone)
 
 	stmt := postgres.SELECT(
 		postgres.COUNT(r.getTable().ID).AS("count_result.total"),
@@ -114,7 +113,7 @@ func (r UserExerciseStatusRepository) FindUserReadyToReviewExercises(ctx *appcon
 	var (
 		ues = r.getTable().AS("ues")
 		e   = table.Exercises.AS("e")
-		now = time.Now()
+		now = manipulation.Now(filter.Timezone)
 	)
 
 	whereCond := postgres.AND(ues.UserID.EQ(postgres.String(filter.UserID)))
@@ -140,7 +139,7 @@ func (r UserExerciseStatusRepository) FindUserFavoriteExercises(ctx *appcontext.
 	var (
 		ues = r.getTable().AS("ues")
 		e   = table.Exercises.AS("e")
-		now = time.Now()
+		now = manipulation.NowUTC()
 	)
 
 	whereCond := postgres.AND(ues.UserID.EQ(postgres.String(filter.UserID)))
@@ -190,19 +189,15 @@ type statsResult struct {
 	ReadyToReview int64 `json:"ready_to_review"`
 }
 
-func (r UserExerciseStatusRepository) FindUserStats(ctx *appcontext.AppContext, userID string) (*domain.UserStats, error) {
-	var (
-		now = time.Now()
-	)
-
+func (r UserExerciseStatusRepository) FindUserStats(ctx *appcontext.AppContext, userID, timezone string) (*domain.UserStats, error) {
 	stmt := postgres.RawStatement(
 		`SELECT
     				COUNT(CASE ues.is_mastered WHEN TRUE::boolean THEN 1 END) AS "stats_result.mastered",
-    				COUNT(CASE WHEN ues.next_review_at < $ts::timestamp with time zone THEN 1 END) AS "stats_result.ready_to_review"
+    				COUNT(CASE WHEN ues.next_review_at < $ts::timestamp THEN 1 END) AS "stats_result.ready_to_review"
 				  FROM public.user_exercise_statuses AS ues
 				  WHERE ues.user_id = $userID::text;`,
 		postgres.RawArgs{
-			"$ts":     manipulation.ToSQLTimestamp(now),
+			"$ts":     postgres.TimestampzT(manipulation.Now(timezone)),
 			"$userID": userID,
 		},
 	)

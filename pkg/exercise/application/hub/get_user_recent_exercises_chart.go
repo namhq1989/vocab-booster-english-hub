@@ -20,10 +20,10 @@ func NewGetUserRecentExercisesChartHandler(
 }
 
 func (h GetUserRecentExercisesChartHandler) GetUserRecentExercisesChart(ctx *appcontext.AppContext, req *exercisepb.GetUserRecentExercisesChartRequest) (*exercisepb.GetUserRecentExercisesChartResponse, error) {
-	ctx.Logger().Info("[hub] new get user recent exercises chart request", appcontext.Fields{"userID": req.GetUserId(), "from": req.GetFrom().AsTime(), "to": req.GetTo().AsTime()})
+	ctx.Logger().Info("[hub] new get user recent exercises chart request", appcontext.Fields{"userID": req.GetUserId(), "timezone": req.GetTimezone(), "from": req.GetFrom().AsTime(), "to": req.GetTo().AsTime()})
 
 	ctx.Logger().Text("find in db")
-	uaes, err := h.userExerciseInteractedHistory.AggregateUserExercisesInTimeRange(ctx, req.GetUserId(), req.GetFrom().AsTime(), req.GetTo().AsTime())
+	uaes, err := h.userExerciseInteractedHistory.AggregateUserExercisesInTimeRange(ctx, req.GetUserId(), req.GetTimezone(), req.GetFrom().AsTime(), req.GetTo().AsTime())
 	if err != nil {
 		ctx.Logger().Error("failed to find in db", err, appcontext.Fields{})
 		return nil, err
