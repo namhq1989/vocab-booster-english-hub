@@ -85,3 +85,43 @@ func ToPartOfSpeech(value string) PartOfSpeech {
 		return PartOfSpeechUnknown
 	}
 }
+
+var posMapping = map[string]string{
+	"adjective":    "adj",
+	"adj":          "adj",
+	"noun":         "noun",
+	"n":            "noun",
+	"verb":         "verb",
+	"v":            "verb",
+	"adverb":       "adv",
+	"adv":          "adv",
+	"pronoun":      "pron",
+	"preposition":  "adp",
+	"adp":          "adp",
+	"conjunction":  "cconj",
+	"cconj":        "cconj",
+	"determiner":   "det",
+	"det":          "det",
+	"exclamation":  "intj",
+	"interjection": "intj",
+	"intj":         "intj",
+	"numeral":      "num",
+	"num":          "num",
+	"particle":     "part",
+	"part":         "part",
+	"proper noun":  "propn",
+	"propn":        "propn",
+	"punctuation":  "punct",
+	"punct":        "punct",
+	"symbol":       "sym",
+	"sym":          "sym",
+	"x":            "x",
+}
+
+func MappingPos(tag string) string {
+	if mappedTag, exists := posMapping[tag]; exists {
+		return mappedTag
+	} else {
+		return tag
+	}
+}

@@ -1,5 +1,23 @@
 -- Write your migrate up statements here
 
+-- VOCABULARY --
+
+CREATE OR REPLACE FUNCTION validate_vocabulary() RETURNS TRIGGER AS $$
+BEGIN
+    -- Validate definitions JSONB
+    IF NOT (
+        jsonb_typeof(NEW.definitions) = 'array'
+    ) THEN
+        RAISE EXCEPTION 'Invalid definitions JSONB structure';
+END IF;
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER validate_vocabulary_trigger
+    BEFORE INSERT OR UPDATE ON vocabularies
+    FOR EACH ROW EXECUTE FUNCTION validate_vocabulary();
+
 -- VOCABULARY EXAMPLE --
 
 CREATE OR REPLACE FUNCTION validate_vocabulary_example() RETURNS TRIGGER AS $$

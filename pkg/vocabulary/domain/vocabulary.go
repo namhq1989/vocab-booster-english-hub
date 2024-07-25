@@ -3,8 +3,11 @@ package domain
 import (
 	"time"
 
+	"github.com/namhq1989/vocab-booster-utilities/language"
+
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/manipulation"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
 
@@ -20,16 +23,20 @@ type Vocabulary struct {
 	ID            string
 	AuthorID      string
 	Term          string
+	Definitions   []VocabularyDefinition
 	PartsOfSpeech []PartOfSpeech
-	IPA           string
+	Ipa           string
 	Audio         string
 	Synonyms      []string
 	Antonyms      []string
+	Frequency     float64
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }
 
-type VocabularyData struct {
+type VocabularyDefinition struct {
+	Pos        PartOfSpeech
+	Definition language.Multilingual
 }
 
 func NewVocabulary(authorID, term string) (*Vocabulary, error) {
@@ -50,6 +57,15 @@ func NewVocabulary(authorID, term string) (*Vocabulary, error) {
 	}, nil
 }
 
+func (d *Vocabulary) SetDefinitions(definitions []VocabularyDefinition) error {
+	if len(definitions) == 0 {
+		return apperrors.Vocabulary.InvalidDefinition
+	}
+	d.Definitions = definitions
+	d.SetUpdatedAt()
+	return nil
+}
+
 func (d *Vocabulary) SetPartsOfSpeech(partsOfSpeech []string) error {
 	dPartsOfSpeech := make([]PartOfSpeech, 0)
 	for _, pos := range partsOfSpeech {
@@ -62,6 +78,7 @@ func (d *Vocabulary) SetPartsOfSpeech(partsOfSpeech []string) error {
 		return apperrors.Vocabulary.InvalidPartOfSpeech
 	}
 	d.PartsOfSpeech = dPartsOfSpeech
+	d.SetUpdatedAt()
 
 	return nil
 }
@@ -70,7 +87,8 @@ func (d *Vocabulary) SetIPA(ipa string) error {
 	if ipa == "" {
 		return apperrors.Vocabulary.InvalidIPA
 	}
-	d.IPA = ipa
+	d.Ipa = ipa
+	d.SetUpdatedAt()
 	return nil
 }
 
@@ -79,15 +97,23 @@ func (d *Vocabulary) SetAudio(audio string) error {
 		return apperrors.Vocabulary.InvalidAudioName
 	}
 	d.Audio = audio
+	d.SetUpdatedAt()
 	return nil
 }
 
 func (d *Vocabulary) SetLexicalRelations(synonyms, antonyms []string) error {
 	d.Synonyms = synonyms
 	d.Antonyms = antonyms
+	d.SetUpdatedAt()
+	return nil
+}
+
+func (d *Vocabulary) SetFrequency(frequency float64) error {
+	d.Frequency = frequency
+	d.SetUpdatedAt()
 	return nil
 }
 
 func (d *Vocabulary) SetUpdatedAt() {
-	d.UpdatedAt = time.Now()
+	d.UpdatedAt = manipulation.NowUTC()
 }

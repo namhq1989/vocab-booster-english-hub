@@ -26,6 +26,7 @@ type exercisesTable struct {
 	CorrectAnswer       postgres.ColumnString
 	Options             postgres.ColumnString
 	CreatedAt           postgres.ColumnTimestampz
+	Frequency           postgres.ColumnFloat
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -75,8 +76,9 @@ func newExercisesTableImpl(schemaName, tableName, alias string) exercisesTable {
 		CorrectAnswerColumn       = postgres.StringColumn("correct_answer")
 		OptionsColumn             = postgres.StringColumn("options")
 		CreatedAtColumn           = postgres.TimestampzColumn("created_at")
-		allColumns                = postgres.ColumnList{IDColumn, VocabularyExampleIDColumn, AudioColumn, LevelColumn, ContentColumn, VocabularyColumn, CorrectAnswerColumn, OptionsColumn, CreatedAtColumn}
-		mutableColumns            = postgres.ColumnList{VocabularyExampleIDColumn, AudioColumn, LevelColumn, ContentColumn, VocabularyColumn, CorrectAnswerColumn, OptionsColumn, CreatedAtColumn}
+		FrequencyColumn           = postgres.FloatColumn("frequency")
+		allColumns                = postgres.ColumnList{IDColumn, VocabularyExampleIDColumn, AudioColumn, LevelColumn, ContentColumn, VocabularyColumn, CorrectAnswerColumn, OptionsColumn, CreatedAtColumn, FrequencyColumn}
+		mutableColumns            = postgres.ColumnList{VocabularyExampleIDColumn, AudioColumn, LevelColumn, ContentColumn, VocabularyColumn, CorrectAnswerColumn, OptionsColumn, CreatedAtColumn, FrequencyColumn}
 	)
 
 	return exercisesTable{
@@ -92,6 +94,7 @@ func newExercisesTableImpl(schemaName, tableName, alias string) exercisesTable {
 		CorrectAnswer:       CorrectAnswerColumn,
 		Options:             OptionsColumn,
 		CreatedAt:           CreatedAtColumn,
+		Frequency:           FrequencyColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

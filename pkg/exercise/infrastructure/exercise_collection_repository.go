@@ -56,12 +56,27 @@ func (r ExerciseCollectionRepository) UpdateExerciseCollection(ctx *appcontext.A
 	}
 
 	stmt := r.getTable().UPDATE(
-		r.getTable().AllColumns,
+		r.getTable().AllColumns.Except(r.getTable().ID),
 	).
 		MODEL(doc).
 		WHERE(
-			r.getTable().ID.EQ(postgres.String(doc.ID)),
+			r.getTable().Slug.EQ(postgres.String(doc.Slug)),
 		)
+
+	_, err = stmt.ExecContext(ctx.Context(), r.getDB())
+	return err
+}
+
+func (r ExerciseCollectionRepository) UpsertExerciseCollection(ctx *appcontext.AppContext, collection domain.ExerciseCollection) error {
+	mapper := mapping.ExerciseCollectionMapper{}
+	doc, err := mapper.FromDomainToModel(collection)
+	if err != nil {
+		return err
+	}
+
+	stmt := r.getTable().INSERT(r.getTable().AllColumns).
+		MODEL(doc).
+		ON_CONFLICT(r.getTable().Slug).DO_NOTHING()
 
 	_, err = stmt.ExecContext(ctx.Context(), r.getDB())
 	return err

@@ -25,41 +25,29 @@ func NewAIRepository(ai ai.Operations, nlp nlp.Operations) AIRepository {
 	}
 }
 
-func (r AIRepository) GetVocabularyData(ctx *appcontext.AppContext, vocabulary string) (*domain.AIVocabularyData, error) {
-	result, err := r.ai.VocabularyData(ctx, ai.VocabularyDataPayload{
-		Vocabulary: vocabulary,
+func (r AIRepository) VocabularyExamples(ctx *appcontext.AppContext, vocabulary string, partsOfSpeech []string) ([]domain.AIVocabularyExample, error) {
+	result, err := r.ai.VocabularyExamples(ctx, ai.VocabularyDataPayload{
+		Vocabulary:    vocabulary,
+		PartsOfSpeech: partsOfSpeech,
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	posTags := make([]string, 0)
-	for _, posTag := range result.PosTags {
-		posTags = append(posTags, domain.MappingAIPos(posTag))
-	}
-
 	examples := make([]domain.AIVocabularyExample, 0)
-	for _, example := range result.Examples {
+	for _, example := range result {
 		if !strings.Contains(example.Example, example.Word) {
 			ctx.Logger().Error("failed to find word in example", nil, appcontext.Fields{"example": example, "word": example.Word})
 			continue
 		}
 
 		examples = append(examples, domain.AIVocabularyExample{
-			Example:    manipulation.RemoveSuffix(example.Example, "."),
-			Word:       example.Word,
-			Pos:        domain.MappingAIPos(example.Pos),
-			Definition: example.Definition,
+			Example: manipulation.RemoveSuffix(example.Example, "."),
+			Word:    example.Word,
 		})
 	}
 
-	return &domain.AIVocabularyData{
-		PosTags:  posTags,
-		IPA:      result.IPA,
-		Synonyms: result.Synonyms,
-		Antonyms: result.Antonyms,
-		Examples: examples,
-	}, nil
+	return examples, nil
 }
 
 func (r AIRepository) GrammarEvaluation(ctx *appcontext.AppContext, sentence string) ([]domain.SentenceGrammarError, error) {

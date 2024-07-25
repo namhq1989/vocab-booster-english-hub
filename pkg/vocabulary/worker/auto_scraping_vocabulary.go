@@ -1,9 +1,9 @@
 package worker
 
 import (
-	"errors"
 	"sync"
 
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
@@ -13,6 +13,7 @@ type AutoScrapingVocabularyHandler struct {
 	vocabularyExampleRepository      domain.VocabularyExampleRepository
 	vocabularyScrapingItemRepository domain.VocabularyScrapingItemRepository
 	aiRepository                     domain.AIRepository
+	externalApiRepository            domain.ExternalApiRepository
 	scraperRepository                domain.ScraperRepository
 	ttsRepository                    domain.TTSRepository
 	nlpRepository                    domain.NlpRepository
@@ -24,6 +25,7 @@ func NewAutoScrapingVocabularyHandler(
 	vocabularyExampleRepository domain.VocabularyExampleRepository,
 	vocabularyScrapingItemRepository domain.VocabularyScrapingItemRepository,
 	aiRepository domain.AIRepository,
+	externalApiRepository domain.ExternalApiRepository,
 	scraperRepository domain.ScraperRepository,
 	ttsRepository domain.TTSRepository,
 	nlpRepository domain.NlpRepository,
@@ -34,6 +36,7 @@ func NewAutoScrapingVocabularyHandler(
 		vocabularyExampleRepository:      vocabularyExampleRepository,
 		vocabularyScrapingItemRepository: vocabularyScrapingItemRepository,
 		aiRepository:                     aiRepository,
+		externalApiRepository:            externalApiRepository,
 		scraperRepository:                scraperRepository,
 		ttsRepository:                    ttsRepository,
 		nlpRepository:                    nlpRepository,
@@ -60,19 +63,30 @@ func (w AutoScrapingVocabularyHandler) AutoScrapingVocabulary(ctx *appcontext.Ap
 		return err
 	}
 
-	ctx.Logger().Text("fetch vocabulary data with GPT")
-	aiVocabularyData, err := w.aiRepository.GetVocabularyData(ctx, vocabulary.Term)
+	ctx.Logger().Text("fetch vocabulary data with Datamuse")
+	datamuseData, err := w.externalApiRepository.SearchTermWithDatamuse(ctx, scrapingItem.Term)
 	if err != nil {
-		ctx.Logger().Error("failed to fetch vocabulary data with GPT", err, appcontext.Fields{})
+		ctx.Logger().Error("failed to fetch vocabulary data with Datamuse", err, appcontext.Fields{})
 		return err
 	}
-	if aiVocabularyData == nil {
-		ctx.Logger().ErrorText("aiVocabularyData is null, respond")
-		return errors.New("invalid AI data")
+	if datamuseData == nil {
+		ctx.Logger().ErrorText("datamuseData is null, return")
+		return apperrors.Common.BadRequest
+	}
+
+	ctx.Logger().Text("generate vocabulary examples with GPT")
+	aiExamplesData, err := w.aiRepository.VocabularyExamples(ctx, scrapingItem.Term, datamuseData.PartsOfSpeech)
+	if err != nil {
+		ctx.Logger().Error("failed to generate vocabulary examples with GPT", err, appcontext.Fields{})
+		return err
+	}
+	if aiExamplesData == nil {
+		ctx.Logger().ErrorText("aiExamplesData is null, return")
+		return apperrors.Common.BadRequest
 	}
 
 	ctx.Logger().Text("translate and analyze the examples")
-	examples, err := w.analyzeExamples(ctx, *vocabulary, aiVocabularyData.Examples)
+	examples, err := w.analyzeExamples(ctx, *vocabulary, aiExamplesData)
 	if err != nil {
 		ctx.Logger().Error("failed to analyze examples", err, appcontext.Fields{})
 		return err
@@ -86,7 +100,7 @@ func (w AutoScrapingVocabularyHandler) AutoScrapingVocabulary(ctx *appcontext.Ap
 	}
 
 	ctx.Logger().Text("set vocabulary data")
-	if err = w.setVocabularyData(ctx, vocabulary, aiVocabularyData, soundGenerationResult); err != nil {
+	if err = w.setVocabularyData(ctx, vocabulary, datamuseData, soundGenerationResult); err != nil {
 		ctx.Logger().Error("failed to set vocabulary data", err, appcontext.Fields{})
 		return err
 	}
@@ -115,19 +129,29 @@ func (w AutoScrapingVocabularyHandler) AutoScrapingVocabulary(ctx *appcontext.Ap
 	return nil
 }
 
-func (AutoScrapingVocabularyHandler) setVocabularyData(ctx *appcontext.AppContext, vocabulary *domain.Vocabulary, aiVocabularyData *domain.AIVocabularyData, soundGenerationResult *domain.TTSGenerateSoundResult) error {
-	if err := vocabulary.SetIPA(aiVocabularyData.IPA); err != nil {
-		ctx.Logger().Error("failed to set vocabulary's ipa", err, appcontext.Fields{"ipa": aiVocabularyData.IPA})
+func (AutoScrapingVocabularyHandler) setVocabularyData(ctx *appcontext.AppContext, vocabulary *domain.Vocabulary, datamuseData *domain.DatamuseSearchTermResult, soundGenerationResult *domain.TTSGenerateSoundResult) error {
+	if err := vocabulary.SetDefinitions(datamuseData.Definitions); err != nil {
+		ctx.Logger().Error("failed to set vocabulary's definitions", err, appcontext.Fields{"definitions": datamuseData.Definitions})
 		return err
 	}
 
-	if err := vocabulary.SetLexicalRelations(aiVocabularyData.Synonyms, aiVocabularyData.Antonyms); err != nil {
-		ctx.Logger().Error("failed to set vocabulary's lexical relations", err, appcontext.Fields{"synonyms": aiVocabularyData.Synonyms, "antonyms": aiVocabularyData.Antonyms})
+	if err := vocabulary.SetIPA(datamuseData.Ipa); err != nil {
+		ctx.Logger().Error("failed to set vocabulary's ipa", err, appcontext.Fields{"ipa": datamuseData.Ipa})
 		return err
 	}
 
-	if err := vocabulary.SetPartsOfSpeech(aiVocabularyData.PosTags); err != nil {
-		ctx.Logger().Error("failed to set vocabulary's parts of speech", err, appcontext.Fields{"posTags": aiVocabularyData.PosTags})
+	if err := vocabulary.SetFrequency(datamuseData.Frequency); err != nil {
+		ctx.Logger().Error("failed to set vocabulary's frequency", err, appcontext.Fields{"frequency": datamuseData.Frequency})
+		return err
+	}
+
+	if err := vocabulary.SetLexicalRelations(datamuseData.Synonyms, datamuseData.Antonyms); err != nil {
+		ctx.Logger().Error("failed to set vocabulary's lexical relations", err, appcontext.Fields{"synonyms": datamuseData.Synonyms, "antonyms": datamuseData.Antonyms})
+		return err
+	}
+
+	if err := vocabulary.SetPartsOfSpeech(datamuseData.PartsOfSpeech); err != nil {
+		ctx.Logger().Error("failed to set vocabulary's parts of speech", err, appcontext.Fields{"partsOfSpeech": datamuseData.PartsOfSpeech})
 		return err
 	}
 
@@ -195,14 +219,9 @@ func (w AutoScrapingVocabularyHandler) analyzeExamples(ctx *appcontext.AppContex
 				return
 			}
 
-			mainWordDefinitionTranslated, err := w.nlpRepository.TranslateDefinition(ctx, e.Definition)
-			if err != nil {
-				ctx.Logger().Error("failed to translate main word definition", err, appcontext.Fields{"definition": e.Definition})
-			} else {
-				if err = example.SetMainWordData(e.Word, vocabulary.Term, e.Pos, *mainWordDefinitionTranslated); err != nil {
-					ctx.Logger().Error("failed to set vocabulary example's word data", err, appcontext.Fields{"word": e.Word, "definition": e.Definition, "pos": e.Pos})
-					return
-				}
+			if err = example.SetMainWordData(e.Word, vocabulary.Term); err != nil {
+				ctx.Logger().Error("failed to set vocabulary example's word data", err, appcontext.Fields{"word": e.Word})
+				return
 			}
 
 			result[i] = *example

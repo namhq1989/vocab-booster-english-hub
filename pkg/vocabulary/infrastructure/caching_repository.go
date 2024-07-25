@@ -12,13 +12,11 @@ import (
 
 type CachingRepository struct {
 	caching caching.Operations
-	ttl     time.Duration
 }
 
 func NewCachingRepository(caching *caching.Caching) CachingRepository {
 	return CachingRepository{
 		caching: caching,
-		ttl:     1 * time.Hour, // 1 hour
 	}
 }
 
@@ -40,7 +38,7 @@ func (r CachingRepository) GetVocabularyByTerm(ctx *appcontext.AppContext, term 
 
 func (r CachingRepository) SetVocabularyByTerm(ctx *appcontext.AppContext, term string, vocabulary *domain.Vocabulary) error {
 	key := r.generateVocabularyKey(term)
-	r.caching.SetTTL(ctx, key, vocabulary, r.ttl)
+	r.caching.SetTTL(ctx, key, vocabulary, 1*time.Hour)
 	return nil
 }
 
@@ -66,7 +64,7 @@ func (r CachingRepository) GetVocabularyExamplesByVocabularyID(ctx *appcontext.A
 
 func (r CachingRepository) SetVocabularyExamplesByVocabularyID(ctx *appcontext.AppContext, vocabularyID string, examples []domain.VocabularyExample) error {
 	key := r.generateVocabularyExamplesKey(vocabularyID)
-	r.caching.SetTTL(ctx, key, examples, r.ttl)
+	r.caching.SetTTL(ctx, key, examples, 1*time.Hour)
 	return nil
 }
 

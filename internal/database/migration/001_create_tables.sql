@@ -10,11 +10,13 @@ CREATE TABLE vocabularies (
     id TEXT PRIMARY KEY,
     author_id TEXT NOT NULL,
     term VARCHAR(30) NOT NULL,
-    parts_of_speech TEXT[] NOT NULL,
+    parts_of_speech TEXT[] NOT NULL DEFAULT '{}',
+    definitions JSONB NOT NULL,
     ipa VARCHAR(30) NOT NULL,
     audio VARCHAR(50) NOT NULL,
     synonyms TEXT[] NOT NULL DEFAULT '{}',
     antonyms TEXT[] NOT NULL DEFAULT '{}',
+    frequency NUMERIC NOT NULL DEFAULT 0,
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
 
@@ -123,10 +125,11 @@ CREATE INDEX idx_community_sentence_likes_user_id_sentence_id ON community_sente
 CREATE TABLE exercises (
     id TEXT PRIMARY KEY,
     vocabulary_example_id TEXT NOT NULL,
+    vocabulary VARCHAR(30) NOT NULL,
     audio VARCHAR(50) NOT NULL,
     level VARCHAR(20) NOT NULL,
+    frequency NUMERIC NOT NULL DEFAULT 0,
     content JSONB NOT NULL, -- Multilingual
-    vocabulary VARCHAR(30) NOT NULL,
     correct_answer VARCHAR(30) NOT NULL,
     options TEXT[] NOT NULL DEFAULT '{}',
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,

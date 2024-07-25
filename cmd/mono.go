@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/namhq1989/vocab-booster-english-hub/internal/externalapi"
+
 	"github.com/labstack/echo/v4"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/ai"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/caching"
@@ -26,19 +28,20 @@ import (
 )
 
 type app struct {
-	cfg        config.Server
-	database   *database.Database
-	caching    *caching.Caching
-	rest       *echo.Echo
-	rpc        *grpc.Server
-	monitoring *monitoring.Monitoring
-	queue      *queue.Queue
-	scraper    *scraper.Scraper
-	tts        *tts.TTS
-	ai         *ai.AI
-	nlp        *nlp.NLP
-	waiter     waiter.Waiter
-	modules    []monolith.Module
+	cfg         config.Server
+	database    *database.Database
+	caching     *caching.Caching
+	rest        *echo.Echo
+	rpc         *grpc.Server
+	monitoring  *monitoring.Monitoring
+	queue       *queue.Queue
+	scraper     *scraper.Scraper
+	tts         *tts.TTS
+	ai          *ai.AI
+	nlp         *nlp.NLP
+	externalApi *externalapi.ExternalAPI
+	waiter      waiter.Waiter
+	modules     []monolith.Module
 }
 
 func (a *app) Config() config.Server {
@@ -87,6 +90,10 @@ func (a *app) AI() *ai.AI {
 
 func (a *app) NLP() *nlp.NLP {
 	return a.nlp
+}
+
+func (a *app) ExternalAPI() *externalapi.ExternalAPI {
+	return a.externalApi
 }
 
 func (a *app) startupModules() error {

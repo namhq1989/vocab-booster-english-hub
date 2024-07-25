@@ -13,12 +13,17 @@ message Vocabulary {
   string id = 1;
   string authorId = 2;
   string term = 3;
-  repeated string partsOfSpeech = 4;
-  string ipa = 5;
-  string audio = 6;
-  repeated string synonyms = 7;
-  repeated string antonyms = 8;
-  repeated VocabularyExample examples = 9;
+  repeated VocabularyDefinition definitions = 4;
+  repeated string partsOfSpeech = 5;
+  string ipa = 6;
+  string audio = 7;
+  repeated string synonyms = 8;
+  repeated string antonyms = 9;
+}
+
+message VocabularyDefinition {
+  string pos = 1;
+  Multilingual definition = 2;
 }
 
 message VocabularyExample {
@@ -35,8 +40,6 @@ message VocabularyExample {
 message VocabularyMainWord {
   string word = 1;
   string base = 2;
-  string pos = 3;
-  Multilingual definition = 4;
 }
 
 message PosTag {

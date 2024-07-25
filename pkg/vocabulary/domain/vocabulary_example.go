@@ -30,10 +30,8 @@ type VocabularyExample struct {
 }
 
 type VocabularyMainWord struct {
-	Word       string
-	Base       string
-	Pos        PartOfSpeech
-	Definition language.Multilingual
+	Word string
+	Base string
 }
 
 func NewVocabularyExample(vocabularyID string) (*VocabularyExample, error) {
@@ -65,12 +63,7 @@ func (d *VocabularyExample) SetContent(content language.Multilingual) error {
 	return nil
 }
 
-func (d *VocabularyExample) SetMainWordData(word, base, pos string, definition language.Multilingual) error {
-	dPos := ToPartOfSpeech(pos)
-	if !dPos.IsValid() {
-		return apperrors.Vocabulary.InvalidPartOfSpeech
-	}
-
+func (d *VocabularyExample) SetMainWordData(word, base string) error {
 	if base == "" {
 		return apperrors.Vocabulary.InvalidTerm
 	}
@@ -79,14 +72,8 @@ func (d *VocabularyExample) SetMainWordData(word, base, pos string, definition l
 		return apperrors.Vocabulary.InvalidTerm
 	}
 
-	if definition.IsEmpty() {
-		return apperrors.Vocabulary.InvalidDefinition
-	}
-
-	d.MainWord.Pos = dPos
 	d.MainWord.Base = base
 	d.MainWord.Word = word
-	d.MainWord.Definition = definition
 	return nil
 }
 

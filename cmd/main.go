@@ -10,6 +10,7 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/internal/caching"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/config"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/externalapi"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/monitoring"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/monolith"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/nlp"
@@ -56,7 +57,7 @@ func main() {
 	a.queue = queue.Init(cfg.QueueRedisURL, cfg.QueueConcurrency)
 
 	// init queue's dashboard
-	a.rest.Any(fmt.Sprintf("%s/*", queue.DashboardPath), echo.WrapHandler(queue.EnableDashboard(cfg.QueueRedisURL)), middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
+	a.rest.Any(fmt.Sprintf("%s/*", queue.DashboardPath), echo.WrapHandler(queue.EnableDashboard(cfg.QueueRedisURL)), middleware.BasicAuth(func(username, password string, _ echo.Context) (bool, error) {
 		if !cfg.IsEnvRelease {
 			return true, nil
 		}
@@ -81,6 +82,9 @@ func main() {
 
 	// nlp
 	a.nlp = nlp.NewNLPClient(cfg.EndpointNLP)
+
+	// external api
+	a.externalApi = externalapi.NewExternalAPIClient()
 
 	// waiter
 	a.waiter = waiter.New(waiter.CatchSignals())
