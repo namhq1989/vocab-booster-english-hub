@@ -1,7 +1,6 @@
 package exercise
 
 import (
-	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/monolith"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/application"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/domain"
@@ -10,7 +9,6 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/shared"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/worker"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
-	"github.com/namhq1989/vocab-booster-utilities/language"
 )
 
 type Module struct{}
@@ -78,76 +76,13 @@ func (Module) createExerciseCollections(
 	exerciseCollectionRepository domain.ExerciseCollectionRepository,
 	cachingRepository domain.CachingRepository,
 ) {
-	// create default collection
-	totalCollections, err := exerciseCollectionRepository.CountExerciseCollections(ctx)
-	if err != nil {
-		panic(err)
-	}
-
-	if totalCollections == 0 {
-		collections := []domain.ExerciseCollection{
-			{
-				ID: database.NewStringID(),
-				Name: language.Multilingual{
-					English:    "All",
-					Vietnamese: "Tất cả",
-				},
-				Slug:           "all",
-				Criteria:       "",
-				IsFromSystem:   true,
-				StatsExercises: 0,
-				Order:          0,
-				Image:          "all.svg",
-			},
-			{
-				ID: database.NewStringID(),
-				Name: language.Multilingual{
-					English:    "Beginner",
-					Vietnamese: "Mới toe",
-				},
-				Slug:           "beginner",
-				Criteria:       "level=beginner",
-				IsFromSystem:   true,
-				StatsExercises: 0,
-				Order:          1,
-				Image:          "beginner.svg",
-			},
-			{
-				ID: database.NewStringID(),
-				Name: language.Multilingual{
-					English:    "Intermediate",
-					Vietnamese: "Tầm trung",
-				},
-				Slug:           "intermediate",
-				Criteria:       "level=intermediate",
-				IsFromSystem:   true,
-				StatsExercises: 0,
-				Order:          2,
-				Image:          "intermediate.svg",
-			},
-			{
-				ID: database.NewStringID(),
-				Name: language.Multilingual{
-					English:    "Advanced",
-					Vietnamese: "Rành rọt",
-				},
-				Slug:           "advanced",
-				Criteria:       "level=advanced",
-				IsFromSystem:   true,
-				StatsExercises: 0,
-				Order:          3,
-				Image:          "advanced.svg",
-			},
-		}
-
-		for _, collection := range collections {
-			if err = exerciseCollectionRepository.CreateExerciseCollection(ctx, collection); err != nil {
-				panic(err)
-			}
-		}
-
-		if err = cachingRepository.SetExerciseCollections(ctx, collections); err != nil {
+	for _, collection := range domain.SystemCollections {
+		if err := exerciseCollectionRepository.UpsertExerciseCollection(ctx, collection); err != nil {
 			panic(err)
 		}
+	}
+
+	if err := cachingRepository.SetExerciseCollections(ctx, domain.SystemCollections); err != nil {
+		panic(err)
 	}
 }

@@ -34,7 +34,7 @@ func (r ExternalAPIRepository) SearchTermWithDatamuse(ctx *appcontext.AppContext
 		Frequency:     apiResult.Frequency,
 		Ipa:           apiResult.Ipa,
 		PartsOfSpeech: make([]string, 0),
-		Definitions:   make([]domain.DatamuseTermDefinition, 0),
+		Definitions:   make([]domain.VocabularyDefinition, 0),
 	}
 
 	for _, def := range apiResult.Definitions {
@@ -49,8 +49,8 @@ func (r ExternalAPIRepository) SearchTermWithDatamuse(ctx *appcontext.AppContext
 			result.PartsOfSpeech = append(result.PartsOfSpeech, pos)
 		}
 
-		result.Definitions = append(result.Definitions, domain.DatamuseTermDefinition{
-			Pos:        pos,
+		result.Definitions = append(result.Definitions, domain.VocabularyDefinition{
+			Pos:        domain.ToPartOfSpeech(pos),
 			Definition: *multilingual,
 		})
 	}

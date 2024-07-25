@@ -13,6 +13,7 @@ import (
 type ExerciseCollectionRepository interface {
 	CreateExerciseCollection(ctx *appcontext.AppContext, collection ExerciseCollection) error
 	UpdateExerciseCollection(ctx *appcontext.AppContext, collection ExerciseCollection) error
+	UpsertExerciseCollection(ctx *appcontext.AppContext, collection ExerciseCollection) error
 	CountExerciseCollections(ctx *appcontext.AppContext) (int64, error)
 	FindExerciseCollections(ctx *appcontext.AppContext) ([]ExerciseCollection, error)
 	FindUserExerciseCollections(ctx *appcontext.AppContext, userID string) ([]UserExerciseCollection, error)

@@ -1,6 +1,8 @@
 package infrastructure
 
 import (
+	"strings"
+
 	"github.com/namhq1989/vocab-booster-english-hub/internal/nlp"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
@@ -27,7 +29,7 @@ func (r NlpRepository) AnalyzeSentence(ctx *appcontext.AppContext, sentence stri
 	posTags := make([]domain.PosTag, 0)
 	for _, posTag := range result.PosTags {
 		posTags = append(posTags, domain.PosTag{
-			Word:  posTag.Word,
+			Word:  strings.ToLower(posTag.Word),
 			Value: domain.ToPartOfSpeech(posTag.Value),
 			Level: posTag.Level,
 		})
@@ -36,20 +38,20 @@ func (r NlpRepository) AnalyzeSentence(ctx *appcontext.AppContext, sentence stri
 	dependencies := make([]domain.Dependency, 0)
 	for _, dependency := range result.Dependencies {
 		dependencies = append(dependencies, domain.Dependency{
-			Word:   dependency.Word,
-			DepRel: dependency.DepRel,
-			Head:   dependency.Head,
+			Word:   strings.ToLower(dependency.Word),
+			DepRel: strings.ToLower(dependency.DepRel),
+			Head:   strings.ToLower(dependency.Head),
 		})
 	}
 
 	verbs := make([]domain.Verb, 0)
 	for _, verb := range result.Verbs {
 		verbs = append(verbs, domain.Verb{
-			Base:                verb.Base,
-			Past:                verb.Past,
-			PastParticiple:      verb.PastParticiple,
-			Gerund:              verb.Gerund,
-			ThirdPersonSingular: verb.ThirdPersonSingular,
+			Base:                strings.ToLower(verb.Base),
+			Past:                strings.ToLower(verb.Past),
+			PastParticiple:      strings.ToLower(verb.PastParticiple),
+			Gerund:              strings.ToLower(verb.Gerund),
+			ThirdPersonSingular: strings.ToLower(verb.ThirdPersonSingular),
 		})
 	}
 

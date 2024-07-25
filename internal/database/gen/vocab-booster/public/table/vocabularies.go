@@ -28,6 +28,7 @@ type vocabulariesTable struct {
 	CreatedAt     postgres.ColumnTimestampz
 	UpdatedAt     postgres.ColumnTimestampz
 	Frequency     postgres.ColumnFloat
+	Definitions   postgres.ColumnString
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -79,8 +80,9 @@ func newVocabulariesTableImpl(schemaName, tableName, alias string) vocabulariesT
 		CreatedAtColumn     = postgres.TimestampzColumn("created_at")
 		UpdatedAtColumn     = postgres.TimestampzColumn("updated_at")
 		FrequencyColumn     = postgres.FloatColumn("frequency")
-		allColumns          = postgres.ColumnList{IDColumn, AuthorIDColumn, TermColumn, PartsOfSpeechColumn, IpaColumn, AudioColumn, SynonymsColumn, AntonymsColumn, CreatedAtColumn, UpdatedAtColumn, FrequencyColumn}
-		mutableColumns      = postgres.ColumnList{AuthorIDColumn, TermColumn, PartsOfSpeechColumn, IpaColumn, AudioColumn, SynonymsColumn, AntonymsColumn, CreatedAtColumn, UpdatedAtColumn, FrequencyColumn}
+		DefinitionsColumn   = postgres.StringColumn("definitions")
+		allColumns          = postgres.ColumnList{IDColumn, AuthorIDColumn, TermColumn, PartsOfSpeechColumn, IpaColumn, AudioColumn, SynonymsColumn, AntonymsColumn, CreatedAtColumn, UpdatedAtColumn, FrequencyColumn, DefinitionsColumn}
+		mutableColumns      = postgres.ColumnList{AuthorIDColumn, TermColumn, PartsOfSpeechColumn, IpaColumn, AudioColumn, SynonymsColumn, AntonymsColumn, CreatedAtColumn, UpdatedAtColumn, FrequencyColumn, DefinitionsColumn}
 	)
 
 	return vocabulariesTable{
@@ -98,6 +100,7 @@ func newVocabulariesTableImpl(schemaName, tableName, alias string) vocabulariesT
 		CreatedAt:     CreatedAtColumn,
 		UpdatedAt:     UpdatedAtColumn,
 		Frequency:     FrequencyColumn,
+		Definitions:   DefinitionsColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

@@ -24,4 +24,5 @@ type Vocabularies struct {
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 	Frequency     float64
+	Definitions   string
 }

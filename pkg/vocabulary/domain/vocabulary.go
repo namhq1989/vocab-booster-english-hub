@@ -3,6 +3,8 @@ package domain
 import (
 	"time"
 
+	"github.com/namhq1989/vocab-booster-utilities/language"
+
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/manipulation"
@@ -21,6 +23,7 @@ type Vocabulary struct {
 	ID            string
 	AuthorID      string
 	Term          string
+	Definitions   []VocabularyDefinition
 	PartsOfSpeech []PartOfSpeech
 	Ipa           string
 	Audio         string
@@ -31,7 +34,9 @@ type Vocabulary struct {
 	UpdatedAt     time.Time
 }
 
-type VocabularyData struct {
+type VocabularyDefinition struct {
+	Pos        PartOfSpeech
+	Definition language.Multilingual
 }
 
 func NewVocabulary(authorID, term string) (*Vocabulary, error) {
@@ -50,6 +55,15 @@ func NewVocabulary(authorID, term string) (*Vocabulary, error) {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}, nil
+}
+
+func (d *Vocabulary) SetDefinitions(definitions []VocabularyDefinition) error {
+	if len(definitions) == 0 {
+		return apperrors.Vocabulary.InvalidDefinition
+	}
+	d.Definitions = definitions
+	d.SetUpdatedAt()
+	return nil
 }
 
 func (d *Vocabulary) SetPartsOfSpeech(partsOfSpeech []string) error {

@@ -130,6 +130,11 @@ func (w AutoScrapingVocabularyHandler) AutoScrapingVocabulary(ctx *appcontext.Ap
 }
 
 func (AutoScrapingVocabularyHandler) setVocabularyData(ctx *appcontext.AppContext, vocabulary *domain.Vocabulary, datamuseData *domain.DatamuseSearchTermResult, soundGenerationResult *domain.TTSGenerateSoundResult) error {
+	if err := vocabulary.SetDefinitions(datamuseData.Definitions); err != nil {
+		ctx.Logger().Error("failed to set vocabulary's definitions", err, appcontext.Fields{"definitions": datamuseData.Definitions})
+		return err
+	}
+
 	if err := vocabulary.SetIPA(datamuseData.Ipa); err != nil {
 		ctx.Logger().Error("failed to set vocabulary's ipa", err, appcontext.Fields{"ipa": datamuseData.Ipa})
 		return err

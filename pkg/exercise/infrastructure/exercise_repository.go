@@ -124,6 +124,8 @@ func (r ExerciseRepository) PickRandomExercisesForUser(ctx *appcontext.AppContex
 		if len(parts) == 2 {
 			if parts[0] == "level" && parts[1] != "" {
 				whereCond = whereCond.AND(e.Level.EQ(postgres.String(parts[1])))
+			} else if parts[0] == "frequency" {
+				whereCond = whereCond.AND(e.Frequency.GT_EQ(postgres.Decimal(parts[1])))
 			}
 		}
 	}
@@ -170,6 +172,8 @@ func (r ExerciseRepository) CountExercisesByCriteria(ctx *appcontext.AppContext,
 		if len(parts) == 2 {
 			if parts[0] == "level" {
 				whereCond = whereCond.AND(r.getTable().Level.EQ(postgres.String(parts[1])))
+			} else if parts[0] == "frequency" {
+				whereCond = whereCond.AND(r.getTable().Frequency.GT_EQ(postgres.Decimal(parts[1])))
 			}
 		}
 	}

@@ -57,11 +57,9 @@ func (h SearchVocabularyHandler) SearchVocabulary(ctx *appcontext.AppContext, re
 	ctx.Logger().Text("find in caching first")
 	vocabulary, _ := h.cachingRepository.GetVocabularyByTerm(ctx, req.GetTerm())
 	if vocabulary != nil {
-		ctx.Logger().Text("vocabulary found in caching layer, find related data")
-		var examples = make([]domain.VocabularyExample, 0)
-		examples, _ = h.cachingRepository.GetVocabularyExamplesByVocabularyID(ctx, vocabulary.ID)
+		ctx.Logger().Text("vocabulary found in caching, respond")
 		result.Found = true
-		result.Vocabulary = dto.ConvertVocabularyFromDomainToGrpc(*vocabulary, examples)
+		result.Vocabulary = dto.ConvertVocabularyFromDomainToGrpc(*vocabulary)
 
 		ctx.Logger().Text("done search vocabulary request")
 		return result, nil
@@ -74,21 +72,18 @@ func (h SearchVocabularyHandler) SearchVocabulary(ctx *appcontext.AppContext, re
 		return nil, err
 	}
 	if vocabulary != nil {
-		ctx.Logger().Text("vocabulary found in db, find related data and response")
-		var examples = make([]domain.VocabularyExample, 0)
-		examples, err = h.vocabularyExampleRepository.FindVocabularyExamplesByVocabularyID(ctx, vocabulary.ID)
-		if err != nil {
-			ctx.Logger().Error("failed to find vocabulary examples", err, appcontext.Fields{})
-		}
+		ctx.Logger().Text("vocabulary found in db")
 
 		ctx.Logger().Text("cache result")
-		if err = h.cacheResult(ctx, *vocabulary, examples); err != nil {
+		if err = h.cacheResult(ctx, *vocabulary); err != nil {
 			ctx.Logger().Error("failed to cache result", err, appcontext.Fields{})
 		}
 
 		ctx.Logger().Text("respond data")
 		result.Found = true
-		result.Vocabulary = dto.ConvertVocabularyFromDomainToGrpc(*vocabulary, examples)
+		result.Vocabulary = dto.ConvertVocabularyFromDomainToGrpc(*vocabulary)
+
+		ctx.Logger().Text("done search vocabulary request")
 		return result, nil
 	}
 
@@ -170,17 +165,22 @@ func (h SearchVocabularyHandler) SearchVocabulary(ctx *appcontext.AppContext, re
 	}
 
 	ctx.Logger().Text("cache result")
-	if err = h.cacheResult(ctx, *vocabulary, examples); err != nil {
+	if err = h.cacheResult(ctx, *vocabulary); err != nil {
 		ctx.Logger().Error("failed to cache result", err, appcontext.Fields{})
 	}
 
 	ctx.Logger().Text("done search vocabulary request")
 	result.Found = true
-	result.Vocabulary = dto.ConvertVocabularyFromDomainToGrpc(*vocabulary, examples)
+	result.Vocabulary = dto.ConvertVocabularyFromDomainToGrpc(*vocabulary)
 	return result, nil
 }
 
 func (SearchVocabularyHandler) setVocabularyData(ctx *appcontext.AppContext, vocabulary *domain.Vocabulary, datamuseData *domain.DatamuseSearchTermResult, soundGenerationResult *domain.TTSGenerateSoundResult) error {
+	if err := vocabulary.SetDefinitions(datamuseData.Definitions); err != nil {
+		ctx.Logger().Error("failed to set vocabulary's definitions", err, appcontext.Fields{"definitions": datamuseData.Definitions})
+		return err
+	}
+
 	if err := vocabulary.SetIPA(datamuseData.Ipa); err != nil {
 		ctx.Logger().Error("failed to set vocabulary's ipa", err, appcontext.Fields{"ipa": datamuseData.Ipa})
 		return err
@@ -316,15 +316,11 @@ func (h SearchVocabularyHandler) enqueueTasks(ctx *appcontext.AppContext, vocabu
 	return nil
 }
 
-func (h SearchVocabularyHandler) cacheResult(ctx *appcontext.AppContext, vocabulary domain.Vocabulary, examples []domain.VocabularyExample) error {
+func (h SearchVocabularyHandler) cacheResult(ctx *appcontext.AppContext, vocabulary domain.Vocabulary) error {
 	ctx.Logger().Text("cache vocabulary")
 	if err := h.cachingRepository.SetVocabularyByTerm(ctx, vocabulary.Term, &vocabulary); err != nil {
 		ctx.Logger().Error("failed to cache vocabulary", err, appcontext.Fields{})
 	}
 
-	ctx.Logger().Text("cache vocabulary examples")
-	if err := h.cachingRepository.SetVocabularyExamplesByVocabularyID(ctx, vocabulary.ID, examples); err != nil {
-		ctx.Logger().Error("failed to cache vocabulary examples", err, appcontext.Fields{})
-	}
 	return nil
 }
