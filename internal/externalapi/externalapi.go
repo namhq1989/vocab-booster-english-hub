@@ -29,7 +29,7 @@ func NewExternalAPIClient() *ExternalAPI {
 			SetTimeout(30 * time.Second).
 			SetJSONMarshaler(json.Marshal).
 			SetJSONUnmarshaler(json.Unmarshal).
-			SetRetryAfter(func(client *resty.Client, resp *resty.Response) (time.Duration, error) {
+			SetRetryAfter(func(_ *resty.Client, resp *resty.Response) (time.Duration, error) {
 				return 1, fmt.Errorf("failed to send Datamuse request at %s with status code %d", resp.Request.RawRequest.RequestURI, resp.StatusCode())
 			}),
 	}

@@ -66,9 +66,7 @@ type datamuseApiSearchTermResult struct {
 func uncapitalizeDefinition(s string) string {
 	// trim spaces and the period at the end
 	s = strings.TrimSpace(s)
-	if strings.HasSuffix(s, ".") {
-		s = strings.TrimSuffix(s, ".")
-	}
+	s = strings.TrimSuffix(s, ".")
 
 	// find the position of the first character after the annotation
 	closingParenIndex := strings.LastIndex(s, ")")
@@ -133,9 +131,7 @@ func (ea ExternalAPI) searchTermDefinitionWitDatamuse(ctx *appcontext.AppContext
 		if len(parts) == 2 {
 			pos := parts[0]
 			definition := strings.TrimSpace(parts[1])
-			if strings.HasSuffix(definition, ".") {
-				definition = strings.TrimSuffix(definition, ".")
-			}
+			definition = strings.TrimSuffix(definition, ".")
 			definition = uncapitalizeDefinition(definition)
 			result.Definitions = append(result.Definitions, DatamuseTermDefinition{
 				Pos:        pos,
