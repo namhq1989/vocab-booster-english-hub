@@ -123,7 +123,7 @@ func (w NewVocabularyExampleCreatedHandler) NewVocabularyExampleCreated(ctx *app
 		}
 
 		ctx.Logger().Text("create new exercise via grpc")
-		if err = w.exerciseHub.CreateExercise(ctx, example.ID, example.Level.String(), example.Content, example.MainWord.Base, example.MainWord.Word, options); err != nil {
+		if err = w.exerciseHub.CreateExercise(ctx, example.ID, example.Level.String(), payload.Vocabulary.Frequency, example.Content, example.MainWord.Base, example.MainWord.Word, options); err != nil {
 			ctx.Logger().Error("failed to create new exercise via grpc", err, appcontext.Fields{})
 		}
 	}()

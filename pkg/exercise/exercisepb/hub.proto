@@ -23,10 +23,11 @@ service ExerciseService {
 message NewExerciseRequest {
   string vocabularyExampleId = 1;
   string level = 2;
-  Multilingual content = 3;
-  string vocabulary = 4;
-  string correctAnswer = 5;
-  repeated string options = 6;
+  double frequency = 3;
+  Multilingual content = 4;
+  string vocabulary = 5;
+  string correctAnswer = 6;
+  repeated string options = 7;
 }
 
 message NewExerciseResponse {

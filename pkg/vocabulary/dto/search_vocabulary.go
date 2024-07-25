@@ -46,10 +46,8 @@ func ConvertVocabularyFromDomainToGrpc(vocabulary domain.Vocabulary, examples []
 			VocabularyId: example.VocabularyID,
 			Content:      ConvertMultilingualToGrpcData(example.Content),
 			MainWord: &vocabularypb.VocabularyMainWord{
-				Word:       example.MainWord.Word,
-				Base:       example.MainWord.Base,
-				Pos:        example.MainWord.Pos.String(),
-				Definition: ConvertMultilingualToGrpcData(example.MainWord.Definition),
+				Word: example.MainWord.Word,
+				Base: example.MainWord.Base,
 			},
 			PosTags: posTags,
 			Sentiment: &vocabularypb.Sentiment{
@@ -66,7 +64,7 @@ func ConvertVocabularyFromDomainToGrpc(vocabulary domain.Vocabulary, examples []
 		AuthorId:      vocabulary.AuthorID,
 		Term:          vocabulary.Term,
 		PartsOfSpeech: partsOfSpeech,
-		Ipa:           vocabulary.IPA,
+		Ipa:           vocabulary.Ipa,
 		Audio:         vocabulary.Audio,
 		Synonyms:      vocabulary.Synonyms,
 		Antonyms:      vocabulary.Antonyms,

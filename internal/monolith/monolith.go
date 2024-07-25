@@ -6,6 +6,7 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/internal/caching"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/config"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/externalapi"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/monitoring"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/nlp"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/queue"
@@ -29,6 +30,7 @@ type Monolith interface {
 	TTS() *tts.TTS
 	AI() *ai.AI
 	NLP() *nlp.NLP
+	ExternalAPI() *externalapi.ExternalAPI
 }
 
 type Module interface {

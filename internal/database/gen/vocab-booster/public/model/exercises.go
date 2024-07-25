@@ -22,4 +22,5 @@ type Exercises struct {
 	CorrectAnswer       string
 	Options             database.StringArray
 	CreatedAt           time.Time
+	Frequency           float64
 }

@@ -13,10 +13,11 @@ func (VocabularyMapper) FromModelToDomain(vocab model.Vocabularies) (*domain.Voc
 		AuthorID:      vocab.AuthorID,
 		Term:          vocab.Term,
 		PartsOfSpeech: make([]domain.PartOfSpeech, 0),
-		IPA:           vocab.Ipa,
+		Ipa:           vocab.Ipa,
 		Audio:         vocab.Audio,
 		Synonyms:      vocab.Synonyms,
 		Antonyms:      vocab.Antonyms,
+		Frequency:     vocab.Frequency,
 		CreatedAt:     vocab.CreatedAt,
 		UpdatedAt:     vocab.UpdatedAt,
 	}
@@ -32,12 +33,13 @@ func (VocabularyMapper) FromDomainToModel(vocab domain.Vocabulary) (*model.Vocab
 	var result = &model.Vocabularies{
 		ID:            vocab.ID,
 		AuthorID:      vocab.AuthorID,
-		Ipa:           vocab.IPA,
+		Ipa:           vocab.Ipa,
 		Term:          vocab.Term,
 		PartsOfSpeech: make([]string, 0),
 		Audio:         vocab.Audio,
 		Synonyms:      vocab.Synonyms,
 		Antonyms:      vocab.Antonyms,
+		Frequency:     vocab.Frequency,
 		CreatedAt:     vocab.CreatedAt,
 		UpdatedAt:     vocab.UpdatedAt,
 	}

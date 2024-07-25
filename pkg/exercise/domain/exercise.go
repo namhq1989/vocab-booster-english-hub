@@ -24,6 +24,7 @@ type Exercise struct {
 	ID                  string
 	VocabularyExampleID string
 	Level               ExerciseLevel
+	Frequency           float64
 	Audio               string
 	Vocabulary          string
 	Content             language.Multilingual
@@ -32,7 +33,7 @@ type Exercise struct {
 	CreatedAt           time.Time
 }
 
-func NewExercise(vocabularyExampleID, level string, content language.Multilingual, vocabulary, correctAnswer string, options []string) (*Exercise, error) {
+func NewExercise(vocabularyExampleID, level string, frequency float64, content language.Multilingual, vocabulary, correctAnswer string, options []string) (*Exercise, error) {
 	if vocabularyExampleID == "" {
 		return nil, apperrors.Exercise.InvalidExerciseID
 	}
@@ -66,6 +67,7 @@ func NewExercise(vocabularyExampleID, level string, content language.Multilingua
 		ID:                  database.NewStringID(),
 		VocabularyExampleID: vocabularyExampleID,
 		Level:               dLevel,
+		Frequency:           frequency,
 		Audio:               "",
 		Content:             content,
 		Vocabulary:          vocabulary,

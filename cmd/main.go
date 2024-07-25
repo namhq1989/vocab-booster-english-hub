@@ -10,6 +10,7 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/internal/caching"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/config"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/externalapi"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/monitoring"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/monolith"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/nlp"
@@ -81,6 +82,9 @@ func main() {
 
 	// nlp
 	a.nlp = nlp.NewNLPClient(cfg.EndpointNLP)
+
+	// external api
+	a.externalApi = externalapi.NewExternalAPIClient()
 
 	// waiter
 	a.waiter = waiter.New(waiter.CatchSignals())

@@ -5,23 +5,13 @@ import (
 )
 
 type AIRepository interface {
-	GetVocabularyData(ctx *appcontext.AppContext, vocabulary string) (*AIVocabularyData, error)
+	VocabularyExamples(ctx *appcontext.AppContext, vocabulary string, partsOfSpeech []string) ([]AIVocabularyExample, error)
 	GrammarEvaluation(ctx *appcontext.AppContext, sentence string) ([]SentenceGrammarError, error)
 }
 
-type AIVocabularyData struct {
-	PosTags  []string
-	IPA      string
-	Synonyms []string
-	Antonyms []string
-	Examples []AIVocabularyExample
-}
-
 type AIVocabularyExample struct {
-	Example    string
-	Word       string
-	Pos        string
-	Definition string
+	Example string
+	Word    string
 }
 
 var posMapping = map[string]string{
@@ -54,7 +44,7 @@ var posMapping = map[string]string{
 	"x":            "x",
 }
 
-func MappingAIPos(tag string) string {
+func MappingPos(tag string) string {
 	if mappedTag, exists := posMapping[tag]; exists {
 		return mappedTag
 	} else {

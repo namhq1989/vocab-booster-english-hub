@@ -44,6 +44,7 @@ func New(
 	communitySentenceDraftRepository domain.CommunitySentenceDraftRepository,
 	communitySentenceLikeRepository domain.CommunitySentenceLikeRepository,
 	aiRepository domain.AIRepository,
+	externalApiRepository domain.ExternalApiRepository,
 	scraperRepository domain.ScraperRepository,
 	ttsRepository domain.TTSRepository,
 	nlpRepository domain.NlpRepository,
@@ -52,7 +53,17 @@ func New(
 ) *Application {
 	return &Application{
 		appHubHandler: appHubHandler{
-			SearchVocabularyHandler: hub.NewSearchVocabularyHandler(vocabularyRepository, vocabularyExampleRepository, aiRepository, scraperRepository, ttsRepository, nlpRepository, queueRepository, cachingRepository),
+			SearchVocabularyHandler: hub.NewSearchVocabularyHandler(
+				vocabularyRepository,
+				vocabularyExampleRepository,
+				aiRepository,
+				externalApiRepository,
+				scraperRepository,
+				ttsRepository,
+				nlpRepository,
+				queueRepository,
+				cachingRepository,
+			),
 
 			CreateCommunitySentenceDraftHandler: hub.NewCreateCommunitySentenceDraftHandler(
 				vocabularyRepository,

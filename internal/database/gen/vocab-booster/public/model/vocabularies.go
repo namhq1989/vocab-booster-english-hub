@@ -23,4 +23,5 @@ type Vocabularies struct {
 	Antonyms      database.StringArray
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
+	Frequency     float64
 }

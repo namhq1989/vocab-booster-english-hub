@@ -8,7 +8,7 @@ import (
 )
 
 type Operations interface {
-	VocabularyData(ctx *appcontext.AppContext, payload VocabularyDataPayload) (*VocabularyDataResult, error)
+	VocabularyExamples(ctx *appcontext.AppContext, payload VocabularyDataPayload) ([]VocabularyExample, error)
 	GrammarEvaluation(ctx *appcontext.AppContext, payload GrammarEvaluationPayload) (*GrammarEvaluationResult, error)
 }
 

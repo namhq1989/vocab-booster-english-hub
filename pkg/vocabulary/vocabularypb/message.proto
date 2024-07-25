@@ -35,8 +35,6 @@ message VocabularyExample {
 message VocabularyMainWord {
   string word = 1;
   string base = 2;
-  string pos = 3;
-  Multilingual definition = 4;
 }
 
 message PosTag {

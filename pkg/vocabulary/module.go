@@ -31,12 +31,13 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 		communitySentenceLikeRepository  = infrastructure.NewCommunitySentenceLikeRepository(mono.Database())
 		verbConjugationRepository        = infrastructure.NewVerbConjugationRepository(mono.Database())
 
-		aiRepository      = infrastructure.NewAIRepository(mono.AI(), mono.NLP())
-		scraperRepository = infrastructure.NewScraperRepository(mono.Scraper())
-		ttsRepository     = infrastructure.NewTTSRepository(mono.TTS())
-		nlpRepository     = infrastructure.NewNlpRepository(mono.NLP())
-		queueRepository   = infrastructure.NewQueueRepository(mono.Queue())
-		cachingRepository = infrastructure.NewCachingRepository(mono.Caching())
+		aiRepository          = infrastructure.NewAIRepository(mono.AI(), mono.NLP())
+		externalApiRepository = infrastructure.NewExternalAPIRepository(mono.ExternalAPI(), mono.NLP())
+		scraperRepository     = infrastructure.NewScraperRepository(mono.Scraper())
+		ttsRepository         = infrastructure.NewTTSRepository(mono.TTS())
+		nlpRepository         = infrastructure.NewNlpRepository(mono.NLP())
+		queueRepository       = infrastructure.NewQueueRepository(mono.Queue())
+		cachingRepository     = infrastructure.NewCachingRepository(mono.Caching())
 
 		exerciseHub = infrastructure.NewExerciseHub(exerciseGRPCClient)
 
@@ -48,6 +49,7 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 			communitySentenceDraftRepository,
 			communitySentenceLikeRepository,
 			aiRepository,
+			externalApiRepository,
 			scraperRepository,
 			ttsRepository,
 			nlpRepository,
@@ -71,6 +73,7 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 		queueRepository,
 		ttsRepository,
 		aiRepository,
+		externalApiRepository,
 		scraperRepository,
 		nlpRepository,
 		exerciseHub,

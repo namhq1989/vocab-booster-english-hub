@@ -5,6 +5,7 @@ import (
 
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/manipulation"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
 
@@ -21,10 +22,11 @@ type Vocabulary struct {
 	AuthorID      string
 	Term          string
 	PartsOfSpeech []PartOfSpeech
-	IPA           string
+	Ipa           string
 	Audio         string
 	Synonyms      []string
 	Antonyms      []string
+	Frequency     float64
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }
@@ -62,6 +64,7 @@ func (d *Vocabulary) SetPartsOfSpeech(partsOfSpeech []string) error {
 		return apperrors.Vocabulary.InvalidPartOfSpeech
 	}
 	d.PartsOfSpeech = dPartsOfSpeech
+	d.SetUpdatedAt()
 
 	return nil
 }
@@ -70,7 +73,8 @@ func (d *Vocabulary) SetIPA(ipa string) error {
 	if ipa == "" {
 		return apperrors.Vocabulary.InvalidIPA
 	}
-	d.IPA = ipa
+	d.Ipa = ipa
+	d.SetUpdatedAt()
 	return nil
 }
 
@@ -79,15 +83,23 @@ func (d *Vocabulary) SetAudio(audio string) error {
 		return apperrors.Vocabulary.InvalidAudioName
 	}
 	d.Audio = audio
+	d.SetUpdatedAt()
 	return nil
 }
 
 func (d *Vocabulary) SetLexicalRelations(synonyms, antonyms []string) error {
 	d.Synonyms = synonyms
 	d.Antonyms = antonyms
+	d.SetUpdatedAt()
+	return nil
+}
+
+func (d *Vocabulary) SetFrequency(frequency float64) error {
+	d.Frequency = frequency
+	d.SetUpdatedAt()
 	return nil
 }
 
 func (d *Vocabulary) SetUpdatedAt() {
-	d.UpdatedAt = time.Now()
+	d.UpdatedAt = manipulation.NowUTC()
 }
