@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"slices"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
@@ -24,6 +25,8 @@ type TTS struct {
 	polly  *polly.Client
 	voices []types.Voice
 }
+
+var pickedVoices = []string{"Joey", "Kendra", "Salli", "Ruth", "Stephen", "Gregory"}
 
 func NewTTSClient(awsAccessKey, awsSecretKey, awsRegion string) *TTS {
 	var (
@@ -51,9 +54,20 @@ func NewTTSClient(awsAccessKey, awsSecretKey, awsRegion string) *TTS {
 		panic(errors.New("no available voices of polly"))
 	}
 
+	voices := make([]types.Voice, 0)
+
+	for _, voice := range resp.Voices {
+		index := slices.IndexFunc(pickedVoices, func(v string) bool {
+			return v == *voice.Name
+		})
+		if index != -1 {
+			voices = append(voices, voice)
+		}
+	}
+
 	t := &TTS{
 		polly:  svc,
-		voices: resp.Voices,
+		voices: voices,
 	}
 	t.initDirectories()
 
