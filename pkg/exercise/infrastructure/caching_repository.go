@@ -2,12 +2,14 @@ package infrastructure
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"time"
 
 	"github.com/namhq1989/vocab-booster-english-hub/internal/caching"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/domain"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
+	"github.com/redis/go-redis/v9"
 )
 
 type CachingRepository struct {
@@ -25,6 +27,9 @@ func (r CachingRepository) GetExerciseCollections(ctx *appcontext.AppContext) (*
 
 	dataStr, err := r.caching.Get(ctx, key)
 	if err != nil {
+		if errors.Is(err, redis.Nil) {
+			return nil, nil
+		}
 		return nil, err
 	}
 
@@ -55,6 +60,9 @@ func (r CachingRepository) GetUserExerciseCollections(ctx *appcontext.AppContext
 
 	dataStr, err := r.caching.Get(ctx, key)
 	if err != nil {
+		if errors.Is(err, redis.Nil) {
+			return nil, nil
+		}
 		return nil, err
 	}
 

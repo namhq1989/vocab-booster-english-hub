@@ -17,7 +17,7 @@ func NewUpsertUserExerciseInteractedHistoryHandler(userExerciseInteractedHistory
 
 func (w UpsertUserExerciseInteractedHistoryHandler) UpsertUserExerciseInteractedHistory(ctx *appcontext.AppContext, payload domain.QueueUpsertUserExerciseInteractedHistoryPayload) error {
 	ctx.Logger().Text("create new model")
-	history, err := domain.NewUserExerciseInteractedHistory(payload.UserID, payload.ExerciseID)
+	history, err := domain.NewUserExerciseInteractedHistory(payload.UserID, payload.ExerciseID, payload.Timezone)
 	if err != nil {
 		ctx.Logger().Error("failed to create new model", err, appcontext.Fields{})
 		return err

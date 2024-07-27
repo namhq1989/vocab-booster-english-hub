@@ -27,7 +27,10 @@ func NewAnswerExerciseHandler(
 }
 
 func (h AnswerExerciseHandler) AnswerExercise(ctx *appcontext.AppContext, req *exercisepb.AnswerExerciseRequest) (*exercisepb.AnswerExerciseResponse, error) {
-	ctx.Logger().Info("[hub] new answer exercise request", appcontext.Fields{"exerciseID": req.GetExerciseId(), "userID": req.GetUserId(), "isCorrect": req.GetIsCorrect()})
+	ctx.Logger().Info("[hub] new answer exercise request", appcontext.Fields{
+		"exerciseID": req.GetExerciseId(), "userID": req.GetUserId(),
+		"isCorrect": req.GetIsCorrect(), "timezone": req.GetTimezone(),
+	})
 
 	ctx.Logger().Text("find exercise in db")
 	exercise, err := h.exerciseRepository.FindExerciseByID(ctx, req.GetExerciseId())
@@ -77,7 +80,7 @@ func (h AnswerExerciseHandler) AnswerExercise(ctx *appcontext.AppContext, req *e
 	}
 
 	ctx.Logger().Text("enqueue task")
-	if err = h.enqueueTask(ctx, *ues, *exercise, isNewInteracting); err != nil {
+	if err = h.enqueueTask(ctx, *ues, *exercise, isNewInteracting, req.GetTimezone()); err != nil {
 		ctx.Logger().Error("failed to enqueue task", err, appcontext.Fields{})
 	}
 
@@ -87,7 +90,7 @@ func (h AnswerExerciseHandler) AnswerExercise(ctx *appcontext.AppContext, req *e
 	}, nil
 }
 
-func (h AnswerExerciseHandler) enqueueTask(ctx *appcontext.AppContext, ues domain.UserExerciseStatus, exercise domain.Exercise, isNewInteracting bool) error {
+func (h AnswerExerciseHandler) enqueueTask(ctx *appcontext.AppContext, ues domain.UserExerciseStatus, exercise domain.Exercise, isNewInteracting bool, tz string) error {
 	if isNewInteracting {
 		ctx.Logger().Text("add task updateUserExerciseCollectionStats")
 		if err := h.queueRepository.UpdateUserExerciseCollectionStats(ctx, domain.QueueUpdateUserExerciseCollectionStatsPayload{
@@ -104,6 +107,7 @@ func (h AnswerExerciseHandler) enqueueTask(ctx *appcontext.AppContext, ues domai
 	if err := h.queueRepository.UpsertUserExerciseInteractedHistory(ctx, domain.QueueUpsertUserExerciseInteractedHistoryPayload{
 		UserID:     ues.UserID,
 		ExerciseID: ues.ExerciseID,
+		Timezone:   tz,
 	}); err != nil {
 		ctx.Logger().Error("failed to add task upsertUserExerciseInteractedHistory", err, appcontext.Fields{})
 	}

@@ -103,7 +103,7 @@ func (w Worker) addCronjob() {
 		jobs = []cronjobData{
 			{
 				Task:       w.queue.GenerateTypename(queue.TypeNames.UpdateExerciseCollectionStats),
-				CronSpec:   "@every 1h",
+				CronSpec:   "@every 30m",
 				Payload:    domain.QueueUpdateExerciseCollectionStatsPayload{},
 				RetryTimes: 1,
 			},

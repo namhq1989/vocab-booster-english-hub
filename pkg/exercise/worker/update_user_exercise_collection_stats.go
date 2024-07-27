@@ -2,9 +2,9 @@ package worker
 
 import (
 	"fmt"
-	"slices"
+	"strconv"
+	"strings"
 
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/exercise/domain"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
@@ -40,12 +40,25 @@ func (w UpdateUserExerciseCollectionStatsHandler) UpdateUserExerciseCollectionSt
 		return err
 	}
 
-	criteria := fmt.Sprintf("level=%s", payload.Exercise.Level)
+	level := fmt.Sprintf("level=%s", payload.Exercise.Level)
+	frequency := fmt.Sprintf("frequency=%f", payload.Exercise.Frequency)
+	ctx.Logger().Info("prepared criteria with exercise data", appcontext.Fields{"level": level, "frequency": frequency})
 
-	// always add Random collection into the criteria list
-	for _, c := range []string{"", criteria} {
-		if err = w.updateStats(ctx, payload.UserExerciseStatus.UserID, collections, c); err != nil {
-			return err
+	for _, collection := range collections {
+		if collection.Criteria == "" {
+			if err = w.updateStats(ctx, payload.UserExerciseStatus.UserID, collection); err != nil {
+				return err
+			}
+			continue
+		}
+
+		for _, c := range []string{level, frequency} {
+			if !w.checkCollectionCriteria(ctx, collection.Criteria, c) {
+				continue
+			}
+			if err = w.updateStats(ctx, payload.UserExerciseStatus.UserID, collection); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -58,19 +71,32 @@ func (w UpdateUserExerciseCollectionStatsHandler) UpdateUserExerciseCollectionSt
 	return nil
 }
 
-func (w UpdateUserExerciseCollectionStatsHandler) updateStats(ctx *appcontext.AppContext, userID string, collections []domain.ExerciseCollection, criteria string) error {
-	ctx.Logger().Info("find collection with criteria", appcontext.Fields{"criteria": criteria})
-	collectionIndex := slices.IndexFunc(collections, func(c domain.ExerciseCollection) bool {
-		return c.Criteria == criteria
-	})
-	if collectionIndex == -1 {
-		ctx.Logger().ErrorText("collection not found")
-		return apperrors.Collection.CollectionNotFound
+func (UpdateUserExerciseCollectionStatsHandler) checkCollectionCriteria(ctx *appcontext.AppContext, collectionCriteria, exerciseCriteria string) bool {
+	if collectionCriteria == "" {
+		return false
 	}
 
-	collection := collections[collectionIndex]
+	if strings.Contains(collectionCriteria, "level") || strings.Contains(exerciseCriteria, "level") {
+		return collectionCriteria == exerciseCriteria
+	}
 
-	ctx.Logger().Text("create new user exercise collection status model")
+	collectionFrequency, err := strconv.ParseFloat(strings.Split(collectionCriteria, "=")[1], 64)
+	if err != nil {
+		ctx.Logger().Error("failed to parse collection frequency", err, appcontext.Fields{"collectionCriteria": collectionCriteria})
+		return false
+	}
+
+	exerciseFrequency, err := strconv.ParseFloat(strings.Split(exerciseCriteria, "=")[1], 64)
+	if err != nil {
+		ctx.Logger().Error("failed to parse exercise frequency", err, appcontext.Fields{"exerciseCriteria": exerciseCriteria})
+		return false
+	}
+
+	return collectionFrequency >= exerciseFrequency
+}
+
+func (w UpdateUserExerciseCollectionStatsHandler) updateStats(ctx *appcontext.AppContext, userID string, collection domain.ExerciseCollection) error {
+	ctx.Logger().Info("create new user exercise collection status model", appcontext.Fields{"id": collection.ID, "criteria": collection.Criteria})
 	uecs, err := domain.NewUserExerciseCollectionStatus(userID, collection.ID)
 	if err != nil {
 		ctx.Logger().Error("failed to create new user exercise collection status model", err, appcontext.Fields{})
