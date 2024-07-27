@@ -71,7 +71,7 @@ func (w UpdateUserExerciseCollectionStatsHandler) UpdateUserExerciseCollectionSt
 	return nil
 }
 
-func (w UpdateUserExerciseCollectionStatsHandler) checkCollectionCriteria(ctx *appcontext.AppContext, collectionCriteria, exerciseCriteria string) bool {
+func (UpdateUserExerciseCollectionStatsHandler) checkCollectionCriteria(ctx *appcontext.AppContext, collectionCriteria, exerciseCriteria string) bool {
 	if collectionCriteria == "" {
 		return false
 	}
