@@ -21,7 +21,7 @@ type UserExerciseInteractedHistory struct {
 	Date       time.Time
 }
 
-func NewUserExerciseInteractedHistory(userID, exerciseID string) (*UserExerciseInteractedHistory, error) {
+func NewUserExerciseInteractedHistory(userID, exerciseID, tz string) (*UserExerciseInteractedHistory, error) {
 	if !database.IsValidID(userID) {
 		return nil, apperrors.User.InvalidUserID
 	}
@@ -34,6 +34,6 @@ func NewUserExerciseInteractedHistory(userID, exerciseID string) (*UserExerciseI
 		ID:         database.NewStringID(),
 		ExerciseID: exerciseID,
 		UserID:     userID,
-		Date:       manipulation.StartOfToday(""),
+		Date:       manipulation.StartOfToday(tz),
 	}, nil
 }

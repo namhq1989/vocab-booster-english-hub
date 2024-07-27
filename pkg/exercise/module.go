@@ -58,7 +58,7 @@ func (m Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) erro
 	)
 	w.Start()
 
-	m.init(ctx, exerciseCollectionRepository, cachingRepository)
+	m.init(ctx, exerciseCollectionRepository)
 
 	return nil
 }
@@ -66,23 +66,17 @@ func (m Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) erro
 func (m Module) init(
 	ctx *appcontext.AppContext,
 	exerciseCollectionRepository domain.ExerciseCollectionRepository,
-	cachingRepository domain.CachingRepository,
 ) {
-	m.createExerciseCollections(ctx, exerciseCollectionRepository, cachingRepository)
+	m.createExerciseCollections(ctx, exerciseCollectionRepository)
 }
 
 func (Module) createExerciseCollections(
 	ctx *appcontext.AppContext,
 	exerciseCollectionRepository domain.ExerciseCollectionRepository,
-	cachingRepository domain.CachingRepository,
 ) {
 	for _, collection := range domain.SystemCollections {
 		if err := exerciseCollectionRepository.UpsertExerciseCollection(ctx, collection); err != nil {
 			panic(err)
 		}
-	}
-
-	if err := cachingRepository.SetExerciseCollections(ctx, domain.SystemCollections); err != nil {
-		panic(err)
 	}
 }

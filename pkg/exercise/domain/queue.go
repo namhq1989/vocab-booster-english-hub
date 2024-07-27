@@ -15,6 +15,7 @@ type QueueUpdateUserExerciseCollectionStatsPayload struct {
 type QueueUpsertUserExerciseInteractedHistoryPayload struct {
 	UserID     string
 	ExerciseID string
+	Timezone   string
 }
 
 type QueueUpdateExerciseCollectionStatsPayload struct{}

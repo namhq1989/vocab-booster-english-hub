@@ -49,6 +49,12 @@ func (h GetExerciseCollectionsHandler) GetExerciseCollections(ctx *appcontext.Ap
 	ctx.Logger().Text("convert to response data")
 	result := dto.ConvertUserExerciseCollectionsFromDomainToGrpc(collections, req.GetLang())
 
+	ctx.Logger().Text("store in caching")
+	err = h.cachingRepository.SetUserExerciseCollections(ctx, req.GetUserId(), collections)
+	if err != nil {
+		ctx.Logger().Error("failed to store in caching", err, appcontext.Fields{})
+	}
+
 	ctx.Logger().Text("done get exercise collections request")
 	return &exercisepb.GetExerciseCollectionsResponse{Collections: result}, nil
 }

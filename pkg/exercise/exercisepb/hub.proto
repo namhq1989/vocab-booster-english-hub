@@ -50,6 +50,7 @@ message AnswerExerciseRequest {
   string userId = 1;
   string exerciseId = 2;
   bool isCorrect = 3;
+  string timezone = 4;
 }
 
 message AnswerExerciseResponse {

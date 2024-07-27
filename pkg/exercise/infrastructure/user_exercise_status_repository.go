@@ -189,7 +189,7 @@ type statsResult struct {
 	ReadyToReview int64 `json:"ready_to_review"`
 }
 
-func (r UserExerciseStatusRepository) FindUserStats(ctx *appcontext.AppContext, userID, timezone string) (*domain.UserStats, error) {
+func (r UserExerciseStatusRepository) FindUserStats(ctx *appcontext.AppContext, userID, tz string) (*domain.UserStats, error) {
 	stmt := postgres.RawStatement(
 		`SELECT
     				COUNT(CASE ues.is_mastered WHEN TRUE::boolean THEN 1 END) AS "stats_result.mastered",
@@ -197,7 +197,7 @@ func (r UserExerciseStatusRepository) FindUserStats(ctx *appcontext.AppContext, 
 				  FROM public.user_exercise_statuses AS ues
 				  WHERE ues.user_id = $userID::text;`,
 		postgres.RawArgs{
-			"$ts":     postgres.TimestampzT(manipulation.Now(timezone)),
+			"$ts":     manipulation.ToSQLTimestamp(manipulation.Now(tz), tz),
 			"$userID": userID,
 		},
 	)

@@ -47,7 +47,7 @@ func (r UserExerciseInteractedHistoryRepository) UpsertUserExerciseInteractedHis
 	return err
 }
 
-func (r UserExerciseInteractedHistoryRepository) AggregateUserExercisesInTimeRange(ctx *appcontext.AppContext, userID, timezone string, from, to time.Time) ([]domain.UserAggregatedExercise, error) {
+func (r UserExerciseInteractedHistoryRepository) AggregateUserExercisesInTimeRange(ctx *appcontext.AppContext, userID, tz string, from, to time.Time) ([]domain.UserAggregatedExercise, error) {
 	stmt := postgres.RawStatement(
 		`WITH RECURSIVE date_series AS (
 						SELECT 
@@ -75,9 +75,9 @@ func (r UserExerciseInteractedHistoryRepository) AggregateUserExercisesInTimeRan
 					ORDER BY 
 						date_series.date;`,
 		postgres.RawArgs{
-			"$from_date": manipulation.ToSQLDateFrom(from, timezone),
-			"$to_date":   manipulation.ToSQLDateTo(to, timezone),
-			"$timezone":  timezone,
+			"$from_date": manipulation.ToSQLDateFrom(from, tz),
+			"$to_date":   manipulation.ToSQLDateTo(to, tz),
+			"$timezone":  tz,
 			"$userID":    userID,
 		},
 	)
