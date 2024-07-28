@@ -75,6 +75,7 @@ func (VocabularyExampleMapper) FromDomainToModel(example domain.VocabularyExampl
 	mainWord := VocabularyMainWord{
 		Word: example.MainWord.Word,
 		Base: example.MainWord.Base,
+		Pos:  example.MainWord.Pos.String(),
 	}
 	if data, err := json.Marshal(mainWord); err != nil {
 		return nil, err

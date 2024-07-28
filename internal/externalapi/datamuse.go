@@ -24,9 +24,15 @@ type DatamuseTermDefinition struct {
 
 func (ea ExternalAPI) SearchTermWitDatamuse(ctx *appcontext.AppContext, term string) (*DatamuseSearchTermResult, error) {
 	var (
-		result = &DatamuseSearchTermResult{}
-		err    error
-		wg     sync.WaitGroup
+		result = &DatamuseSearchTermResult{
+			Synonyms:    make([]string, 0),
+			Antonyms:    make([]string, 0),
+			Definitions: make([]DatamuseTermDefinition, 0),
+			Frequency:   0.0,
+			Ipa:         "",
+		}
+		err error
+		wg  sync.WaitGroup
 	)
 
 	wg.Add(3)
@@ -173,7 +179,7 @@ func (ea ExternalAPI) searchTermSynonymsWitDatamuse(ctx *appcontext.AppContext, 
 	}
 
 	if len(synonyms) == 0 {
-		ctx.Logger().Error("[externalapi] datamuse api search synonyms result is empty", err, appcontext.Fields{"term": term})
+		ctx.Logger().ErrorText("[externalapi] datamuse api search synonyms result is empty")
 		return nil
 	}
 
@@ -201,7 +207,7 @@ func (ea ExternalAPI) searchTermAntonymsWitDatamuse(ctx *appcontext.AppContext, 
 	}
 
 	if len(antonyms) == 0 {
-		ctx.Logger().Error("[externalapi] datamuse api search antonyms result is empty", err, appcontext.Fields{"term": term})
+		ctx.Logger().ErrorText("[externalapi] datamuse api search antonyms result is empty")
 		return nil
 	}
 

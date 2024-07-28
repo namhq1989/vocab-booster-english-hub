@@ -6,6 +6,7 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/application"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/grpc"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/infrastructure"
+	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/shared"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/worker"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
@@ -41,6 +42,8 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 
 		exerciseHub = infrastructure.NewExerciseHub(exerciseGRPCClient)
 
+		service = shared.NewService(vocabularyRepository, vocabularyExampleRepository, cachingRepository)
+
 		// app
 		app = application.New(
 			vocabularyRepository,
@@ -55,6 +58,7 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 			nlpRepository,
 			queueRepository,
 			cachingRepository,
+			service,
 		)
 	)
 

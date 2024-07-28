@@ -20,7 +20,7 @@ func NewNewExerciseHandler(exerciseRepository domain.ExerciseRepository) NewExer
 func (h NewExerciseHandler) NewExercise(ctx *appcontext.AppContext, req *exercisepb.NewExerciseRequest) (*exercisepb.NewExerciseResponse, error) {
 	ctx.Logger().Info("[hub] new new exercise request", appcontext.Fields{
 		"exampleID": req.GetVocabularyExampleId(),
-		"level":     req.GetLevel(), "content": req.GetContent(),
+		"level":     req.GetLevel(), "frequency": req.GetFrequency(), "content": req.GetContent(),
 		"correctAnswer": req.GetCorrectAnswer(), "options": req.GetOptions(),
 	})
 

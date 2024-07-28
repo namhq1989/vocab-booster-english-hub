@@ -50,6 +50,7 @@ func New(
 	nlpRepository domain.NlpRepository,
 	queueRepository domain.QueueRepository,
 	cachingRepository domain.CachingRepository,
+	service domain.Service,
 ) *Application {
 	return &Application{
 		appHubHandler: appHubHandler{
@@ -63,6 +64,7 @@ func New(
 				nlpRepository,
 				queueRepository,
 				cachingRepository,
+				service,
 			),
 
 			CreateCommunitySentenceDraftHandler: hub.NewCreateCommunitySentenceDraftHandler(
@@ -75,6 +77,7 @@ func New(
 				nlpRepository,
 			),
 			PromoteCommunitySentenceDraftHandler: hub.NewPromoteCommunitySentenceDraftHandler(
+				vocabularyRepository,
 				communitySentenceRepository,
 				communitySentenceDraftRepository,
 				nlpRepository,

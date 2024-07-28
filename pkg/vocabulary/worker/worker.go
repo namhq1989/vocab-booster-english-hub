@@ -138,8 +138,9 @@ func (w Worker) addCronjob() {
 		ctx  = appcontext.NewWorker(context.Background())
 		jobs = []cronjobData{
 			{
-				Task:       w.queue.GenerateTypename(queue.TypeNames.AutoScrapingVocabulary),
-				CronSpec:   "@every 3h",
+				Task:     w.queue.GenerateTypename(queue.TypeNames.AutoScrapingVocabulary),
+				CronSpec: "@every 3h",
+				// CronSpec:   "@every 1m",
 				Payload:    domain.QueueAutoScrapingVocabularyPayload{},
 				RetryTimes: 1,
 			},

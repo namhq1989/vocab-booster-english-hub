@@ -29,6 +29,7 @@ CREATE TABLE vocabulary_examples (
     vocabulary_id TEXT NOT NULL,
     audio VARCHAR(50) NOT NULL,
     content JSONB NOT NULL, -- Multilingual
+    pos VARCHAR(20) NOT NULL,
     main_word JSONB NOT NULL,
     pos_tags JSONB NOT NULL DEFAULT '{}',
     sentiment JSONB NOT NULL,

@@ -177,7 +177,7 @@ func (w AutoScrapingVocabularyHandler) analyzeExamples(ctx *appcontext.AppContex
 		go func(i int, e domain.AIVocabularyExample) {
 			defer wg.Done()
 
-			analysisResult, err := w.nlpRepository.AnalyzeSentence(ctx, e.Example)
+			analysisResult, err := w.nlpRepository.AnalyzeSentence(ctx, e.Example, vocabulary.Term)
 			if err != nil {
 				ctx.Logger().Error("failed to analyze sentence", err, appcontext.Fields{"sentence": e.Example})
 				return
@@ -219,7 +219,7 @@ func (w AutoScrapingVocabularyHandler) analyzeExamples(ctx *appcontext.AppContex
 				return
 			}
 
-			if err = example.SetMainWordData(e.Word, vocabulary.Term); err != nil {
+			if err = example.SetMainWordData(analysisResult.MainWord); err != nil {
 				ctx.Logger().Error("failed to set vocabulary example's word data", err, appcontext.Fields{"word": e.Word})
 				return
 			}

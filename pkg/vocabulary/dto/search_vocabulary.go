@@ -6,7 +6,7 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 )
 
-func ConvertVocabularyFromDomainToGrpc(vocabulary domain.Vocabulary) *vocabularypb.Vocabulary {
+func ConvertVocabularyFromDomainToGrpc(vocabulary domain.Vocabulary, examples []domain.VocabularyExample) *vocabularypb.Vocabulary {
 	definitions := make([]*vocabularypb.VocabularyDefinition, 0)
 	for _, def := range vocabulary.Definitions {
 		definitions = append(definitions, &vocabularypb.VocabularyDefinition{
@@ -20,6 +20,20 @@ func ConvertVocabularyFromDomainToGrpc(vocabulary domain.Vocabulary) *vocabulary
 		partsOfSpeech = append(partsOfSpeech, pos.String())
 	}
 
+	exampleBriefs := make([]*vocabularypb.VocabularyExampleBrief, 0)
+	for _, example := range examples {
+		exampleBriefs = append(exampleBriefs, &vocabularypb.VocabularyExampleBrief{
+			Id:      example.ID,
+			Content: ConvertMultilingualToGrpcData(example.Content),
+			Audio:   staticfiles.GetExampleEndpoint(example.Audio),
+			MainWord: &vocabularypb.VocabularyMainWord{
+				Word: example.MainWord.Word,
+				Base: example.MainWord.Base,
+				Pos:  example.MainWord.Pos.String(),
+			},
+		})
+	}
+
 	result := &vocabularypb.Vocabulary{
 		Id:            vocabulary.ID,
 		AuthorId:      vocabulary.AuthorID,
@@ -30,6 +44,7 @@ func ConvertVocabularyFromDomainToGrpc(vocabulary domain.Vocabulary) *vocabulary
 		Audio:         staticfiles.GetVocabularyEndpoint(vocabulary.Audio),
 		Synonyms:      vocabulary.Synonyms,
 		Antonyms:      vocabulary.Antonyms,
+		Examples:      exampleBriefs,
 	}
 
 	return result

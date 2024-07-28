@@ -30,6 +30,14 @@ func (VocabularyMapper) FromModelToDomain(vocab model.Vocabularies) (*domain.Voc
 		UpdatedAt:     vocab.UpdatedAt,
 	}
 
+	if len(result.Synonyms) == 1 && result.Synonyms[0] == "" {
+		result.Synonyms = make([]string, 0)
+	}
+
+	if len(result.Antonyms) == 1 && result.Antonyms[0] == "" {
+		result.Antonyms = make([]string, 0)
+	}
+
 	if err := json.Unmarshal([]byte(vocab.Definitions), &result.Definitions); err != nil {
 		return nil, err
 	}

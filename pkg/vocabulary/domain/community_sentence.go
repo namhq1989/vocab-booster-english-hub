@@ -22,6 +22,7 @@ type CommunitySentence struct {
 	UserID             string
 	VocabularyID       string
 	Content            language.Multilingual
+	MainWord           VocabularyMainWord
 	RequiredVocabulary []string
 	RequiredTense      Tense
 	Clauses            []SentenceClause
@@ -57,6 +58,19 @@ func (s *CommunitySentence) SetContent(content language.Multilingual) error {
 	}
 
 	s.Content = content
+	return nil
+}
+
+func (s *CommunitySentence) SetMainWordData(mainWord VocabularyMainWord) error {
+	if mainWord.Base == "" {
+		return apperrors.Vocabulary.InvalidTerm
+	}
+
+	if mainWord.Word == "" {
+		return apperrors.Vocabulary.InvalidTerm
+	}
+
+	s.MainWord = mainWord
 	return nil
 }
 
