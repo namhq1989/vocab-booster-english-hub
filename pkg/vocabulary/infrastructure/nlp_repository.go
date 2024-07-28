@@ -19,8 +19,8 @@ func NewNlpRepository(nlp *nlp.NLP) NlpRepository {
 	}
 }
 
-func (r NlpRepository) AnalyzeSentence(ctx *appcontext.AppContext, sentence string) (*domain.NlpSentenceAnalysisResult, error) {
-	result, err := r.nlp.AnalyzeSentence(ctx, sentence)
+func (r NlpRepository) AnalyzeSentence(ctx *appcontext.AppContext, sentence, term string) (*domain.NlpSentenceAnalysisResult, error) {
+	result, err := r.nlp.AnalyzeSentence(ctx, sentence, term)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,12 @@ func (r NlpRepository) AnalyzeSentence(ctx *appcontext.AppContext, sentence stri
 
 	return &domain.NlpSentenceAnalysisResult{
 		Translated: result.Translated,
-		PosTags:    posTags,
+		MainWord: domain.VocabularyMainWord{
+			Word: strings.ToLower(result.MainWord.Word),
+			Base: strings.ToLower(result.MainWord.Base),
+			Pos:  domain.ToPartOfSpeech(result.MainWord.Pos),
+		},
+		PosTags: posTags,
 		Sentiment: domain.Sentiment{
 			Polarity:     result.Sentiment.Polarity,
 			Subjectivity: result.Sentiment.Subjectivity,

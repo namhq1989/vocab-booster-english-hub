@@ -19,11 +19,19 @@ message Vocabulary {
   string audio = 7;
   repeated string synonyms = 8;
   repeated string antonyms = 9;
+  repeated VocabularyExampleBrief examples = 10;
 }
 
 message VocabularyDefinition {
   string pos = 1;
   Multilingual definition = 2;
+}
+
+message VocabularyExampleBrief {
+  string id = 1;
+  Multilingual content = 2;
+  string audio = 3;
+  VocabularyMainWord mainWord = 4;
 }
 
 message VocabularyExample {
@@ -40,6 +48,7 @@ message VocabularyExample {
 message VocabularyMainWord {
   string word = 1;
   string base = 2;
+  string pos = 3;
 }
 
 message PosTag {

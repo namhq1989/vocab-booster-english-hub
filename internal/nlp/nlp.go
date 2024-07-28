@@ -11,7 +11,7 @@ import (
 )
 
 type Operations interface {
-	AnalyzeSentence(_ *appcontext.AppContext, sentence string) (*SentenceAnalysisResult, error)
+	AnalyzeSentence(_ *appcontext.AppContext, sentence, term string) (*SentenceAnalysisResult, error)
 	Translate(_ *appcontext.AppContext, term string) (result *language.Multilingual, err error)
 	EvaluateSentence(_ *appcontext.AppContext, sentence, tense string, vocabulary []string) (result *EvaluateSentenceResult, err error)
 	GrammarCheck(_ *appcontext.AppContext, sentence string) (result *GrammarCheckResult, err error)
@@ -29,7 +29,7 @@ func NewNLPClient(endpoint string) *NLP {
 			SetTimeout(30 * time.Second).
 			SetJSONMarshaler(json.Marshal).
 			SetJSONUnmarshaler(json.Unmarshal).
-			SetRetryAfter(func(client *resty.Client, resp *resty.Response) (time.Duration, error) {
+			SetRetryAfter(func(_ *resty.Client, resp *resty.Response) (time.Duration, error) {
 				return 1, fmt.Errorf("failed to send NLP request at %s with status code %d", endpoint, resp.StatusCode())
 			}),
 	}

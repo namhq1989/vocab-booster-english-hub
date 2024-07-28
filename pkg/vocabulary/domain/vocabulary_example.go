@@ -32,6 +32,7 @@ type VocabularyExample struct {
 type VocabularyMainWord struct {
 	Word string
 	Base string
+	Pos  PartOfSpeech
 }
 
 func NewVocabularyExample(vocabularyID string) (*VocabularyExample, error) {
@@ -63,17 +64,16 @@ func (d *VocabularyExample) SetContent(content language.Multilingual) error {
 	return nil
 }
 
-func (d *VocabularyExample) SetMainWordData(word, base string) error {
-	if base == "" {
+func (d *VocabularyExample) SetMainWordData(mainWord VocabularyMainWord) error {
+	if mainWord.Base == "" {
 		return apperrors.Vocabulary.InvalidTerm
 	}
 
-	if word == "" {
+	if mainWord.Word == "" {
 		return apperrors.Vocabulary.InvalidTerm
 	}
 
-	d.MainWord.Base = base
-	d.MainWord.Word = word
+	d.MainWord = mainWord
 	return nil
 }
 

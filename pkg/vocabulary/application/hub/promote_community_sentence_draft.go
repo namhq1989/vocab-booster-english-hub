@@ -8,17 +8,20 @@ import (
 )
 
 type PromoteCommunitySentenceDraftHandler struct {
+	vocabularyRepository             domain.VocabularyRepository
 	communitySentenceRepository      domain.CommunitySentenceRepository
 	communitySentenceDraftRepository domain.CommunitySentenceDraftRepository
 	nlpRepository                    domain.NlpRepository
 }
 
 func NewPromoteCommunitySentenceDraftHandler(
+	vocabularyRepository domain.VocabularyRepository,
 	communitySentenceRepository domain.CommunitySentenceRepository,
 	communitySentenceDraftRepository domain.CommunitySentenceDraftRepository,
 	nlpRepository domain.NlpRepository,
 ) PromoteCommunitySentenceDraftHandler {
 	return PromoteCommunitySentenceDraftHandler{
+		vocabularyRepository:             vocabularyRepository,
 		communitySentenceRepository:      communitySentenceRepository,
 		communitySentenceDraftRepository: communitySentenceDraftRepository,
 		nlpRepository:                    nlpRepository,
@@ -49,8 +52,19 @@ func (h PromoteCommunitySentenceDraftHandler) PromoteCommunitySentenceDraft(ctx 
 		return nil, apperrors.Common.Forbidden
 	}
 
+	ctx.Logger().Text("find vocabulary in db")
+	vocabulary, err := h.vocabularyRepository.FindVocabularyByID(ctx, draftSentence.VocabularyID)
+	if err != nil {
+		ctx.Logger().Error("failed to find vocabulary in db", err, appcontext.Fields{})
+		return nil, err
+	}
+	if vocabulary == nil {
+		ctx.Logger().ErrorText("vocabulary not found")
+		return nil, apperrors.Vocabulary.VocabularyNotFound
+	}
+
 	ctx.Logger().Text("analyze draft sentence")
-	sentenceAnalysisResult, err := h.nlpRepository.AnalyzeSentence(ctx, draftSentence.Content.English)
+	sentenceAnalysisResult, err := h.nlpRepository.AnalyzeSentence(ctx, draftSentence.Content.English, vocabulary.Term)
 	if err != nil {
 		ctx.Logger().Error("failed to analyze draft sentence", err, appcontext.Fields{})
 		return nil, err
@@ -85,9 +99,19 @@ func (h PromoteCommunitySentenceDraftHandler) PromoteCommunitySentenceDraft(ctx 
 	return &vocabularypb.PromoteCommunitySentenceDraftResponse{}, nil
 }
 
-func (PromoteCommunitySentenceDraftHandler) setSentenceData(ctx *appcontext.AppContext, sentence *domain.CommunitySentence, draft domain.CommunitySentenceDraft, analysisData domain.NlpSentenceAnalysisResult) error {
+func (PromoteCommunitySentenceDraftHandler) setSentenceData(
+	ctx *appcontext.AppContext,
+	sentence *domain.CommunitySentence,
+	draft domain.CommunitySentenceDraft,
+	analysisData domain.NlpSentenceAnalysisResult,
+) error {
 	if err := sentence.SetContent(draft.Content); err != nil {
 		ctx.Logger().Error("failed to set content", err, appcontext.Fields{})
+		return err
+	}
+
+	if err := sentence.SetMainWordData(analysisData.MainWord); err != nil {
+		ctx.Logger().Error("failed to set main word", err, appcontext.Fields{"word": analysisData.MainWord.Word, "base": analysisData.MainWord.Base, "pos": analysisData.MainWord.Pos.String()})
 		return err
 	}
 

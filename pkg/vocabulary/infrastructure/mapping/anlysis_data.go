@@ -28,4 +28,5 @@ type Verb struct {
 type VocabularyMainWord struct {
 	Word string `json:"word"`
 	Base string `json:"base"`
+	Pos  string `json:"pos"`
 }

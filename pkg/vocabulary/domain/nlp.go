@@ -6,7 +6,7 @@ import (
 )
 
 type NlpRepository interface {
-	AnalyzeSentence(ctx *appcontext.AppContext, sentence string) (*NlpSentenceAnalysisResult, error)
+	AnalyzeSentence(ctx *appcontext.AppContext, sentence, term string) (*NlpSentenceAnalysisResult, error)
 	TranslateDefinition(ctx *appcontext.AppContext, definition string) (*language.Multilingual, error)
 	EvaluateSentence(ctx *appcontext.AppContext, sentence, tense string, vocabulary []string) (*NlpSentenceEvaluationResult, error)
 	GrammarCheck(ctx *appcontext.AppContext, sentence string) ([]SentenceGrammarError, error)
@@ -14,6 +14,7 @@ type NlpRepository interface {
 
 type NlpSentenceAnalysisResult struct {
 	Translated   language.Multilingual
+	MainWord     VocabularyMainWord
 	PosTags      []PosTag
 	Sentiment    Sentiment
 	Dependencies []Dependency
