@@ -9,6 +9,14 @@ message Multilingual {
   string vietnamese = 2;
 }
 
+message VocabularyBrief {
+  string id = 1;
+  string term = 2;
+  repeated string partsOfSpeech = 3;
+  string ipa = 4;
+  string audio = 5;
+}
+
 message Vocabulary {
   string id = 1;
   string authorId = 2;

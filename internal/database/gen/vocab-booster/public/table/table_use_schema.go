@@ -16,6 +16,7 @@ func UseSchema(schema string) {
 	ExerciseCollections = ExerciseCollections.FromSchema(schema)
 	Exercises = Exercises.FromSchema(schema)
 	SchemaVersion = SchemaVersion.FromSchema(schema)
+	UserBookmarkedVocabulary = UserBookmarkedVocabulary.FromSchema(schema)
 	UserExerciseCollectionStatus = UserExerciseCollectionStatus.FromSchema(schema)
 	UserExerciseInteractedHistories = UserExerciseInteractedHistories.FromSchema(schema)
 	UserExerciseStatuses = UserExerciseStatuses.FromSchema(schema)

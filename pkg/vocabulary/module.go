@@ -24,13 +24,14 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 	}
 
 	var (
-		vocabularyRepository             = infrastructure.NewVocabularyRepository(mono.Database())
-		vocabularyExampleRepository      = infrastructure.NewVocabularyExampleRepository(mono.Database())
-		vocabularyScrapingItemRepository = infrastructure.NewVocabularyScrapingItemRepository(mono.Database())
-		communitySentenceRepository      = infrastructure.NewCommunitySentenceRepository(mono.Database())
-		communitySentenceDraftRepository = infrastructure.NewCommunitySentenceDraftRepository(mono.Database())
-		communitySentenceLikeRepository  = infrastructure.NewCommunitySentenceLikeRepository(mono.Database())
-		verbConjugationRepository        = infrastructure.NewVerbConjugationRepository(mono.Database())
+		vocabularyRepository               = infrastructure.NewVocabularyRepository(mono.Database())
+		vocabularyExampleRepository        = infrastructure.NewVocabularyExampleRepository(mono.Database())
+		vocabularyScrapingItemRepository   = infrastructure.NewVocabularyScrapingItemRepository(mono.Database())
+		userBookmarkedVocabularyRepository = infrastructure.NewUserBookmarkedVocabularyRepository(mono.Database())
+		communitySentenceRepository        = infrastructure.NewCommunitySentenceRepository(mono.Database())
+		communitySentenceDraftRepository   = infrastructure.NewCommunitySentenceDraftRepository(mono.Database())
+		communitySentenceLikeRepository    = infrastructure.NewCommunitySentenceLikeRepository(mono.Database())
+		verbConjugationRepository          = infrastructure.NewVerbConjugationRepository(mono.Database())
 
 		aiRepository          = infrastructure.NewAIRepository(mono.AI(), mono.NLP())
 		externalApiRepository = infrastructure.NewExternalAPIRepository(mono.ExternalAPI(), mono.NLP())
@@ -48,6 +49,7 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 		app = application.New(
 			vocabularyRepository,
 			vocabularyExampleRepository,
+			userBookmarkedVocabularyRepository,
 			communitySentenceRepository,
 			communitySentenceDraftRepository,
 			communitySentenceLikeRepository,

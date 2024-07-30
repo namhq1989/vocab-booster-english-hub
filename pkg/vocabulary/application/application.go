@@ -10,6 +10,8 @@ import (
 type (
 	Hubs interface {
 		SearchVocabulary(ctx *appcontext.AppContext, req *vocabularypb.SearchVocabularyRequest) (*vocabularypb.SearchVocabularyResponse, error)
+		BookmarkVocabulary(ctx *appcontext.AppContext, req *vocabularypb.BookmarkVocabularyRequest) (*vocabularypb.BookmarkVocabularyResponse, error)
+		GetUserBookmarkedVocabularies(ctx *appcontext.AppContext, req *vocabularypb.GetUserBookmarkedVocabulariesRequest) (*vocabularypb.GetUserBookmarkedVocabulariesResponse, error)
 
 		CreateCommunitySentenceDraft(ctx *appcontext.AppContext, req *vocabularypb.CreateCommunitySentenceDraftRequest) (*vocabularypb.CreateCommunitySentenceDraftResponse, error)
 		UpdateCommunitySentenceDraft(ctx *appcontext.AppContext, req *vocabularypb.UpdateCommunitySentenceDraftRequest) (*vocabularypb.UpdateCommunitySentenceDraftResponse, error)
@@ -23,6 +25,8 @@ type (
 
 	appHubHandler struct {
 		hub.SearchVocabularyHandler
+		hub.BookmarkVocabularyHandler
+		hub.GetUserBookmarkedVocabulariesHandler
 
 		hub.CreateCommunitySentenceDraftHandler
 		hub.UpdateCommunitySentenceDraftHandler
@@ -40,6 +44,7 @@ var _ App = (*Application)(nil)
 func New(
 	vocabularyRepository domain.VocabularyRepository,
 	vocabularyExampleRepository domain.VocabularyExampleRepository,
+	userBookmarkedVocabularyRepository domain.UserBookmarkedVocabularyRepository,
 	communitySentenceRepository domain.CommunitySentenceRepository,
 	communitySentenceDraftRepository domain.CommunitySentenceDraftRepository,
 	communitySentenceLikeRepository domain.CommunitySentenceLikeRepository,
@@ -65,6 +70,15 @@ func New(
 				queueRepository,
 				cachingRepository,
 				service,
+			),
+
+			BookmarkVocabularyHandler: hub.NewBookmarkVocabularyHandler(
+				vocabularyRepository,
+				userBookmarkedVocabularyRepository,
+			),
+
+			GetUserBookmarkedVocabulariesHandler: hub.NewGetUserBookmarkedVocabulariesHandler(
+				userBookmarkedVocabularyRepository,
 			),
 
 			CreateCommunitySentenceDraftHandler: hub.NewCreateCommunitySentenceDraftHandler(

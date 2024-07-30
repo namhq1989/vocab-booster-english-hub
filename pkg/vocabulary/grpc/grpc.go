@@ -3,9 +3,8 @@ package grpc
 import (
 	"context"
 
-	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
-
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/vocabularypb"
+	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/application"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 	"google.golang.org/grpc"
@@ -25,6 +24,22 @@ func RegisterServer(_ *appcontext.AppContext, registrar grpc.ServiceRegistrar, a
 
 func (s server) SearchVocabulary(bgCtx context.Context, req *vocabularypb.SearchVocabularyRequest) (*vocabularypb.SearchVocabularyResponse, error) {
 	resp, err := s.app.SearchVocabulary(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
+}
+
+func (s server) BookmarkVocabulary(bgCtx context.Context, req *vocabularypb.BookmarkVocabularyRequest) (*vocabularypb.BookmarkVocabularyResponse, error) {
+	resp, err := s.app.BookmarkVocabulary(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
+}
+
+func (s server) GetUserBookmarkedVocabularies(bgCtx context.Context, req *vocabularypb.GetUserBookmarkedVocabulariesRequest) (*vocabularypb.GetUserBookmarkedVocabulariesResponse, error) {
+	resp, err := s.app.GetUserBookmarkedVocabularies(appcontext.NewGRPC(bgCtx), req)
 	if err != nil {
 		return nil, apperrors.ToGrpcError(bgCtx, err)
 	}

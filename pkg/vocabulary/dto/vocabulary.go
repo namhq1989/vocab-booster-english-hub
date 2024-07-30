@@ -49,3 +49,20 @@ func ConvertVocabularyFromDomainToGrpc(vocabulary domain.Vocabulary, examples []
 
 	return result
 }
+
+func ConvertVocabularyBriefFromDomainToGrpc(vocabulary domain.Vocabulary) *vocabularypb.VocabularyBrief {
+	partsOfSpeech := make([]string, 0)
+	for _, pos := range vocabulary.PartsOfSpeech {
+		partsOfSpeech = append(partsOfSpeech, pos.String())
+	}
+
+	result := &vocabularypb.VocabularyBrief{
+		Id:            vocabulary.ID,
+		Term:          vocabulary.Term,
+		PartsOfSpeech: partsOfSpeech,
+		Ipa:           vocabulary.Ipa,
+		Audio:         staticfiles.GetVocabularyEndpoint(vocabulary.Audio),
+	}
+
+	return result
+}

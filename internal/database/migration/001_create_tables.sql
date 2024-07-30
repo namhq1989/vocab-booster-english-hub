@@ -63,6 +63,17 @@ CREATE TABLE vocabulary_scraping_items (
     UNIQUE (term)
 );
 
+CREATE TABLE user_bookmarked_vocabulary (
+    id TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    vocabulary_id TEXT NOT NULL,
+    bookmarked_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+
+    PRIMARY KEY (user_id, vocabulary_id),
+    FOREIGN KEY(vocabulary_id) REFERENCES vocabularies(id)
+);
+
+CREATE INDEX idx_user_bookmarked_vocabulary_user_id_vocabulary_id ON user_bookmarked_vocabulary(user_id, vocabulary_id);
 -- COMMUNITY --
 
 CREATE TABLE community_sentences (
