@@ -62,6 +62,7 @@ func New(
 			SearchVocabularyHandler: hub.NewSearchVocabularyHandler(
 				vocabularyRepository,
 				vocabularyExampleRepository,
+				userBookmarkedVocabularyRepository,
 				aiRepository,
 				externalApiRepository,
 				scraperRepository,

@@ -11,21 +11,23 @@ import (
 )
 
 type SearchVocabularyHandler struct {
-	vocabularyRepository        domain.VocabularyRepository
-	vocabularyExampleRepository domain.VocabularyExampleRepository
-	aiRepository                domain.AIRepository
-	externalApiRepository       domain.ExternalApiRepository
-	scraperRepository           domain.ScraperRepository
-	ttsRepository               domain.TTSRepository
-	nlpRepository               domain.NlpRepository
-	queueRepository             domain.QueueRepository
-	cachingRepository           domain.CachingRepository
-	service                     domain.Service
+	vocabularyRepository               domain.VocabularyRepository
+	vocabularyExampleRepository        domain.VocabularyExampleRepository
+	userBookmarkedVocabularyRepository domain.UserBookmarkedVocabularyRepository
+	aiRepository                       domain.AIRepository
+	externalApiRepository              domain.ExternalApiRepository
+	scraperRepository                  domain.ScraperRepository
+	ttsRepository                      domain.TTSRepository
+	nlpRepository                      domain.NlpRepository
+	queueRepository                    domain.QueueRepository
+	cachingRepository                  domain.CachingRepository
+	service                            domain.Service
 }
 
 func NewSearchVocabularyHandler(
 	vocabularyRepository domain.VocabularyRepository,
 	vocabularyExampleRepository domain.VocabularyExampleRepository,
+	userBookmarkedVocabularyRepository domain.UserBookmarkedVocabularyRepository,
 	aiRepository domain.AIRepository,
 	externalApiRepository domain.ExternalApiRepository,
 	scraperRepository domain.ScraperRepository,
@@ -36,16 +38,17 @@ func NewSearchVocabularyHandler(
 	service domain.Service,
 ) SearchVocabularyHandler {
 	return SearchVocabularyHandler{
-		vocabularyRepository:        vocabularyRepository,
-		vocabularyExampleRepository: vocabularyExampleRepository,
-		aiRepository:                aiRepository,
-		externalApiRepository:       externalApiRepository,
-		scraperRepository:           scraperRepository,
-		ttsRepository:               ttsRepository,
-		nlpRepository:               nlpRepository,
-		queueRepository:             queueRepository,
-		cachingRepository:           cachingRepository,
-		service:                     service,
+		vocabularyRepository:               vocabularyRepository,
+		vocabularyExampleRepository:        vocabularyExampleRepository,
+		userBookmarkedVocabularyRepository: userBookmarkedVocabularyRepository,
+		aiRepository:                       aiRepository,
+		externalApiRepository:              externalApiRepository,
+		scraperRepository:                  scraperRepository,
+		ttsRepository:                      ttsRepository,
+		nlpRepository:                      nlpRepository,
+		queueRepository:                    queueRepository,
+		cachingRepository:                  cachingRepository,
+		service:                            service,
 	}
 }
 
@@ -71,8 +74,15 @@ func (h SearchVocabularyHandler) SearchVocabulary(ctx *appcontext.AppContext, re
 			return nil, examplesErr
 		}
 
+		ctx.Logger().Text("check bookmarked")
+		ubv, bookmarkedErr := h.userBookmarkedVocabularyRepository.FindBookmarkedVocabulary(ctx, req.GetPerformerId(), vocabulary.ID)
+		if bookmarkedErr != nil {
+			ctx.Logger().Error("failed to check bookmarked vocabulary", bookmarkedErr, appcontext.Fields{"vocabularyID": vocabulary.ID})
+		}
+		isBookmarked := ubv != nil
+
 		result.Found = true
-		result.Vocabulary = dto.ConvertVocabularyFromDomainToGrpc(*vocabulary, examples)
+		result.Vocabulary = dto.ConvertVocabularyFromDomainToGrpc(*vocabulary, examples, isBookmarked)
 
 		ctx.Logger().Text("done search vocabulary request")
 		return result, nil
@@ -160,9 +170,16 @@ func (h SearchVocabularyHandler) SearchVocabulary(ctx *appcontext.AppContext, re
 		ctx.Logger().Error("failed to cache result", err, appcontext.Fields{})
 	}
 
+	ctx.Logger().Text("check bookmarked")
+	ubv, bookmarkedErr := h.userBookmarkedVocabularyRepository.FindBookmarkedVocabulary(ctx, req.GetPerformerId(), vocabulary.ID)
+	if bookmarkedErr != nil {
+		ctx.Logger().Error("failed to check bookmarked vocabulary", bookmarkedErr, appcontext.Fields{"vocabularyID": vocabulary.ID})
+	}
+	isBookmarked := ubv != nil
+
 	ctx.Logger().Text("done search vocabulary request")
 	result.Found = true
-	result.Vocabulary = dto.ConvertVocabularyFromDomainToGrpc(*vocabulary, examples)
+	result.Vocabulary = dto.ConvertVocabularyFromDomainToGrpc(*vocabulary, examples, isBookmarked)
 	return result, nil
 }
 

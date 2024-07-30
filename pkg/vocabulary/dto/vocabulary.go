@@ -6,7 +6,7 @@ import (
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 )
 
-func ConvertVocabularyFromDomainToGrpc(vocabulary domain.Vocabulary, examples []domain.VocabularyExample) *vocabularypb.Vocabulary {
+func ConvertVocabularyFromDomainToGrpc(vocabulary domain.Vocabulary, examples []domain.VocabularyExample, isBookmarked bool) *vocabularypb.Vocabulary {
 	definitions := make([]*vocabularypb.VocabularyDefinition, 0)
 	for _, def := range vocabulary.Definitions {
 		definitions = append(definitions, &vocabularypb.VocabularyDefinition{
@@ -45,6 +45,7 @@ func ConvertVocabularyFromDomainToGrpc(vocabulary domain.Vocabulary, examples []
 		Synonyms:      vocabulary.Synonyms,
 		Antonyms:      vocabulary.Antonyms,
 		Examples:      exampleBriefs,
+		IsBookmarked:  isBookmarked,
 	}
 
 	return result
