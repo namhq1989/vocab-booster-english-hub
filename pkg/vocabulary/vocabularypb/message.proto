@@ -28,6 +28,7 @@ message Vocabulary {
   repeated string synonyms = 8;
   repeated string antonyms = 9;
   repeated VocabularyExampleBrief examples = 10;
+  bool isBookmarked = 11;
 }
 
 message VocabularyDefinition {

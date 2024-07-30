@@ -121,7 +121,7 @@ func (r UserBookmarkedVocabularyRepository) CreateUserBookmarkedVocabulary(ctx *
 		r.getTable().AllColumns,
 	).
 		MODEL(doc).
-		ON_CONFLICT().DO_UPDATE(
+		ON_CONFLICT(r.getTable().UserID, r.getTable().VocabularyID).DO_UPDATE(
 		postgres.SET(r.getTable().BookmarkedAt.SET(postgres.TimestampzT(doc.BookmarkedAt))),
 	)
 
