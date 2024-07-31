@@ -43,33 +43,17 @@ var _ App = (*Application)(nil)
 
 func New(
 	vocabularyRepository domain.VocabularyRepository,
-	vocabularyExampleRepository domain.VocabularyExampleRepository,
 	userBookmarkedVocabularyRepository domain.UserBookmarkedVocabularyRepository,
 	communitySentenceRepository domain.CommunitySentenceRepository,
 	communitySentenceDraftRepository domain.CommunitySentenceDraftRepository,
 	communitySentenceLikeRepository domain.CommunitySentenceLikeRepository,
-	aiRepository domain.AIRepository,
-	externalApiRepository domain.ExternalApiRepository,
-	scraperRepository domain.ScraperRepository,
-	ttsRepository domain.TTSRepository,
 	nlpRepository domain.NlpRepository,
-	queueRepository domain.QueueRepository,
-	cachingRepository domain.CachingRepository,
 	service domain.Service,
 ) *Application {
 	return &Application{
 		appHubHandler: appHubHandler{
 			SearchVocabularyHandler: hub.NewSearchVocabularyHandler(
-				vocabularyRepository,
-				vocabularyExampleRepository,
 				userBookmarkedVocabularyRepository,
-				aiRepository,
-				externalApiRepository,
-				scraperRepository,
-				ttsRepository,
-				nlpRepository,
-				queueRepository,
-				cachingRepository,
 				service,
 			),
 

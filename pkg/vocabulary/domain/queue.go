@@ -32,3 +32,4 @@ type QueueAddOtherVocabularyToScrapingQueuePayload struct {
 }
 
 type QueueAutoScrapingVocabularyPayload struct{}
+type QueueFetchWordOfTheDayPayload struct{}
