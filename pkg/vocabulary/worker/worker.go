@@ -19,7 +19,8 @@ type (
 		AddOtherVocabularyToScrapingQueue(ctx *appcontext.AppContext, payload domain.QueueAddOtherVocabularyToScrapingQueuePayload) error
 	}
 	Cronjob interface {
-		AutoScrapingVocabulary(ctx *appcontext.AppContext, payload domain.QueueAutoScrapingVocabularyPayload) error
+		AutoScrapingVocabulary(ctx *appcontext.AppContext, _ domain.QueueAutoScrapingVocabularyPayload) error
+		FetchWordOfTheDay(ctx *appcontext.AppContext, _ domain.QueueFetchWordOfTheDayPayload) error
 	}
 	Instance interface {
 		Handlers
@@ -35,6 +36,7 @@ type (
 	}
 	workerCronjob struct {
 		AutoScrapingVocabularyHandler
+		FetchWordOfTheDayHandler
 	}
 	Worker struct {
 		queue queue.Operations
@@ -51,13 +53,12 @@ func New(
 	vocabularyExampleRepository domain.VocabularyExampleRepository,
 	vocabularyScrapingItemRepository domain.VocabularyScrapingItemRepository,
 	verbConjugationRepository domain.VerbConjugationRepository,
+	wordOfTheDayRepository domain.WordOfTheDayRepository,
 	queueRepository domain.QueueRepository,
 	ttsRepository domain.TTSRepository,
 	aiRepository domain.AIRepository,
-	externalApiRepository domain.ExternalApiRepository,
-	scraperRepository domain.ScraperRepository,
-	nlpRepository domain.NlpRepository,
 	exerciseHub domain.ExerciseHub,
+	service domain.Service,
 ) Worker {
 	return Worker{
 		queue: queue,
@@ -82,15 +83,13 @@ func New(
 		},
 		workerCronjob: workerCronjob{
 			AutoScrapingVocabularyHandler: NewAutoScrapingVocabularyHandler(
-				vocabularyRepository,
-				vocabularyExampleRepository,
 				vocabularyScrapingItemRepository,
+				service,
+			),
+			FetchWordOfTheDayHandler: NewFetchWordOfTheDayHandler(
+				wordOfTheDayRepository,
 				aiRepository,
-				externalApiRepository,
-				scraperRepository,
-				ttsRepository,
-				nlpRepository,
-				queueRepository,
+				service,
 			),
 		},
 	}
@@ -124,6 +123,10 @@ func (w Worker) Start() {
 	server.HandleFunc(w.queue.GenerateTypename(queue.TypeNames.AutoScrapingVocabulary), func(bgCtx context.Context, t *asynq.Task) error {
 		return queue.ProcessTask[domain.QueueAutoScrapingVocabularyPayload](bgCtx, t, queue.ParsePayload[domain.QueueAutoScrapingVocabularyPayload], w.AutoScrapingVocabulary)
 	})
+
+	server.HandleFunc(w.queue.GenerateTypename(queue.TypeNames.FetchWordOfTheDay), func(bgCtx context.Context, t *asynq.Task) error {
+		return queue.ProcessTask[domain.QueueFetchWordOfTheDayPayload](bgCtx, t, queue.ParsePayload[domain.QueueFetchWordOfTheDayPayload], w.FetchWordOfTheDay)
+	})
 }
 
 type cronjobData struct {
@@ -142,6 +145,13 @@ func (w Worker) addCronjob() {
 				CronSpec: "@every 3h",
 				// CronSpec:   "@every 1m",
 				Payload:    domain.QueueAutoScrapingVocabularyPayload{},
+				RetryTimes: 1,
+			},
+			{
+				Task:     w.queue.GenerateTypename(queue.TypeNames.FetchWordOfTheDay),
+				CronSpec: "@every 8h",
+				// CronSpec:   "@every 1m",
+				Payload:    domain.QueueFetchWordOfTheDayPayload{},
 				RetryTimes: 1,
 			},
 		}

@@ -12,6 +12,7 @@ var TypeNames = struct {
 
 	// cronjob
 	AutoScrapingVocabulary string
+	FetchWordOfTheDay      string
 
 	UpdateExerciseCollectionStats string
 }{
@@ -26,6 +27,7 @@ var TypeNames = struct {
 
 	// cronjob
 	AutoScrapingVocabulary: "vocabulary.autoScrapingVocabulary",
+	FetchWordOfTheDay:      "vocabulary.fetchWordOfTheDay",
 
 	UpdateExerciseCollectionStats: "exercise.updateExerciseCollectionStats",
 }

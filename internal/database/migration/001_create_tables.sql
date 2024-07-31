@@ -74,6 +74,19 @@ CREATE TABLE user_bookmarked_vocabulary (
 );
 
 CREATE INDEX idx_user_bookmarked_vocabulary_user_id_vocabulary_id ON user_bookmarked_vocabulary(user_id, vocabulary_id);
+
+CREATE TABLE word_of_the_day (
+    id TEXT PRIMARY KEY,
+    vocabulary_id TEXT NOT NULL,
+    information JSONB NOT NULL,
+    country VARCHAR(20) NOT NULL,
+    date TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+
+    FOREIGN KEY(vocabulary_id) REFERENCES vocabularies(id)
+);
+
+CREATE INDEX idx_word_of_the_day_date ON word_of_the_day(date DESC);
+
 -- COMMUNITY --
 
 CREATE TABLE community_sentences (

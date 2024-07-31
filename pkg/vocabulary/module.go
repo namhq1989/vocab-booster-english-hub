@@ -32,6 +32,7 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 		communitySentenceDraftRepository   = infrastructure.NewCommunitySentenceDraftRepository(mono.Database())
 		communitySentenceLikeRepository    = infrastructure.NewCommunitySentenceLikeRepository(mono.Database())
 		verbConjugationRepository          = infrastructure.NewVerbConjugationRepository(mono.Database())
+		wordOfTheDayRepository             = infrastructure.NewWordOfTheDayRepository(mono.Database())
 
 		aiRepository          = infrastructure.NewAIRepository(mono.AI(), mono.NLP())
 		externalApiRepository = infrastructure.NewExternalAPIRepository(mono.ExternalAPI(), mono.NLP())
@@ -43,16 +44,9 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 
 		exerciseHub = infrastructure.NewExerciseHub(exerciseGRPCClient)
 
-		service = shared.NewService(vocabularyRepository, vocabularyExampleRepository, cachingRepository)
-
-		// app
-		app = application.New(
+		service = shared.NewService(
 			vocabularyRepository,
 			vocabularyExampleRepository,
-			userBookmarkedVocabularyRepository,
-			communitySentenceRepository,
-			communitySentenceDraftRepository,
-			communitySentenceLikeRepository,
 			aiRepository,
 			externalApiRepository,
 			scraperRepository,
@@ -60,6 +54,16 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 			nlpRepository,
 			queueRepository,
 			cachingRepository,
+		)
+
+		// app
+		app = application.New(
+			vocabularyRepository,
+			userBookmarkedVocabularyRepository,
+			communitySentenceRepository,
+			communitySentenceDraftRepository,
+			communitySentenceLikeRepository,
+			nlpRepository,
 			service,
 		)
 	)
@@ -76,13 +80,12 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 		vocabularyExampleRepository,
 		vocabularyScrapingItemRepository,
 		verbConjugationRepository,
+		wordOfTheDayRepository,
 		queueRepository,
 		ttsRepository,
 		aiRepository,
-		externalApiRepository,
-		scraperRepository,
-		nlpRepository,
 		exerciseHub,
+		service,
 	)
 	w.Start()
 

@@ -24,4 +24,5 @@ func UseSchema(schema string) {
 	Vocabularies = Vocabularies.FromSchema(schema)
 	VocabularyExamples = VocabularyExamples.FromSchema(schema)
 	VocabularyScrapingItems = VocabularyScrapingItems.FromSchema(schema)
+	WordOfTheDay = WordOfTheDay.FromSchema(schema)
 }

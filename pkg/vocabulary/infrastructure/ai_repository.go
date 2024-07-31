@@ -94,3 +94,26 @@ func (r AIRepository) translateGrammarErrorMessage(ctx *appcontext.AppContext, m
 
 	return translatedResult, nil
 }
+
+func (r AIRepository) WordOfTheDay(ctx *appcontext.AppContext, country, date string) (*domain.AIWordOfTheDay, error) {
+	result, err := r.ai.WordOfTheDay(ctx, ai.WordOfTheDayPayload{
+		Country: country,
+		Date:    date,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if result == nil {
+		return nil, nil
+	}
+
+	translatedInformation, err := r.nlp.Translate(ctx, result.Information)
+	if err != nil {
+		return nil, err
+	}
+
+	return &domain.AIWordOfTheDay{
+		Word:        strings.ToLower(result.Word),
+		Information: *translatedInformation,
+	}, nil
+}

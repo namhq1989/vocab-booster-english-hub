@@ -23,10 +23,7 @@ type VocabularyExample struct {
 
 const vocabularyExamplesPrompt = `
 	{{timestamp}}
-	The term "{{vocabulary}}" has the POS of {{pos}}. Provide 2 examples for each POS with different forms of the term and random difficulty levels:
-      + beginner (A simple sentence with basic vocabulary and structure).
-      + intermediate (A moderately complex sentence with some advanced vocabulary and structure).
-      + advanced (A complex sentence with advanced vocabulary and intricate structure).
+	The term "{{vocabulary}}" has the POS of {{pos}}. Provide 2 examples for each POS with different forms of the term and random difficulty levels.
 	Ensure the "word" field contains the exact form of "{{vocabulary}}" as used in the example, including any multi-word phrases.
 	The output should be only in JSON format without any markdown tags. Here is the required structure:
 
