@@ -46,6 +46,14 @@ func (s server) GetUserBookmarkedVocabularies(bgCtx context.Context, req *vocabu
 	return resp, nil
 }
 
+func (s server) GetWordOfTheDay(bgCtx context.Context, req *vocabularypb.GetWordOfTheDayRequest) (*vocabularypb.GetWordOfTheDayResponse, error) {
+	resp, err := s.app.GetWordOfTheDay(appcontext.NewGRPC(bgCtx), req)
+	if err != nil {
+		return nil, apperrors.ToGrpcError(bgCtx, err)
+	}
+	return resp, nil
+}
+
 func (s server) CreateCommunitySentenceDraft(bgCtx context.Context, req *vocabularypb.CreateCommunitySentenceDraftRequest) (*vocabularypb.CreateCommunitySentenceDraftResponse, error) {
 	resp, err := s.app.CreateCommunitySentenceDraft(appcontext.NewGRPC(bgCtx), req)
 	if err != nil {

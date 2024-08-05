@@ -85,7 +85,7 @@ CREATE TABLE word_of_the_day (
     FOREIGN KEY(vocabulary_id) REFERENCES vocabularies(id)
 );
 
-CREATE INDEX idx_word_of_the_day_date ON word_of_the_day(date DESC);
+CREATE INDEX idx_word_of_the_day_country_date ON word_of_the_day(country, date DESC);
 
 -- COMMUNITY --
 

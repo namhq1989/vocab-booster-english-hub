@@ -11,7 +11,7 @@ import (
 )
 
 type WordOfTheDayRepository interface {
-	FindWordOfTheDay(ctx *appcontext.AppContext) (*WordOfTheDay, error)
+	FindWordOfTheDay(ctx *appcontext.AppContext, country string) (*ExtendedWordOfTheDay, error)
 	CreateWordOfTheDay(ctx *appcontext.AppContext, word WordOfTheDay) error
 }
 
@@ -35,4 +35,9 @@ func NewWordOfTheDay(vocabularyID, country string, information language.Multilin
 		Information:  information,
 		Date:         manipulation.NowUTC(),
 	}, nil
+}
+
+type ExtendedWordOfTheDay struct {
+	WordOfTheDay WordOfTheDay
+	Vocabulary   Vocabulary
 }

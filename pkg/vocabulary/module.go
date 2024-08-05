@@ -60,10 +60,12 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 		app = application.New(
 			vocabularyRepository,
 			userBookmarkedVocabularyRepository,
+			wordOfTheDayRepository,
 			communitySentenceRepository,
 			communitySentenceDraftRepository,
 			communitySentenceLikeRepository,
 			nlpRepository,
+			cachingRepository,
 			service,
 		)
 	)

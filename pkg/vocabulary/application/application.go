@@ -12,6 +12,7 @@ type (
 		SearchVocabulary(ctx *appcontext.AppContext, req *vocabularypb.SearchVocabularyRequest) (*vocabularypb.SearchVocabularyResponse, error)
 		BookmarkVocabulary(ctx *appcontext.AppContext, req *vocabularypb.BookmarkVocabularyRequest) (*vocabularypb.BookmarkVocabularyResponse, error)
 		GetUserBookmarkedVocabularies(ctx *appcontext.AppContext, req *vocabularypb.GetUserBookmarkedVocabulariesRequest) (*vocabularypb.GetUserBookmarkedVocabulariesResponse, error)
+		GetWordOfTheDay(ctx *appcontext.AppContext, req *vocabularypb.GetWordOfTheDayRequest) (*vocabularypb.GetWordOfTheDayResponse, error)
 
 		CreateCommunitySentenceDraft(ctx *appcontext.AppContext, req *vocabularypb.CreateCommunitySentenceDraftRequest) (*vocabularypb.CreateCommunitySentenceDraftResponse, error)
 		UpdateCommunitySentenceDraft(ctx *appcontext.AppContext, req *vocabularypb.UpdateCommunitySentenceDraftRequest) (*vocabularypb.UpdateCommunitySentenceDraftResponse, error)
@@ -27,6 +28,7 @@ type (
 		hub.SearchVocabularyHandler
 		hub.BookmarkVocabularyHandler
 		hub.GetUserBookmarkedVocabulariesHandler
+		hub.GetWordOfTheDayHandler
 
 		hub.CreateCommunitySentenceDraftHandler
 		hub.UpdateCommunitySentenceDraftHandler
@@ -44,10 +46,12 @@ var _ App = (*Application)(nil)
 func New(
 	vocabularyRepository domain.VocabularyRepository,
 	userBookmarkedVocabularyRepository domain.UserBookmarkedVocabularyRepository,
+	wordOfTheDayRepository domain.WordOfTheDayRepository,
 	communitySentenceRepository domain.CommunitySentenceRepository,
 	communitySentenceDraftRepository domain.CommunitySentenceDraftRepository,
 	communitySentenceLikeRepository domain.CommunitySentenceLikeRepository,
 	nlpRepository domain.NlpRepository,
+	cachingRepository domain.CachingRepository,
 	service domain.Service,
 ) *Application {
 	return &Application{
@@ -64,6 +68,11 @@ func New(
 
 			GetUserBookmarkedVocabulariesHandler: hub.NewGetUserBookmarkedVocabulariesHandler(
 				userBookmarkedVocabularyRepository,
+			),
+
+			GetWordOfTheDayHandler: hub.NewGetWordOfTheDayHandler(
+				wordOfTheDayRepository,
+				cachingRepository,
 			),
 
 			CreateCommunitySentenceDraftHandler: hub.NewCreateCommunitySentenceDraftHandler(
