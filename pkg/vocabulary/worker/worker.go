@@ -57,6 +57,7 @@ func New(
 	queueRepository domain.QueueRepository,
 	ttsRepository domain.TTSRepository,
 	aiRepository domain.AIRepository,
+	cachingRepository domain.CachingRepository,
 	exerciseHub domain.ExerciseHub,
 	service domain.Service,
 ) Worker {
@@ -89,6 +90,7 @@ func New(
 			FetchWordOfTheDayHandler: NewFetchWordOfTheDayHandler(
 				wordOfTheDayRepository,
 				aiRepository,
+				cachingRepository,
 				service,
 			),
 		},

@@ -5,7 +5,6 @@ import (
 
 	"github.com/go-jet/jet/v2/postgres"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
-	"github.com/namhq1989/vocab-booster-english-hub/internal/database/gen/vocab-booster/public/model"
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database/gen/vocab-booster/public/table"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/infrastructure/mapping"
@@ -31,15 +30,28 @@ func (WordOfTheDayRepository) getTable() *table.WordOfTheDayTable {
 	return table.WordOfTheDay
 }
 
-func (r WordOfTheDayRepository) FindWordOfTheDay(ctx *appcontext.AppContext) (*domain.WordOfTheDay, error) {
+func (r WordOfTheDayRepository) FindWordOfTheDay(ctx *appcontext.AppContext, country string) (*domain.ExtendedWordOfTheDay, error) {
+	var (
+		wotd = r.getTable().AS("wotd")
+		v    = table.Vocabularies.AS("v")
+	)
+
 	stmt := postgres.SELECT(
-		r.getTable().AllColumns,
+		wotd.Information,
+		v.ID,
+		v.Term,
+		v.Ipa,
+		v.PartsOfSpeech,
+		v.Audio,
 	).
-		FROM(r.getTable()).
+		FROM(
+			r.getTable().LEFT_JOIN(v, v.ID.EQ(wotd.VocabularyID)),
+		).
+		WHERE(r.getTable().Country.EQ(postgres.String(country))).
 		LIMIT(1).
 		ORDER_BY(r.getTable().Date.DESC())
 
-	var doc model.WordOfTheDay
+	var doc mapping.ExtendedWordOfTheDay
 	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &doc); err != nil {
 		if r.db.IsNoRowsError(err) {
 			return nil, nil
@@ -48,7 +60,7 @@ func (r WordOfTheDayRepository) FindWordOfTheDay(ctx *appcontext.AppContext) (*d
 	}
 
 	var (
-		mapper    = mapping.WordOfTheDayMapper{}
+		mapper    = mapping.ExtendedWordOfTheDayMapper{}
 		result, _ = mapper.FromModelToDomain(doc)
 	)
 	return result, nil

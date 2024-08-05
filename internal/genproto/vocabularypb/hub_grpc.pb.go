@@ -27,6 +27,7 @@ const (
 	VocabularyService_GetVocabularyCommunitySentences_FullMethodName = "/vocabularypb.VocabularyService/GetVocabularyCommunitySentences"
 	VocabularyService_BookmarkVocabulary_FullMethodName              = "/vocabularypb.VocabularyService/BookmarkVocabulary"
 	VocabularyService_GetUserBookmarkedVocabularies_FullMethodName   = "/vocabularypb.VocabularyService/GetUserBookmarkedVocabularies"
+	VocabularyService_GetWordOfTheDay_FullMethodName                 = "/vocabularypb.VocabularyService/GetWordOfTheDay"
 )
 
 // VocabularyServiceClient is the client API for VocabularyService service.
@@ -41,6 +42,7 @@ type VocabularyServiceClient interface {
 	GetVocabularyCommunitySentences(ctx context.Context, in *GetVocabularyCommunitySentencesRequest, opts ...grpc.CallOption) (*GetVocabularyCommunitySentencesResponse, error)
 	BookmarkVocabulary(ctx context.Context, in *BookmarkVocabularyRequest, opts ...grpc.CallOption) (*BookmarkVocabularyResponse, error)
 	GetUserBookmarkedVocabularies(ctx context.Context, in *GetUserBookmarkedVocabulariesRequest, opts ...grpc.CallOption) (*GetUserBookmarkedVocabulariesResponse, error)
+	GetWordOfTheDay(ctx context.Context, in *GetWordOfTheDayRequest, opts ...grpc.CallOption) (*GetWordOfTheDayResponse, error)
 }
 
 type vocabularyServiceClient struct {
@@ -123,6 +125,15 @@ func (c *vocabularyServiceClient) GetUserBookmarkedVocabularies(ctx context.Cont
 	return out, nil
 }
 
+func (c *vocabularyServiceClient) GetWordOfTheDay(ctx context.Context, in *GetWordOfTheDayRequest, opts ...grpc.CallOption) (*GetWordOfTheDayResponse, error) {
+	out := new(GetWordOfTheDayResponse)
+	err := c.cc.Invoke(ctx, VocabularyService_GetWordOfTheDay_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // VocabularyServiceServer is the server API for VocabularyService service.
 // All implementations should embed UnimplementedVocabularyServiceServer
 // for forward compatibility
@@ -135,6 +146,7 @@ type VocabularyServiceServer interface {
 	GetVocabularyCommunitySentences(context.Context, *GetVocabularyCommunitySentencesRequest) (*GetVocabularyCommunitySentencesResponse, error)
 	BookmarkVocabulary(context.Context, *BookmarkVocabularyRequest) (*BookmarkVocabularyResponse, error)
 	GetUserBookmarkedVocabularies(context.Context, *GetUserBookmarkedVocabulariesRequest) (*GetUserBookmarkedVocabulariesResponse, error)
+	GetWordOfTheDay(context.Context, *GetWordOfTheDayRequest) (*GetWordOfTheDayResponse, error)
 }
 
 // UnimplementedVocabularyServiceServer should be embedded to have forward compatible implementations.
@@ -164,6 +176,9 @@ func (UnimplementedVocabularyServiceServer) BookmarkVocabulary(context.Context, 
 }
 func (UnimplementedVocabularyServiceServer) GetUserBookmarkedVocabularies(context.Context, *GetUserBookmarkedVocabulariesRequest) (*GetUserBookmarkedVocabulariesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserBookmarkedVocabularies not implemented")
+}
+func (UnimplementedVocabularyServiceServer) GetWordOfTheDay(context.Context, *GetWordOfTheDayRequest) (*GetWordOfTheDayResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetWordOfTheDay not implemented")
 }
 
 // UnsafeVocabularyServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -321,6 +336,24 @@ func _VocabularyService_GetUserBookmarkedVocabularies_Handler(srv interface{}, c
 	return interceptor(ctx, in, info, handler)
 }
 
+func _VocabularyService_GetWordOfTheDay_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWordOfTheDayRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VocabularyServiceServer).GetWordOfTheDay(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: VocabularyService_GetWordOfTheDay_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VocabularyServiceServer).GetWordOfTheDay(ctx, req.(*GetWordOfTheDayRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // VocabularyService_ServiceDesc is the grpc.ServiceDesc for VocabularyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -359,6 +392,10 @@ var VocabularyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserBookmarkedVocabularies",
 			Handler:    _VocabularyService_GetUserBookmarkedVocabularies_Handler,
+		},
+		{
+			MethodName: "GetWordOfTheDay",
+			Handler:    _VocabularyService_GetWordOfTheDay_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

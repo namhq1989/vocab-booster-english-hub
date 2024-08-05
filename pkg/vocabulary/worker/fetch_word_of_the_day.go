@@ -11,17 +11,20 @@ import (
 type FetchWordOfTheDayHandler struct {
 	wordOfTheDayRepository domain.WordOfTheDayRepository
 	aiRepository           domain.AIRepository
+	cachingRepository      domain.CachingRepository
 	service                domain.Service
 }
 
 func NewFetchWordOfTheDayHandler(
 	wordOfTheDayRepository domain.WordOfTheDayRepository,
 	aiRepository domain.AIRepository,
+	cachingRepository domain.CachingRepository,
 	service domain.Service,
 ) FetchWordOfTheDayHandler {
 	return FetchWordOfTheDayHandler{
 		wordOfTheDayRepository: wordOfTheDayRepository,
 		aiRepository:           aiRepository,
+		cachingRepository:      cachingRepository,
 		service:                service,
 	}
 }
@@ -61,6 +64,11 @@ func (w FetchWordOfTheDayHandler) FetchWordOfTheDay(ctx *appcontext.AppContext, 
 		if err = w.wordOfTheDayRepository.CreateWordOfTheDay(ctx, *word); err != nil {
 			ctx.Logger().Error("failed to persist word of the day", err, appcontext.Fields{"country": country, "date": date})
 			return err
+		}
+
+		ctx.Logger().Text("delete word of the day in caching layer")
+		if err = w.cachingRepository.DeleteWordOfTheDay(ctx, country); err != nil {
+			ctx.Logger().Error("failed to delete word of the day in caching layer", err, appcontext.Fields{"country": country})
 		}
 	}
 

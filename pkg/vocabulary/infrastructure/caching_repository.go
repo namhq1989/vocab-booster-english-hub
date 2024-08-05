@@ -1,6 +1,7 @@
 package infrastructure
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/goccy/go-json"
@@ -70,4 +71,36 @@ func (r CachingRepository) SetVocabularyExamplesByVocabularyID(ctx *appcontext.A
 
 func (r CachingRepository) generateVocabularyExamplesKey(vocabularyID string) string {
 	return r.caching.GenerateKey("vocabularyExamples", vocabularyID)
+}
+
+func (r CachingRepository) GetWordOfTheDay(ctx *appcontext.AppContext, country string) (*domain.ExtendedWordOfTheDay, error) {
+	key := r.generateWordOfTheDayKey(country)
+
+	dataStr, err := r.caching.Get(ctx, key)
+	if err != nil {
+		return nil, err
+	}
+
+	var result *domain.ExtendedWordOfTheDay
+	if err = json.Unmarshal([]byte(dataStr), &result); err != nil {
+		return nil, nil
+	}
+
+	return result, nil
+}
+
+func (r CachingRepository) SetWordOfTheDay(ctx *appcontext.AppContext, wotd domain.ExtendedWordOfTheDay, country string) error {
+	key := r.generateWordOfTheDayKey(country)
+	r.caching.SetTTL(ctx, key, wotd, 8*time.Hour)
+	return nil
+}
+
+func (r CachingRepository) DeleteWordOfTheDay(ctx *appcontext.AppContext, country string) error {
+	key := r.generateWordOfTheDayKey(country)
+	_, _ = r.caching.Del(ctx, key)
+	return nil
+}
+
+func (r CachingRepository) generateWordOfTheDayKey(country string) string {
+	return r.caching.GenerateKey("vocabulary", fmt.Sprintf("wotd:%s", country))
 }

@@ -48,3 +48,29 @@ func (WordOfTheDayMapper) FromDomainToModel(word domain.WordOfTheDay) (*model.Wo
 
 	return result, nil
 }
+
+type ExtendedWordOfTheDay struct {
+	WordOfTheDay model.WordOfTheDay `alias:"wotd"`
+	Vocabulary   model.Vocabularies `alias:"v"`
+}
+
+type ExtendedWordOfTheDayMapper struct{}
+
+func (ExtendedWordOfTheDayMapper) FromModelToDomain(ewotd ExtendedWordOfTheDay) (*domain.ExtendedWordOfTheDay, error) {
+	var vocabularyMapper = VocabularyMapper{}
+	vocabulary, err := vocabularyMapper.FromModelToDomain(ewotd.Vocabulary)
+	if err != nil {
+		return nil, err
+	}
+
+	var wordOfTheDayMapper = WordOfTheDayMapper{}
+	wotd, err := wordOfTheDayMapper.FromModelToDomain(ewotd.WordOfTheDay)
+	if err != nil {
+		return nil, err
+	}
+
+	return &domain.ExtendedWordOfTheDay{
+		Vocabulary:   *vocabulary,
+		WordOfTheDay: *wotd,
+	}, nil
+}
