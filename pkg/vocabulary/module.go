@@ -86,6 +86,7 @@ func (Module) Startup(ctx *appcontext.AppContext, mono monolith.Monolith) error 
 		queueRepository,
 		ttsRepository,
 		aiRepository,
+		cachingRepository,
 		exerciseHub,
 		service,
 	)

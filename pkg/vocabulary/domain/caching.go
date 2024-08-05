@@ -11,4 +11,5 @@ type CachingRepository interface {
 
 	GetWordOfTheDay(ctx *appcontext.AppContext, country string) (*ExtendedWordOfTheDay, error)
 	SetWordOfTheDay(ctx *appcontext.AppContext, wotd ExtendedWordOfTheDay, country string) error
+	DeleteWordOfTheDay(ctx *appcontext.AppContext, country string) error
 }

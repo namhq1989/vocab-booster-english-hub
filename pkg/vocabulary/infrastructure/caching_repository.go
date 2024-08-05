@@ -95,6 +95,12 @@ func (r CachingRepository) SetWordOfTheDay(ctx *appcontext.AppContext, wotd doma
 	return nil
 }
 
+func (r CachingRepository) DeleteWordOfTheDay(ctx *appcontext.AppContext, country string) error {
+	key := r.generateWordOfTheDayKey(country)
+	_, _ = r.caching.Del(ctx, key)
+	return nil
+}
+
 func (r CachingRepository) generateWordOfTheDayKey(country string) string {
 	return r.caching.GenerateKey("vocabulary", fmt.Sprintf("wotd:%s", country))
 }
