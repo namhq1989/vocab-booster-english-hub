@@ -93,7 +93,14 @@ func (r CommunitySentenceRepository) FindCommunitySentenceByID(ctx *appcontext.A
 	return result, nil
 }
 
-func (r CommunitySentenceRepository) FindVocabularyCommunitySentences(ctx *appcontext.AppContext, filter domain.VocabularyCommunitySentenceFilter) ([]domain.ExtendedCommunitySentence, error) {
+func (r CommunitySentenceRepository) FindCommunitySentenceWithUserID(ctx *appcontext.AppContext, sentenceID, userID string) (*domain.ExtendedCommunitySentence, error) {
+	if !database.IsValidID(sentenceID) {
+		return nil, apperrors.Vocabulary.InvalidSentence
+	}
+	if !database.IsValidID(userID) {
+		return nil, apperrors.User.UserNotFound
+	}
+
 	var (
 		cs  = r.getTable().AS("cs")
 		csl = table.CommunitySentenceLikes.AS("csl")
@@ -107,6 +114,46 @@ func (r CommunitySentenceRepository) FindVocabularyCommunitySentences(ctx *appco
 
 	stmt := postgres.SELECT(
 		cs.AllColumns,
+		isLikedExpr,
+	).
+		FROM(
+			cs.LEFT_JOIN(csl, csl.SentenceID.EQ(cs.ID).
+				AND(csl.UserID.EQ(postgres.String(userID)))),
+		).
+		WHERE(
+			cs.ID.EQ(postgres.String(sentenceID)),
+		).
+		ORDER_BY(cs.CreatedAt.DESC())
+
+	var doc mapping.ExtendedCommunitySentence
+	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &doc); err != nil {
+		if r.db.IsNoRowsError(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	var (
+		mapper    = mapping.ExtendedCommunitySentenceMapper{}
+		result, _ = mapper.FromModelToDomain(doc)
+	)
+	return result, nil
+}
+
+func (r CommunitySentenceRepository) FindCommunitySentences(ctx *appcontext.AppContext, filter domain.VocabularyCommunitySentenceFilter) ([]domain.ExtendedCommunitySentence, error) {
+	var (
+		cs  = r.getTable().AS("cs")
+		csl = table.CommunitySentenceLikes.AS("csl")
+	)
+
+	isLikedExpr := postgres.CASE().
+		WHEN(csl.UserID.IS_NOT_NULL()).
+		THEN(postgres.Bool(true)).
+		ELSE(postgres.Bool(false)).
+		AS("csl.is_liked")
+
+	stmt := postgres.SELECT(
+		cs.ID, cs.Content, cs.StatsLike, cs.Level, cs.CreatedAt,
 		isLikedExpr,
 	).
 		FROM(

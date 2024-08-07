@@ -63,6 +63,7 @@ message VocabularyMainWord {
 message PosTag {
   string word = 1;
   string value = 2;
+  int32 level = 3;
 }
 
 message Sentiment {
@@ -95,6 +96,14 @@ message SentenceGrammarError {
   string translated = 2;
   string segment = 3;
   string replacement = 4;
+}
+
+message CommunitySentenceBrief {
+  string id = 1;
+  Multilingual content = 2;
+  string level = 3;
+  int32 statsLike = 4;
+  bool isLiked = 5;
 }
 
 message CommunitySentence {
