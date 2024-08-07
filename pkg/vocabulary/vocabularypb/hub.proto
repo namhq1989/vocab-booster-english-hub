@@ -10,8 +10,8 @@ service VocabularyService {
   rpc UpdateCommunitySentenceDraft(UpdateCommunitySentenceDraftRequest) returns (UpdateCommunitySentenceDraftResponse) {}
   rpc PromoteCommunitySentenceDraft(PromoteCommunitySentenceDraftRequest) returns (PromoteCommunitySentenceDraftResponse) {}
   rpc LikeCommunitySentence(LikeCommunitySentenceRequest) returns (LikeCommunitySentenceResponse) {}
-  rpc GetVocabularyCommunitySentences(GetVocabularyCommunitySentencesRequest) returns (GetVocabularyCommunitySentencesResponse) {}
-  rpc GetVocabularyCommunitySentenceByID(GetVocabularyCommunitySentenceByIDRequest) returns (GetVocabularyCommunitySentenceByIDResponse) {}
+  rpc GetCommunitySentences(GetCommunitySentencesRequest) returns (GetCommunitySentencesResponse) {}
+  rpc GetCommunitySentence(GetCommunitySentenceRequest) returns (GetCommunitySentenceResponse) {}
   rpc BookmarkVocabulary(BookmarkVocabularyRequest) returns (BookmarkVocabularyResponse) {}
   rpc GetUserBookmarkedVocabularies(GetUserBookmarkedVocabulariesRequest) returns (GetUserBookmarkedVocabulariesResponse) {}
   rpc GetWordOfTheDay(GetWordOfTheDayRequest) returns (GetWordOfTheDayResponse) {}
@@ -79,27 +79,27 @@ message LikeCommunitySentenceResponse {
 
 // GET VOCABULARY COMMUNITY SENTENCES
 
-message GetVocabularyCommunitySentencesRequest {
+message GetCommunitySentencesRequest {
   string vocabularyId = 1;
   string userId = 2;
   string lang = 3;
   string pageToken = 4;
 }
 
-message GetVocabularyCommunitySentencesResponse {
+message GetCommunitySentencesResponse {
   repeated CommunitySentenceBrief sentences = 1;
   string nextPageToken = 2;
 }
 
-// GET VOCABULARY COMMUNITY SENTENCE BY ID
+// GET VOCABULARY COMMUNITY SENTENCE
 
-message GetVocabularyCommunitySentenceByIDRequest {
-  string vocabularyId = 1;
+message GetCommunitySentenceRequest {
+  string sentenceId = 1;
   string userId = 2;
 }
 
-message GetVocabularyCommunitySentenceByIDResponse {
-  repeated CommunitySentence sentence = 1;
+message GetCommunitySentenceResponse {
+  CommunitySentence sentence = 1;
 }
 
 // BOOKMARK VOCABULARY

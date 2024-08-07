@@ -8,19 +8,19 @@ import (
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
 
-type GetVocabularyCommunitySentencesHandler struct {
+type GetCommunitySentencesHandler struct {
 	communitySentenceRepository domain.CommunitySentenceRepository
 }
 
-func NewGetVocabularyCommunitySentencesHandler(
+func NewGetCommunitySentencesHandler(
 	communitySentenceRepository domain.CommunitySentenceRepository,
-) GetVocabularyCommunitySentencesHandler {
-	return GetVocabularyCommunitySentencesHandler{
+) GetCommunitySentencesHandler {
+	return GetCommunitySentencesHandler{
 		communitySentenceRepository: communitySentenceRepository,
 	}
 }
 
-func (h GetVocabularyCommunitySentencesHandler) GetVocabularyCommunitySentences(ctx *appcontext.AppContext, req *vocabularypb.GetVocabularyCommunitySentencesRequest) (*vocabularypb.GetVocabularyCommunitySentencesResponse, error) {
+func (h GetCommunitySentencesHandler) GetCommunitySentences(ctx *appcontext.AppContext, req *vocabularypb.GetCommunitySentencesRequest) (*vocabularypb.GetCommunitySentencesResponse, error) {
 	ctx.Logger().Info("[hub] new get vocabulary community sentences request", appcontext.Fields{"userID": req.GetUserId(), "vocabularyID": req.GetVocabularyId(), "lang": req.GetLang(), "pageToken": req.GetPageToken()})
 
 	ctx.Logger().Text("new vocabulary community sentences filter")
@@ -39,7 +39,7 @@ func (h GetVocabularyCommunitySentencesHandler) GetVocabularyCommunitySentences(
 
 	var (
 		totalSentences = len(sentences)
-		result         = &vocabularypb.GetVocabularyCommunitySentencesResponse{
+		result         = &vocabularypb.GetCommunitySentencesResponse{
 			Sentences:     make([]*vocabularypb.CommunitySentenceBrief, 0),
 			NextPageToken: "",
 		}

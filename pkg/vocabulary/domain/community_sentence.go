@@ -15,6 +15,7 @@ type CommunitySentenceRepository interface {
 	FindCommunitySentences(ctx *appcontext.AppContext, filter VocabularyCommunitySentenceFilter) ([]ExtendedCommunitySentence, error)
 	CreateCommunitySentence(ctx *appcontext.AppContext, sentence CommunitySentence) error
 	UpdateCommunitySentence(ctx *appcontext.AppContext, sentence CommunitySentence) error
+	FindCommunitySentenceWithUserID(ctx *appcontext.AppContext, sentenceID, userID string) (*ExtendedCommunitySentence, error)
 }
 
 type CommunitySentence struct {
