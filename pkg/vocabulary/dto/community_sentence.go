@@ -33,6 +33,7 @@ func ConvertCommunitySentenceFromDomainToGrpc(sentence domain.ExtendedCommunityS
 		posTags[i] = &vocabularypb.PosTag{
 			Word:  posTag.Word,
 			Value: posTag.Value.String(),
+			Level: int32(posTag.Level),
 		}
 	}
 

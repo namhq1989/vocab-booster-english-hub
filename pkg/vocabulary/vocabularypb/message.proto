@@ -63,6 +63,7 @@ message VocabularyMainWord {
 message PosTag {
   string word = 1;
   string value = 2;
+  int32 level = 3;
 }
 
 message Sentiment {
