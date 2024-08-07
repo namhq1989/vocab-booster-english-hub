@@ -19,15 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	VocabularyService_SearchVocabulary_FullMethodName                = "/vocabularypb.VocabularyService/SearchVocabulary"
-	VocabularyService_CreateCommunitySentenceDraft_FullMethodName    = "/vocabularypb.VocabularyService/CreateCommunitySentenceDraft"
-	VocabularyService_UpdateCommunitySentenceDraft_FullMethodName    = "/vocabularypb.VocabularyService/UpdateCommunitySentenceDraft"
-	VocabularyService_PromoteCommunitySentenceDraft_FullMethodName   = "/vocabularypb.VocabularyService/PromoteCommunitySentenceDraft"
-	VocabularyService_LikeCommunitySentence_FullMethodName           = "/vocabularypb.VocabularyService/LikeCommunitySentence"
-	VocabularyService_GetVocabularyCommunitySentences_FullMethodName = "/vocabularypb.VocabularyService/GetVocabularyCommunitySentences"
-	VocabularyService_BookmarkVocabulary_FullMethodName              = "/vocabularypb.VocabularyService/BookmarkVocabulary"
-	VocabularyService_GetUserBookmarkedVocabularies_FullMethodName   = "/vocabularypb.VocabularyService/GetUserBookmarkedVocabularies"
-	VocabularyService_GetWordOfTheDay_FullMethodName                 = "/vocabularypb.VocabularyService/GetWordOfTheDay"
+	VocabularyService_SearchVocabulary_FullMethodName                   = "/vocabularypb.VocabularyService/SearchVocabulary"
+	VocabularyService_CreateCommunitySentenceDraft_FullMethodName       = "/vocabularypb.VocabularyService/CreateCommunitySentenceDraft"
+	VocabularyService_UpdateCommunitySentenceDraft_FullMethodName       = "/vocabularypb.VocabularyService/UpdateCommunitySentenceDraft"
+	VocabularyService_PromoteCommunitySentenceDraft_FullMethodName      = "/vocabularypb.VocabularyService/PromoteCommunitySentenceDraft"
+	VocabularyService_LikeCommunitySentence_FullMethodName              = "/vocabularypb.VocabularyService/LikeCommunitySentence"
+	VocabularyService_GetVocabularyCommunitySentences_FullMethodName    = "/vocabularypb.VocabularyService/GetVocabularyCommunitySentences"
+	VocabularyService_GetVocabularyCommunitySentenceByID_FullMethodName = "/vocabularypb.VocabularyService/GetVocabularyCommunitySentenceByID"
+	VocabularyService_BookmarkVocabulary_FullMethodName                 = "/vocabularypb.VocabularyService/BookmarkVocabulary"
+	VocabularyService_GetUserBookmarkedVocabularies_FullMethodName      = "/vocabularypb.VocabularyService/GetUserBookmarkedVocabularies"
+	VocabularyService_GetWordOfTheDay_FullMethodName                    = "/vocabularypb.VocabularyService/GetWordOfTheDay"
 )
 
 // VocabularyServiceClient is the client API for VocabularyService service.
@@ -40,6 +41,7 @@ type VocabularyServiceClient interface {
 	PromoteCommunitySentenceDraft(ctx context.Context, in *PromoteCommunitySentenceDraftRequest, opts ...grpc.CallOption) (*PromoteCommunitySentenceDraftResponse, error)
 	LikeCommunitySentence(ctx context.Context, in *LikeCommunitySentenceRequest, opts ...grpc.CallOption) (*LikeCommunitySentenceResponse, error)
 	GetVocabularyCommunitySentences(ctx context.Context, in *GetVocabularyCommunitySentencesRequest, opts ...grpc.CallOption) (*GetVocabularyCommunitySentencesResponse, error)
+	GetVocabularyCommunitySentenceByID(ctx context.Context, in *GetVocabularyCommunitySentenceByIDRequest, opts ...grpc.CallOption) (*GetVocabularyCommunitySentenceByIDResponse, error)
 	BookmarkVocabulary(ctx context.Context, in *BookmarkVocabularyRequest, opts ...grpc.CallOption) (*BookmarkVocabularyResponse, error)
 	GetUserBookmarkedVocabularies(ctx context.Context, in *GetUserBookmarkedVocabulariesRequest, opts ...grpc.CallOption) (*GetUserBookmarkedVocabulariesResponse, error)
 	GetWordOfTheDay(ctx context.Context, in *GetWordOfTheDayRequest, opts ...grpc.CallOption) (*GetWordOfTheDayResponse, error)
@@ -107,6 +109,15 @@ func (c *vocabularyServiceClient) GetVocabularyCommunitySentences(ctx context.Co
 	return out, nil
 }
 
+func (c *vocabularyServiceClient) GetVocabularyCommunitySentenceByID(ctx context.Context, in *GetVocabularyCommunitySentenceByIDRequest, opts ...grpc.CallOption) (*GetVocabularyCommunitySentenceByIDResponse, error) {
+	out := new(GetVocabularyCommunitySentenceByIDResponse)
+	err := c.cc.Invoke(ctx, VocabularyService_GetVocabularyCommunitySentenceByID_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *vocabularyServiceClient) BookmarkVocabulary(ctx context.Context, in *BookmarkVocabularyRequest, opts ...grpc.CallOption) (*BookmarkVocabularyResponse, error) {
 	out := new(BookmarkVocabularyResponse)
 	err := c.cc.Invoke(ctx, VocabularyService_BookmarkVocabulary_FullMethodName, in, out, opts...)
@@ -144,6 +155,7 @@ type VocabularyServiceServer interface {
 	PromoteCommunitySentenceDraft(context.Context, *PromoteCommunitySentenceDraftRequest) (*PromoteCommunitySentenceDraftResponse, error)
 	LikeCommunitySentence(context.Context, *LikeCommunitySentenceRequest) (*LikeCommunitySentenceResponse, error)
 	GetVocabularyCommunitySentences(context.Context, *GetVocabularyCommunitySentencesRequest) (*GetVocabularyCommunitySentencesResponse, error)
+	GetVocabularyCommunitySentenceByID(context.Context, *GetVocabularyCommunitySentenceByIDRequest) (*GetVocabularyCommunitySentenceByIDResponse, error)
 	BookmarkVocabulary(context.Context, *BookmarkVocabularyRequest) (*BookmarkVocabularyResponse, error)
 	GetUserBookmarkedVocabularies(context.Context, *GetUserBookmarkedVocabulariesRequest) (*GetUserBookmarkedVocabulariesResponse, error)
 	GetWordOfTheDay(context.Context, *GetWordOfTheDayRequest) (*GetWordOfTheDayResponse, error)
@@ -170,6 +182,9 @@ func (UnimplementedVocabularyServiceServer) LikeCommunitySentence(context.Contex
 }
 func (UnimplementedVocabularyServiceServer) GetVocabularyCommunitySentences(context.Context, *GetVocabularyCommunitySentencesRequest) (*GetVocabularyCommunitySentencesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVocabularyCommunitySentences not implemented")
+}
+func (UnimplementedVocabularyServiceServer) GetVocabularyCommunitySentenceByID(context.Context, *GetVocabularyCommunitySentenceByIDRequest) (*GetVocabularyCommunitySentenceByIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetVocabularyCommunitySentenceByID not implemented")
 }
 func (UnimplementedVocabularyServiceServer) BookmarkVocabulary(context.Context, *BookmarkVocabularyRequest) (*BookmarkVocabularyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BookmarkVocabulary not implemented")
@@ -300,6 +315,24 @@ func _VocabularyService_GetVocabularyCommunitySentences_Handler(srv interface{},
 	return interceptor(ctx, in, info, handler)
 }
 
+func _VocabularyService_GetVocabularyCommunitySentenceByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetVocabularyCommunitySentenceByIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VocabularyServiceServer).GetVocabularyCommunitySentenceByID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: VocabularyService_GetVocabularyCommunitySentenceByID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VocabularyServiceServer).GetVocabularyCommunitySentenceByID(ctx, req.(*GetVocabularyCommunitySentenceByIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _VocabularyService_BookmarkVocabulary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(BookmarkVocabularyRequest)
 	if err := dec(in); err != nil {
@@ -384,6 +417,10 @@ var VocabularyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetVocabularyCommunitySentences",
 			Handler:    _VocabularyService_GetVocabularyCommunitySentences_Handler,
+		},
+		{
+			MethodName: "GetVocabularyCommunitySentenceByID",
+			Handler:    _VocabularyService_GetVocabularyCommunitySentenceByID_Handler,
 		},
 		{
 			MethodName: "BookmarkVocabulary",

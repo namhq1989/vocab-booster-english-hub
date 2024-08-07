@@ -93,7 +93,7 @@ func (r CommunitySentenceRepository) FindCommunitySentenceByID(ctx *appcontext.A
 	return result, nil
 }
 
-func (r CommunitySentenceRepository) FindVocabularyCommunitySentences(ctx *appcontext.AppContext, filter domain.VocabularyCommunitySentenceFilter) ([]domain.ExtendedCommunitySentence, error) {
+func (r CommunitySentenceRepository) FindCommunitySentences(ctx *appcontext.AppContext, filter domain.VocabularyCommunitySentenceFilter) ([]domain.ExtendedCommunitySentence, error) {
 	var (
 		cs  = r.getTable().AS("cs")
 		csl = table.CommunitySentenceLikes.AS("csl")
@@ -106,7 +106,7 @@ func (r CommunitySentenceRepository) FindVocabularyCommunitySentences(ctx *appco
 		AS("csl.is_liked")
 
 	stmt := postgres.SELECT(
-		cs.AllColumns,
+		cs.ID, cs.Content, cs.StatsLike, cs.Level, cs.CreatedAt,
 		isLikedExpr,
 	).
 		FROM(

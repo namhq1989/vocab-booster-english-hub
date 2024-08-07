@@ -11,6 +11,7 @@ service VocabularyService {
   rpc PromoteCommunitySentenceDraft(PromoteCommunitySentenceDraftRequest) returns (PromoteCommunitySentenceDraftResponse) {}
   rpc LikeCommunitySentence(LikeCommunitySentenceRequest) returns (LikeCommunitySentenceResponse) {}
   rpc GetVocabularyCommunitySentences(GetVocabularyCommunitySentencesRequest) returns (GetVocabularyCommunitySentencesResponse) {}
+  rpc GetVocabularyCommunitySentenceByID(GetVocabularyCommunitySentenceByIDRequest) returns (GetVocabularyCommunitySentenceByIDResponse) {}
   rpc BookmarkVocabulary(BookmarkVocabularyRequest) returns (BookmarkVocabularyResponse) {}
   rpc GetUserBookmarkedVocabularies(GetUserBookmarkedVocabulariesRequest) returns (GetUserBookmarkedVocabulariesResponse) {}
   rpc GetWordOfTheDay(GetWordOfTheDayRequest) returns (GetWordOfTheDayResponse) {}
@@ -86,8 +87,19 @@ message GetVocabularyCommunitySentencesRequest {
 }
 
 message GetVocabularyCommunitySentencesResponse {
-  repeated CommunitySentence sentences = 1;
+  repeated CommunitySentenceBrief sentences = 1;
   string nextPageToken = 2;
+}
+
+// GET VOCABULARY COMMUNITY SENTENCE BY ID
+
+message GetVocabularyCommunitySentenceByIDRequest {
+  string vocabularyId = 1;
+  string userId = 2;
+}
+
+message GetVocabularyCommunitySentenceByIDResponse {
+  repeated CommunitySentence sentence = 1;
 }
 
 // BOOKMARK VOCABULARY

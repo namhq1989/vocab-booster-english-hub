@@ -2,6 +2,7 @@ package hub
 
 import (
 	"github.com/namhq1989/vocab-booster-english-hub/internal/genproto/vocabularypb"
+	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/pagetoken"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/domain"
 	"github.com/namhq1989/vocab-booster-english-hub/pkg/vocabulary/dto"
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
@@ -30,17 +31,31 @@ func (h GetVocabularyCommunitySentencesHandler) GetVocabularyCommunitySentences(
 	}
 
 	ctx.Logger().Text("find sentences in db")
-	sentences, err := h.communitySentenceRepository.FindVocabularyCommunitySentences(ctx, *filter)
+	sentences, err := h.communitySentenceRepository.FindCommunitySentences(ctx, *filter)
 	if err != nil {
 		ctx.Logger().Error("failed to query sentences in db", err, appcontext.Fields{})
 		return nil, err
 	}
 
+	var (
+		totalSentences = len(sentences)
+		result         = &vocabularypb.GetVocabularyCommunitySentencesResponse{
+			Sentences:     make([]*vocabularypb.CommunitySentenceBrief, 0),
+			NextPageToken: "",
+		}
+	)
+
+	if totalSentences == 0 {
+		ctx.Logger().Text("no sentences found, respond")
+		return result, nil
+	}
+
 	ctx.Logger().Text("convert to grpc data")
-	result := dto.ConvertCommunitySentencesFromDomainToGrpc(sentences)
+	for _, sentence := range sentences {
+		result.Sentences = append(result.Sentences, dto.ConvertCommunitySentenceBriefFromDomainToGrpc(sentence))
+	}
+	result.NextPageToken = pagetoken.NewWithTimestamp(sentences[totalSentences-1].CreatedAt)
 
 	ctx.Logger().Text("done get vocabulary community sentences request")
-	return &vocabularypb.GetVocabularyCommunitySentencesResponse{
-		Sentences: result,
-	}, nil
+	return result, nil
 }

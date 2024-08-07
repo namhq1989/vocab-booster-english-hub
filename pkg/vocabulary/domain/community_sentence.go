@@ -12,7 +12,7 @@ import (
 
 type CommunitySentenceRepository interface {
 	FindCommunitySentenceByID(ctx *appcontext.AppContext, id string) (*CommunitySentence, error)
-	FindVocabularyCommunitySentences(ctx *appcontext.AppContext, filter VocabularyCommunitySentenceFilter) ([]ExtendedCommunitySentence, error)
+	FindCommunitySentences(ctx *appcontext.AppContext, filter VocabularyCommunitySentenceFilter) ([]ExtendedCommunitySentence, error)
 	CreateCommunitySentence(ctx *appcontext.AppContext, sentence CommunitySentence) error
 	UpdateCommunitySentence(ctx *appcontext.AppContext, sentence CommunitySentence) error
 }
