@@ -13,17 +13,18 @@ import (
 )
 
 type CommunitySentenceDrafts struct {
-	ID                 string `sql:"primary_key"`
-	UserID             string
-	VocabularyID       string
-	Content            string
-	RequiredVocabulary database.StringArray
-	RequiredTense      string
-	IsCorrect          bool
-	GrammarErrors      string
-	ErrorCode          string
-	Sentiment          string
-	Clauses            string
-	CreatedAt          time.Time
-	UpdatedAt          time.Time
+	ID                   string `sql:"primary_key"`
+	UserID               string
+	VocabularyID         string
+	Content              string
+	RequiredVocabularies database.StringArray
+	RequiredTense        string
+	IsCorrect            bool
+	GrammarErrors        string
+	ErrorCode            string
+	Sentiment            string
+	Clauses              string
+	CreatedAt            time.Time
+	UpdatedAt            time.Time
+	Level                string
 }

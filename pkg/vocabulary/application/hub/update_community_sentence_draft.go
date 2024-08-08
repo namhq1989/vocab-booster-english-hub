@@ -97,7 +97,7 @@ func (UpdateCommunitySentenceDraftHandler) hasGrammarErrors(ctx *appcontext.AppC
 
 func (h UpdateCommunitySentenceDraftHandler) noGrammarErrors(ctx *appcontext.AppContext, sentence *domain.CommunitySentenceDraft, content string) error {
 	ctx.Logger().Text("call NLP to evaluate the sentence")
-	sentenceEvaluationResult, err := h.nlpRepository.EvaluateSentence(ctx, content, sentence.RequiredTense.String(), sentence.RequiredVocabulary)
+	sentenceEvaluationResult, err := h.nlpRepository.EvaluateSentence(ctx, content, sentence.RequiredTense.String(), sentence.RequiredVocabularies)
 	if err != nil {
 		ctx.Logger().Error("failed to call NLP to evaluate the sentence", err, appcontext.Fields{})
 		return err

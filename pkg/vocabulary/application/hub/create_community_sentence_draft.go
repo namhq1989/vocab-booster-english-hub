@@ -31,8 +31,8 @@ func NewCreateCommunitySentenceDraftHandler(
 func (h CreateCommunitySentenceDraftHandler) CreateCommunitySentenceDraft(ctx *appcontext.AppContext, req *vocabularypb.CreateCommunitySentenceDraftRequest) (*vocabularypb.CreateCommunitySentenceDraftResponse, error) {
 	ctx.Logger().Info("[hub] new create community sentence draft request", appcontext.Fields{
 		"userID": req.GetUserId(), "vocabularyID": req.GetVocabularyId(),
-		"sentence": req.GetSentence(), "vocabulary": req.GetVocabulary(),
-		"tense": req.GetTense(), "lang": req.GetLang(),
+		"sentence": req.GetSentence(), "vocabularies": req.GetVocabularies(),
+		"tense": req.GetTense(),
 	})
 
 	ctx.Logger().Text("find vocabulary by id")
@@ -46,9 +46,9 @@ func (h CreateCommunitySentenceDraftHandler) CreateCommunitySentenceDraft(ctx *a
 		return nil, apperrors.Vocabulary.VocabularyNotFound
 	}
 
-	ctx.Logger().Info("check if vocabulary is in list sentence's required vocabulary or not", appcontext.Fields{"term": vocabulary.Term})
-	if !slices.Contains(req.GetVocabulary(), vocabulary.Term) {
-		ctx.Logger().ErrorText("vocabulary is not in list sentence's required vocabulary")
+	ctx.Logger().Info("check if vocabulary is in list sentence's required vocabularies or not", appcontext.Fields{"term": vocabulary.Term})
+	if !slices.Contains(req.GetVocabularies(), vocabulary.Term) {
+		ctx.Logger().ErrorText("vocabulary is not in list sentence's required vocabularies")
 		return nil, apperrors.Vocabulary.InvalidVocabularyID
 	} else {
 		ctx.Logger().Text("valid vocabulary")
@@ -112,8 +112,8 @@ func (h CreateCommunitySentenceDraftHandler) hasGrammarErrors(ctx *appcontext.Ap
 		return nil, err
 	}
 
-	if err = sentence.SetRequiredVocabulary(req.GetVocabulary()); err != nil {
-		ctx.Logger().Error("failed to set required vocabulary", err, appcontext.Fields{})
+	if err = sentence.SetRequiredVocabularies(req.GetVocabularies()); err != nil {
+		ctx.Logger().Error("failed to set required vocabularies", err, appcontext.Fields{})
 		return nil, err
 	}
 
@@ -140,7 +140,7 @@ func (h CreateCommunitySentenceDraftHandler) noGrammarErrors(ctx *appcontext.App
 	}
 
 	ctx.Logger().Text("call NLP to evaluate the sentence")
-	sentenceEvaluationResult, err := h.nlpRepository.EvaluateSentence(ctx, req.GetSentence(), req.GetTense(), req.GetVocabulary())
+	sentenceEvaluationResult, err := h.nlpRepository.EvaluateSentence(ctx, req.GetSentence(), req.GetTense(), req.GetVocabularies())
 	if err != nil {
 		ctx.Logger().Error("failed to call NLP to evaluate the sentence", err, appcontext.Fields{})
 		return nil, err
@@ -157,7 +157,7 @@ func (h CreateCommunitySentenceDraftHandler) noGrammarErrors(ctx *appcontext.App
 		return nil, err
 	}
 
-	if err = sentence.SetRequiredVocabulary(req.GetVocabulary()); err != nil {
+	if err = sentence.SetRequiredVocabularies(req.GetVocabularies()); err != nil {
 		ctx.Logger().Error("failed to set required vocabulary", err, appcontext.Fields{})
 		return nil, err
 	}

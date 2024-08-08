@@ -24,7 +24,7 @@ func (h GetCommunitySentencesHandler) GetCommunitySentences(ctx *appcontext.AppC
 	ctx.Logger().Info("[hub] new get vocabulary community sentences request", appcontext.Fields{"userID": req.GetUserId(), "vocabularyID": req.GetVocabularyId(), "lang": req.GetLang(), "pageToken": req.GetPageToken()})
 
 	ctx.Logger().Text("new vocabulary community sentences filter")
-	filter, err := domain.NewVocabularyCommunitySentenceFilter(req.GetUserId(), req.GetVocabularyId(), req.GetLang(), req.GetPageToken())
+	filter, err := domain.NewCommunitySentenceFilter(req.GetUserId(), req.GetVocabularyId(), req.GetLang(), req.GetPageToken())
 	if err != nil {
 		ctx.Logger().Error("failed to create new vocabulary community sentences filter", err, appcontext.Fields{})
 		return nil, err

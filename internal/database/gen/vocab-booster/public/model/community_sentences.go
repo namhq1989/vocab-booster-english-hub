@@ -13,18 +13,19 @@ import (
 )
 
 type CommunitySentences struct {
-	ID                 string `sql:"primary_key"`
-	UserID             string
-	VocabularyID       string
-	Content            string
-	RequiredVocabulary database.StringArray
-	RequiredTense      string
-	Sentiment          string
-	Clauses            string
-	PosTags            string
-	Dependencies       string
-	Verbs              string
-	Level              string
-	StatsLike          int32
-	CreatedAt          time.Time
+	ID                   string `sql:"primary_key"`
+	UserID               string
+	VocabularyID         string
+	Content              string
+	RequiredVocabularies database.StringArray
+	RequiredTense        string
+	Sentiment            string
+	Clauses              string
+	PosTags              string
+	Dependencies         string
+	Verbs                string
+	Level                string
+	StatsLike            int32
+	CreatedAt            time.Time
+	MainWord             string
 }

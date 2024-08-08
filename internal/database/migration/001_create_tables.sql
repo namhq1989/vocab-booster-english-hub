@@ -94,7 +94,8 @@ CREATE TABLE community_sentences (
     user_id TEXT NOT NULL,
     vocabulary_id TEXT NOT NULL,
     content JSONB NOT NULL, -- Multilingual
-    required_vocabulary TEXT[] NOT NULL DEFAULT '{}',
+    main_word JSONB NOT NULL,
+    required_vocabularies TEXT[] NOT NULL DEFAULT '{}',
     required_tense TEXT NOT NULL,
     sentiment JSONB NOT NULL,
     clauses JSONB NOT NULL DEFAULT '{}',
@@ -116,13 +117,14 @@ CREATE TABLE community_sentence_drafts (
     user_id TEXT NOT NULL,
     vocabulary_id TEXT NOT NULL,
     content JSONB NOT NULL, -- Multilingual
-    required_vocabulary TEXT[] NOT NULL DEFAULT '{}',
+    required_vocabularies TEXT[] NOT NULL DEFAULT '{}',
     required_tense TEXT NOT NULL,
     is_correct BOOLEAN NOT NULL,
     grammar_errors JSONB NOT NULL DEFAULT '{}',
     error_code VARCHAR(30) NOT NULL,
     sentiment JSONB NOT NULL,
     clauses JSONB NOT NULL DEFAULT '{}',
+    level VARCHAR(20) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
 

@@ -20,11 +20,11 @@ type EvaluateSentenceClause struct {
 	IsPrimaryTense bool   `json:"is_primary_tense"`
 }
 
-func (n NLP) EvaluateSentence(_ *appcontext.AppContext, sentence, tense string, vocabulary []string) (result *EvaluateSentenceResult, err error) {
+func (n NLP) EvaluateSentence(_ *appcontext.AppContext, sentence, tense string, vocabularies []string) (result *EvaluateSentenceResult, err error) {
 	_, err = n.httpClient.R().
 		SetBody(map[string]interface{}{
 			"sentence":   sentence,
-			"vocabulary": vocabulary,
+			"vocabulary": vocabularies,
 			"tense":      tense,
 		}).
 		SetResult(&result).

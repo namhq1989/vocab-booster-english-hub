@@ -3,6 +3,8 @@ package domain
 import (
 	"time"
 
+	"github.com/namhq1989/vocab-booster-english-hub/internal/utils/pagetoken"
+
 	apperrors "github.com/namhq1989/vocab-booster-english-hub/internal/utils/error"
 
 	"github.com/namhq1989/vocab-booster-english-hub/internal/database"
@@ -14,23 +16,25 @@ type CommunitySentenceDraftRepository interface {
 	FindCommunitySentenceDraftByID(ctx *appcontext.AppContext, sentenceID string) (*CommunitySentenceDraft, error)
 	CreateCommunitySentenceDraft(ctx *appcontext.AppContext, sentence CommunitySentenceDraft) error
 	UpdateCommunitySentenceDraft(ctx *appcontext.AppContext, sentence CommunitySentenceDraft) error
-	DeleteCommunitySentenceDrafts(ctx *appcontext.AppContext, vocabularyID, userID string) error
+	DeleteCommunitySentenceDraft(ctx *appcontext.AppContext, vocabularyID, userID string) error
+	FindUserCommunitySentenceDrafts(ctx *appcontext.AppContext, filter CommunitySentenceDraftFilter) ([]CommunitySentenceDraft, error)
 }
 
 type CommunitySentenceDraft struct {
-	ID                 string
-	UserID             string
-	VocabularyID       string
-	Content            language.Multilingual
-	RequiredVocabulary []string
-	RequiredTense      Tense
-	IsCorrect          bool
-	ErrorCode          SentenceErrorCode
-	GrammarErrors      []SentenceGrammarError
-	Sentiment          Sentiment
-	Clauses            []SentenceClause
-	CreatedAt          time.Time
-	UpdatedAt          time.Time
+	ID                   string
+	UserID               string
+	VocabularyID         string
+	Content              language.Multilingual
+	RequiredVocabularies []string
+	RequiredTense        Tense
+	IsCorrect            bool
+	ErrorCode            SentenceErrorCode
+	GrammarErrors        []SentenceGrammarError
+	Sentiment            Sentiment
+	Clauses              []SentenceClause
+	Level                SentenceLevel
+	CreatedAt            time.Time
+	UpdatedAt            time.Time
 }
 
 func NewCommunitySentenceDraft(userID, vocabularyID string) (*CommunitySentenceDraft, error) {
@@ -60,12 +64,12 @@ func (s *CommunitySentenceDraft) SetContent(content language.Multilingual) error
 	return nil
 }
 
-func (s *CommunitySentenceDraft) SetRequiredVocabulary(required []string) error {
+func (s *CommunitySentenceDraft) SetRequiredVocabularies(required []string) error {
 	if len(required) == 0 {
-		return apperrors.Common.InvalidRequiredVocabulary
+		return apperrors.Common.InvalidRequiredVocabularies
 	}
 
-	s.RequiredVocabulary = required
+	s.RequiredVocabularies = required
 	return nil
 }
 
@@ -109,10 +113,49 @@ func (s *CommunitySentenceDraft) SetGrammarErrors(errors []SentenceGrammarError)
 	return nil
 }
 
+func (s *CommunitySentenceDraft) SetLevel(level string) error {
+	dLevel := ToSentenceLevel(level)
+	if !dLevel.IsValid() {
+		return apperrors.Vocabulary.InvalidExampleLevel
+	}
+
+	s.Level = dLevel
+	return nil
+}
+
 func (s *CommunitySentenceDraft) SetUpdatedAt() {
 	s.UpdatedAt = time.Now()
 }
 
 func (s *CommunitySentenceDraft) IsOwner(userID string) bool {
 	return s.UserID == userID
+}
+
+//
+// FILTER
+//
+
+type CommunitySentenceDraftFilter struct {
+	UserID       string
+	VocabularyID string
+	Timestamp    time.Time
+	Limit        int64
+}
+
+func NewCommunitySentenceDraftFilter(userID, vocabularyID, pageToken string) (*CommunitySentenceDraftFilter, error) {
+	if !database.IsValidID(userID) {
+		return nil, apperrors.User.InvalidUserID
+	}
+
+	if !database.IsValidID(vocabularyID) {
+		return nil, apperrors.Vocabulary.InvalidVocabularyID
+	}
+
+	pt := pagetoken.Decode(pageToken)
+	return &CommunitySentenceDraftFilter{
+		UserID:       userID,
+		VocabularyID: vocabularyID,
+		Timestamp:    pt.Timestamp,
+		Limit:        10,
+	}, nil
 }

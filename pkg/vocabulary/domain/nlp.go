@@ -8,7 +8,7 @@ import (
 type NlpRepository interface {
 	AnalyzeSentence(ctx *appcontext.AppContext, sentence, term string) (*NlpSentenceAnalysisResult, error)
 	TranslateDefinition(ctx *appcontext.AppContext, definition string) (*language.Multilingual, error)
-	EvaluateSentence(ctx *appcontext.AppContext, sentence, tense string, vocabulary []string) (*NlpSentenceEvaluationResult, error)
+	EvaluateSentence(ctx *appcontext.AppContext, sentence, tense string, vocabularies []string) (*NlpSentenceEvaluationResult, error)
 	GrammarCheck(ctx *appcontext.AppContext, sentence string) ([]SentenceGrammarError, error)
 }
 

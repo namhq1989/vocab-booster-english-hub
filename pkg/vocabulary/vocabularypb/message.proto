@@ -92,10 +92,9 @@ message SentenceClause {
 }
 
 message SentenceGrammarError {
-  string message = 1;
-  string translated = 2;
-  string segment = 3;
-  string replacement = 4;
+  Multilingual message = 1;
+  string segment = 2;
+  string replacement = 3;
 }
 
 message CommunitySentenceBrief {
@@ -110,15 +109,30 @@ message CommunitySentence {
   string id = 1;
   string vocabularyId = 2;
   Multilingual content = 3;
-  repeated string requiredVocabulary = 4;
-  string requiredTense = 5;
-  repeated SentenceClause clauses = 6;
-  repeated PosTag posTags = 7;
-  Sentiment sentiment = 8;
-  repeated Dependency dependencies = 9;
-  repeated Verb verbs = 10;
-  string level = 11;
-  int32 statsLike = 12;
-  bool isLiked = 13;
-  google.protobuf.Timestamp createdAt = 14;
+  VocabularyMainWord mainWord = 4;
+  repeated string requiredVocabularies = 5;
+  string requiredTense = 6;
+  repeated SentenceClause clauses = 7;
+  repeated PosTag posTags = 8;
+  Sentiment sentiment = 9;
+  repeated Dependency dependencies = 10;
+  repeated Verb verbs = 11;
+  string level = 12;
+  int32 statsLike = 13;
+  bool isLiked = 14;
+  google.protobuf.Timestamp createdAt = 15;
+}
+
+message CommunitySentenceDraft {
+  string id = 1;
+  Multilingual content = 2;
+  repeated string requiredVocabularies = 3;
+  string requiredTense = 4;
+  bool isCorrect = 5;
+  string errorCode = 6;
+  Sentiment sentiment = 7;
+  string level = 8;
+  repeated SentenceClause clauses = 9;
+  repeated SentenceGrammarError errors = 10;
+  google.protobuf.Timestamp createdAt = 11;
 }
