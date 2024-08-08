@@ -102,8 +102,8 @@ func (s server) GetCommunitySentence(bgCtx context.Context, req *vocabularypb.Ge
 	return resp, nil
 }
 
-func (s server) GetUserDraftCommunitySentences(bgCtx context.Context, req *vocabularypb.GetUserDraftCommunitySentencesRequest) (*vocabularypb.GetUserDraftCommunitySentencesResponse, error) {
-	resp, err := s.app.GetUserDraftCommunitySentences(appcontext.NewGRPC(bgCtx), req)
+func (s server) GetUserCommunitySentenceDrafts(bgCtx context.Context, req *vocabularypb.GetUserCommunitySentenceDraftsRequest) (*vocabularypb.GetUserCommunitySentenceDraftsResponse, error) {
+	resp, err := s.app.GetUserCommunitySentenceDrafts(appcontext.NewGRPC(bgCtx), req)
 	if err != nil {
 		return nil, apperrors.ToGrpcError(bgCtx, err)
 	}

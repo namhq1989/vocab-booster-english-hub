@@ -796,7 +796,7 @@ func (x *GetCommunitySentenceResponse) GetSentence() *CommunitySentence {
 	return nil
 }
 
-type GetUserDraftCommunitySentencesRequest struct {
+type GetUserCommunitySentenceDraftsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -806,8 +806,8 @@ type GetUserDraftCommunitySentencesRequest struct {
 	PageToken    string `protobuf:"bytes,3,opt,name=pageToken,proto3" json:"pageToken,omitempty"`
 }
 
-func (x *GetUserDraftCommunitySentencesRequest) Reset() {
-	*x = GetUserDraftCommunitySentencesRequest{}
+func (x *GetUserCommunitySentenceDraftsRequest) Reset() {
+	*x = GetUserCommunitySentenceDraftsRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_vocabularypb_hub_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -815,13 +815,13 @@ func (x *GetUserDraftCommunitySentencesRequest) Reset() {
 	}
 }
 
-func (x *GetUserDraftCommunitySentencesRequest) String() string {
+func (x *GetUserCommunitySentenceDraftsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserDraftCommunitySentencesRequest) ProtoMessage() {}
+func (*GetUserCommunitySentenceDraftsRequest) ProtoMessage() {}
 
-func (x *GetUserDraftCommunitySentencesRequest) ProtoReflect() protoreflect.Message {
+func (x *GetUserCommunitySentenceDraftsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_vocabularypb_hub_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -833,33 +833,33 @@ func (x *GetUserDraftCommunitySentencesRequest) ProtoReflect() protoreflect.Mess
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserDraftCommunitySentencesRequest.ProtoReflect.Descriptor instead.
-func (*GetUserDraftCommunitySentencesRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserCommunitySentenceDraftsRequest.ProtoReflect.Descriptor instead.
+func (*GetUserCommunitySentenceDraftsRequest) Descriptor() ([]byte, []int) {
 	return file_vocabularypb_hub_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *GetUserDraftCommunitySentencesRequest) GetVocabularyId() string {
+func (x *GetUserCommunitySentenceDraftsRequest) GetVocabularyId() string {
 	if x != nil {
 		return x.VocabularyId
 	}
 	return ""
 }
 
-func (x *GetUserDraftCommunitySentencesRequest) GetUserId() string {
+func (x *GetUserCommunitySentenceDraftsRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
 	return ""
 }
 
-func (x *GetUserDraftCommunitySentencesRequest) GetPageToken() string {
+func (x *GetUserCommunitySentenceDraftsRequest) GetPageToken() string {
 	if x != nil {
 		return x.PageToken
 	}
 	return ""
 }
 
-type GetUserDraftCommunitySentencesResponse struct {
+type GetUserCommunitySentenceDraftsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -868,8 +868,8 @@ type GetUserDraftCommunitySentencesResponse struct {
 	NextPageToken string                    `protobuf:"bytes,2,opt,name=nextPageToken,proto3" json:"nextPageToken,omitempty"`
 }
 
-func (x *GetUserDraftCommunitySentencesResponse) Reset() {
-	*x = GetUserDraftCommunitySentencesResponse{}
+func (x *GetUserCommunitySentenceDraftsResponse) Reset() {
+	*x = GetUserCommunitySentenceDraftsResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_vocabularypb_hub_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -877,13 +877,13 @@ func (x *GetUserDraftCommunitySentencesResponse) Reset() {
 	}
 }
 
-func (x *GetUserDraftCommunitySentencesResponse) String() string {
+func (x *GetUserCommunitySentenceDraftsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserDraftCommunitySentencesResponse) ProtoMessage() {}
+func (*GetUserCommunitySentenceDraftsResponse) ProtoMessage() {}
 
-func (x *GetUserDraftCommunitySentencesResponse) ProtoReflect() protoreflect.Message {
+func (x *GetUserCommunitySentenceDraftsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_vocabularypb_hub_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -895,19 +895,19 @@ func (x *GetUserDraftCommunitySentencesResponse) ProtoReflect() protoreflect.Mes
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserDraftCommunitySentencesResponse.ProtoReflect.Descriptor instead.
-func (*GetUserDraftCommunitySentencesResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserCommunitySentenceDraftsResponse.ProtoReflect.Descriptor instead.
+func (*GetUserCommunitySentenceDraftsResponse) Descriptor() ([]byte, []int) {
 	return file_vocabularypb_hub_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *GetUserDraftCommunitySentencesResponse) GetSentences() []*CommunitySentenceDraft {
+func (x *GetUserCommunitySentenceDraftsResponse) GetSentences() []*CommunitySentenceDraft {
 	if x != nil {
 		return x.Sentences
 	}
 	return nil
 }
 
-func (x *GetUserDraftCommunitySentencesResponse) GetNextPageToken() string {
+func (x *GetUserCommunitySentenceDraftsResponse) GetNextPageToken() string {
 	if x != nil {
 		return x.NextPageToken
 	}
@@ -1323,16 +1323,16 @@ var file_vocabularypb_hub_proto_rawDesc = []byte{
 	0x6f, 0x63, 0x61, 0x62, 0x75, 0x6c, 0x61, 0x72, 0x79, 0x70, 0x62, 0x2e, 0x43, 0x6f, 0x6d, 0x6d,
 	0x75, 0x6e, 0x69, 0x74, 0x79, 0x53, 0x65, 0x6e, 0x74, 0x65, 0x6e, 0x63, 0x65, 0x52, 0x08, 0x73,
 	0x65, 0x6e, 0x74, 0x65, 0x6e, 0x63, 0x65, 0x22, 0x81, 0x01, 0x0a, 0x25, 0x47, 0x65, 0x74, 0x55,
-	0x73, 0x65, 0x72, 0x44, 0x72, 0x61, 0x66, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x75, 0x6e, 0x69, 0x74,
-	0x79, 0x53, 0x65, 0x6e, 0x74, 0x65, 0x6e, 0x63, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x73, 0x65, 0x72, 0x43, 0x6f, 0x6d, 0x6d, 0x75, 0x6e, 0x69, 0x74, 0x79, 0x53, 0x65, 0x6e, 0x74,
+	0x65, 0x6e, 0x63, 0x65, 0x44, 0x72, 0x61, 0x66, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
 	0x74, 0x12, 0x22, 0x0a, 0x0c, 0x76, 0x6f, 0x63, 0x61, 0x62, 0x75, 0x6c, 0x61, 0x72, 0x79, 0x49,
 	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x76, 0x6f, 0x63, 0x61, 0x62, 0x75, 0x6c,
 	0x61, 0x72, 0x79, 0x49, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x18,
 	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x1c, 0x0a,
 	0x09, 0x70, 0x61, 0x67, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09,
 	0x52, 0x09, 0x70, 0x61, 0x67, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x92, 0x01, 0x0a, 0x26,
-	0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x44, 0x72, 0x61, 0x66, 0x74, 0x43, 0x6f, 0x6d, 0x6d,
-	0x75, 0x6e, 0x69, 0x74, 0x79, 0x53, 0x65, 0x6e, 0x74, 0x65, 0x6e, 0x63, 0x65, 0x73, 0x52, 0x65,
+	0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x43, 0x6f, 0x6d, 0x6d, 0x75, 0x6e, 0x69, 0x74, 0x79,
+	0x53, 0x65, 0x6e, 0x74, 0x65, 0x6e, 0x63, 0x65, 0x44, 0x72, 0x61, 0x66, 0x74, 0x73, 0x52, 0x65,
 	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x42, 0x0a, 0x09, 0x73, 0x65, 0x6e, 0x74, 0x65, 0x6e,
 	0x63, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x24, 0x2e, 0x76, 0x6f, 0x63, 0x61,
 	0x62, 0x75, 0x6c, 0x61, 0x72, 0x79, 0x70, 0x62, 0x2e, 0x43, 0x6f, 0x6d, 0x6d, 0x75, 0x6e, 0x69,
@@ -1433,14 +1433,14 @@ var file_vocabularypb_hub_proto_rawDesc = []byte{
 	0x61, 0x62, 0x75, 0x6c, 0x61, 0x72, 0x79, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x6f, 0x6d,
 	0x6d, 0x75, 0x6e, 0x69, 0x74, 0x79, 0x53, 0x65, 0x6e, 0x74, 0x65, 0x6e, 0x63, 0x65, 0x52, 0x65,
 	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x8d, 0x01, 0x0a, 0x1e, 0x47, 0x65, 0x74,
-	0x55, 0x73, 0x65, 0x72, 0x44, 0x72, 0x61, 0x66, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x75, 0x6e, 0x69,
-	0x74, 0x79, 0x53, 0x65, 0x6e, 0x74, 0x65, 0x6e, 0x63, 0x65, 0x73, 0x12, 0x33, 0x2e, 0x76, 0x6f,
+	0x55, 0x73, 0x65, 0x72, 0x43, 0x6f, 0x6d, 0x6d, 0x75, 0x6e, 0x69, 0x74, 0x79, 0x53, 0x65, 0x6e,
+	0x74, 0x65, 0x6e, 0x63, 0x65, 0x44, 0x72, 0x61, 0x66, 0x74, 0x73, 0x12, 0x33, 0x2e, 0x76, 0x6f,
 	0x63, 0x61, 0x62, 0x75, 0x6c, 0x61, 0x72, 0x79, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x55, 0x73,
-	0x65, 0x72, 0x44, 0x72, 0x61, 0x66, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x75, 0x6e, 0x69, 0x74, 0x79,
-	0x53, 0x65, 0x6e, 0x74, 0x65, 0x6e, 0x63, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x65, 0x72, 0x43, 0x6f, 0x6d, 0x6d, 0x75, 0x6e, 0x69, 0x74, 0x79, 0x53, 0x65, 0x6e, 0x74, 0x65,
+	0x6e, 0x63, 0x65, 0x44, 0x72, 0x61, 0x66, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
 	0x1a, 0x34, 0x2e, 0x76, 0x6f, 0x63, 0x61, 0x62, 0x75, 0x6c, 0x61, 0x72, 0x79, 0x70, 0x62, 0x2e,
-	0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x44, 0x72, 0x61, 0x66, 0x74, 0x43, 0x6f, 0x6d, 0x6d,
-	0x75, 0x6e, 0x69, 0x74, 0x79, 0x53, 0x65, 0x6e, 0x74, 0x65, 0x6e, 0x63, 0x65, 0x73, 0x52, 0x65,
+	0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x43, 0x6f, 0x6d, 0x6d, 0x75, 0x6e, 0x69, 0x74, 0x79,
+	0x53, 0x65, 0x6e, 0x74, 0x65, 0x6e, 0x63, 0x65, 0x44, 0x72, 0x61, 0x66, 0x74, 0x73, 0x52, 0x65,
 	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x69, 0x0a, 0x12, 0x42, 0x6f, 0x6f, 0x6b,
 	0x6d, 0x61, 0x72, 0x6b, 0x56, 0x6f, 0x63, 0x61, 0x62, 0x75, 0x6c, 0x61, 0x72, 0x79, 0x12, 0x27,
 	0x2e, 0x76, 0x6f, 0x63, 0x61, 0x62, 0x75, 0x6c, 0x61, 0x72, 0x79, 0x70, 0x62, 0x2e, 0x42, 0x6f,
@@ -1505,8 +1505,8 @@ var file_vocabularypb_hub_proto_goTypes = []interface{}{
 	(*GetCommunitySentencesResponse)(nil),          // 11: vocabularypb.GetCommunitySentencesResponse
 	(*GetCommunitySentenceRequest)(nil),            // 12: vocabularypb.GetCommunitySentenceRequest
 	(*GetCommunitySentenceResponse)(nil),           // 13: vocabularypb.GetCommunitySentenceResponse
-	(*GetUserDraftCommunitySentencesRequest)(nil),  // 14: vocabularypb.GetUserDraftCommunitySentencesRequest
-	(*GetUserDraftCommunitySentencesResponse)(nil), // 15: vocabularypb.GetUserDraftCommunitySentencesResponse
+	(*GetUserCommunitySentenceDraftsRequest)(nil),  // 14: vocabularypb.GetUserCommunitySentenceDraftsRequest
+	(*GetUserCommunitySentenceDraftsResponse)(nil), // 15: vocabularypb.GetUserCommunitySentenceDraftsResponse
 	(*BookmarkVocabularyRequest)(nil),              // 16: vocabularypb.BookmarkVocabularyRequest
 	(*BookmarkVocabularyResponse)(nil),             // 17: vocabularypb.BookmarkVocabularyResponse
 	(*GetUserBookmarkedVocabulariesRequest)(nil),   // 18: vocabularypb.GetUserBookmarkedVocabulariesRequest
@@ -1524,7 +1524,7 @@ var file_vocabularypb_hub_proto_depIdxs = []int32{
 	22, // 0: vocabularypb.SearchVocabularyResponse.vocabulary:type_name -> vocabularypb.Vocabulary
 	23, // 1: vocabularypb.GetCommunitySentencesResponse.sentences:type_name -> vocabularypb.CommunitySentenceBrief
 	24, // 2: vocabularypb.GetCommunitySentenceResponse.sentence:type_name -> vocabularypb.CommunitySentence
-	25, // 3: vocabularypb.GetUserDraftCommunitySentencesResponse.sentences:type_name -> vocabularypb.CommunitySentenceDraft
+	25, // 3: vocabularypb.GetUserCommunitySentenceDraftsResponse.sentences:type_name -> vocabularypb.CommunitySentenceDraft
 	26, // 4: vocabularypb.GetUserBookmarkedVocabulariesResponse.vocabularies:type_name -> vocabularypb.VocabularyBrief
 	26, // 5: vocabularypb.GetWordOfTheDayResponse.vocabulary:type_name -> vocabularypb.VocabularyBrief
 	27, // 6: vocabularypb.GetWordOfTheDayResponse.information:type_name -> vocabularypb.Multilingual
@@ -1535,7 +1535,7 @@ var file_vocabularypb_hub_proto_depIdxs = []int32{
 	8,  // 11: vocabularypb.VocabularyService.LikeCommunitySentence:input_type -> vocabularypb.LikeCommunitySentenceRequest
 	10, // 12: vocabularypb.VocabularyService.GetCommunitySentences:input_type -> vocabularypb.GetCommunitySentencesRequest
 	12, // 13: vocabularypb.VocabularyService.GetCommunitySentence:input_type -> vocabularypb.GetCommunitySentenceRequest
-	14, // 14: vocabularypb.VocabularyService.GetUserDraftCommunitySentences:input_type -> vocabularypb.GetUserDraftCommunitySentencesRequest
+	14, // 14: vocabularypb.VocabularyService.GetUserCommunitySentenceDrafts:input_type -> vocabularypb.GetUserCommunitySentenceDraftsRequest
 	16, // 15: vocabularypb.VocabularyService.BookmarkVocabulary:input_type -> vocabularypb.BookmarkVocabularyRequest
 	18, // 16: vocabularypb.VocabularyService.GetUserBookmarkedVocabularies:input_type -> vocabularypb.GetUserBookmarkedVocabulariesRequest
 	20, // 17: vocabularypb.VocabularyService.GetWordOfTheDay:input_type -> vocabularypb.GetWordOfTheDayRequest
@@ -1546,7 +1546,7 @@ var file_vocabularypb_hub_proto_depIdxs = []int32{
 	9,  // 22: vocabularypb.VocabularyService.LikeCommunitySentence:output_type -> vocabularypb.LikeCommunitySentenceResponse
 	11, // 23: vocabularypb.VocabularyService.GetCommunitySentences:output_type -> vocabularypb.GetCommunitySentencesResponse
 	13, // 24: vocabularypb.VocabularyService.GetCommunitySentence:output_type -> vocabularypb.GetCommunitySentenceResponse
-	15, // 25: vocabularypb.VocabularyService.GetUserDraftCommunitySentences:output_type -> vocabularypb.GetUserDraftCommunitySentencesResponse
+	15, // 25: vocabularypb.VocabularyService.GetUserCommunitySentenceDrafts:output_type -> vocabularypb.GetUserCommunitySentenceDraftsResponse
 	17, // 26: vocabularypb.VocabularyService.BookmarkVocabulary:output_type -> vocabularypb.BookmarkVocabularyResponse
 	19, // 27: vocabularypb.VocabularyService.GetUserBookmarkedVocabularies:output_type -> vocabularypb.GetUserBookmarkedVocabulariesResponse
 	21, // 28: vocabularypb.VocabularyService.GetWordOfTheDay:output_type -> vocabularypb.GetWordOfTheDayResponse
@@ -1733,7 +1733,7 @@ func file_vocabularypb_hub_proto_init() {
 			}
 		}
 		file_vocabularypb_hub_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetUserDraftCommunitySentencesRequest); i {
+			switch v := v.(*GetUserCommunitySentenceDraftsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1745,7 +1745,7 @@ func file_vocabularypb_hub_proto_init() {
 			}
 		}
 		file_vocabularypb_hub_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetUserDraftCommunitySentencesResponse); i {
+			switch v := v.(*GetUserCommunitySentenceDraftsResponse); i {
 			case 0:
 				return &v.state
 			case 1:

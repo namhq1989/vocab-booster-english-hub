@@ -26,7 +26,7 @@ const (
 	VocabularyService_LikeCommunitySentence_FullMethodName          = "/vocabularypb.VocabularyService/LikeCommunitySentence"
 	VocabularyService_GetCommunitySentences_FullMethodName          = "/vocabularypb.VocabularyService/GetCommunitySentences"
 	VocabularyService_GetCommunitySentence_FullMethodName           = "/vocabularypb.VocabularyService/GetCommunitySentence"
-	VocabularyService_GetUserDraftCommunitySentences_FullMethodName = "/vocabularypb.VocabularyService/GetUserDraftCommunitySentences"
+	VocabularyService_GetUserCommunitySentenceDrafts_FullMethodName = "/vocabularypb.VocabularyService/GetUserCommunitySentenceDrafts"
 	VocabularyService_BookmarkVocabulary_FullMethodName             = "/vocabularypb.VocabularyService/BookmarkVocabulary"
 	VocabularyService_GetUserBookmarkedVocabularies_FullMethodName  = "/vocabularypb.VocabularyService/GetUserBookmarkedVocabularies"
 	VocabularyService_GetWordOfTheDay_FullMethodName                = "/vocabularypb.VocabularyService/GetWordOfTheDay"
@@ -43,7 +43,7 @@ type VocabularyServiceClient interface {
 	LikeCommunitySentence(ctx context.Context, in *LikeCommunitySentenceRequest, opts ...grpc.CallOption) (*LikeCommunitySentenceResponse, error)
 	GetCommunitySentences(ctx context.Context, in *GetCommunitySentencesRequest, opts ...grpc.CallOption) (*GetCommunitySentencesResponse, error)
 	GetCommunitySentence(ctx context.Context, in *GetCommunitySentenceRequest, opts ...grpc.CallOption) (*GetCommunitySentenceResponse, error)
-	GetUserDraftCommunitySentences(ctx context.Context, in *GetUserDraftCommunitySentencesRequest, opts ...grpc.CallOption) (*GetUserDraftCommunitySentencesResponse, error)
+	GetUserCommunitySentenceDrafts(ctx context.Context, in *GetUserCommunitySentenceDraftsRequest, opts ...grpc.CallOption) (*GetUserCommunitySentenceDraftsResponse, error)
 	BookmarkVocabulary(ctx context.Context, in *BookmarkVocabularyRequest, opts ...grpc.CallOption) (*BookmarkVocabularyResponse, error)
 	GetUserBookmarkedVocabularies(ctx context.Context, in *GetUserBookmarkedVocabulariesRequest, opts ...grpc.CallOption) (*GetUserBookmarkedVocabulariesResponse, error)
 	GetWordOfTheDay(ctx context.Context, in *GetWordOfTheDayRequest, opts ...grpc.CallOption) (*GetWordOfTheDayResponse, error)
@@ -120,9 +120,9 @@ func (c *vocabularyServiceClient) GetCommunitySentence(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *vocabularyServiceClient) GetUserDraftCommunitySentences(ctx context.Context, in *GetUserDraftCommunitySentencesRequest, opts ...grpc.CallOption) (*GetUserDraftCommunitySentencesResponse, error) {
-	out := new(GetUserDraftCommunitySentencesResponse)
-	err := c.cc.Invoke(ctx, VocabularyService_GetUserDraftCommunitySentences_FullMethodName, in, out, opts...)
+func (c *vocabularyServiceClient) GetUserCommunitySentenceDrafts(ctx context.Context, in *GetUserCommunitySentenceDraftsRequest, opts ...grpc.CallOption) (*GetUserCommunitySentenceDraftsResponse, error) {
+	out := new(GetUserCommunitySentenceDraftsResponse)
+	err := c.cc.Invoke(ctx, VocabularyService_GetUserCommunitySentenceDrafts_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ type VocabularyServiceServer interface {
 	LikeCommunitySentence(context.Context, *LikeCommunitySentenceRequest) (*LikeCommunitySentenceResponse, error)
 	GetCommunitySentences(context.Context, *GetCommunitySentencesRequest) (*GetCommunitySentencesResponse, error)
 	GetCommunitySentence(context.Context, *GetCommunitySentenceRequest) (*GetCommunitySentenceResponse, error)
-	GetUserDraftCommunitySentences(context.Context, *GetUserDraftCommunitySentencesRequest) (*GetUserDraftCommunitySentencesResponse, error)
+	GetUserCommunitySentenceDrafts(context.Context, *GetUserCommunitySentenceDraftsRequest) (*GetUserCommunitySentenceDraftsResponse, error)
 	BookmarkVocabulary(context.Context, *BookmarkVocabularyRequest) (*BookmarkVocabularyResponse, error)
 	GetUserBookmarkedVocabularies(context.Context, *GetUserBookmarkedVocabulariesRequest) (*GetUserBookmarkedVocabulariesResponse, error)
 	GetWordOfTheDay(context.Context, *GetWordOfTheDayRequest) (*GetWordOfTheDayResponse, error)
@@ -198,8 +198,8 @@ func (UnimplementedVocabularyServiceServer) GetCommunitySentences(context.Contex
 func (UnimplementedVocabularyServiceServer) GetCommunitySentence(context.Context, *GetCommunitySentenceRequest) (*GetCommunitySentenceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCommunitySentence not implemented")
 }
-func (UnimplementedVocabularyServiceServer) GetUserDraftCommunitySentences(context.Context, *GetUserDraftCommunitySentencesRequest) (*GetUserDraftCommunitySentencesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserDraftCommunitySentences not implemented")
+func (UnimplementedVocabularyServiceServer) GetUserCommunitySentenceDrafts(context.Context, *GetUserCommunitySentenceDraftsRequest) (*GetUserCommunitySentenceDraftsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserCommunitySentenceDrafts not implemented")
 }
 func (UnimplementedVocabularyServiceServer) BookmarkVocabulary(context.Context, *BookmarkVocabularyRequest) (*BookmarkVocabularyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BookmarkVocabulary not implemented")
@@ -348,20 +348,20 @@ func _VocabularyService_GetCommunitySentence_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _VocabularyService_GetUserDraftCommunitySentences_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserDraftCommunitySentencesRequest)
+func _VocabularyService_GetUserCommunitySentenceDrafts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserCommunitySentenceDraftsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(VocabularyServiceServer).GetUserDraftCommunitySentences(ctx, in)
+		return srv.(VocabularyServiceServer).GetUserCommunitySentenceDrafts(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: VocabularyService_GetUserDraftCommunitySentences_FullMethodName,
+		FullMethod: VocabularyService_GetUserCommunitySentenceDrafts_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VocabularyServiceServer).GetUserDraftCommunitySentences(ctx, req.(*GetUserDraftCommunitySentencesRequest))
+		return srv.(VocabularyServiceServer).GetUserCommunitySentenceDrafts(ctx, req.(*GetUserCommunitySentenceDraftsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -456,8 +456,8 @@ var VocabularyService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _VocabularyService_GetCommunitySentence_Handler,
 		},
 		{
-			MethodName: "GetUserDraftCommunitySentences",
-			Handler:    _VocabularyService_GetUserDraftCommunitySentences_Handler,
+			MethodName: "GetUserCommunitySentenceDrafts",
+			Handler:    _VocabularyService_GetUserCommunitySentenceDrafts_Handler,
 		},
 		{
 			MethodName: "BookmarkVocabulary",

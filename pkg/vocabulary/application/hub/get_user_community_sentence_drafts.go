@@ -8,19 +8,19 @@ import (
 	"github.com/namhq1989/vocab-booster-utilities/appcontext"
 )
 
-type GetUserDraftCommunitySentencesHandler struct {
+type GetUserCommunitySentenceDraftsHandler struct {
 	communitySentenceDraftRepository domain.CommunitySentenceDraftRepository
 }
 
-func NewGetUserDraftCommunitySentencesHandler(
+func NewGetUserCommunitySentenceDraftsHandler(
 	communitySentenceDraftRepository domain.CommunitySentenceDraftRepository,
-) GetUserDraftCommunitySentencesHandler {
-	return GetUserDraftCommunitySentencesHandler{
+) GetUserCommunitySentenceDraftsHandler {
+	return GetUserCommunitySentenceDraftsHandler{
 		communitySentenceDraftRepository: communitySentenceDraftRepository,
 	}
 }
 
-func (h GetUserDraftCommunitySentencesHandler) GetUserDraftCommunitySentences(ctx *appcontext.AppContext, req *vocabularypb.GetUserDraftCommunitySentencesRequest) (*vocabularypb.GetUserDraftCommunitySentencesResponse, error) {
+func (h GetUserCommunitySentenceDraftsHandler) GetUserCommunitySentenceDrafts(ctx *appcontext.AppContext, req *vocabularypb.GetUserCommunitySentenceDraftsRequest) (*vocabularypb.GetUserCommunitySentenceDraftsResponse, error) {
 	ctx.Logger().Info("[hub] new get user draft community sentences request", appcontext.Fields{
 		"userID": req.GetUserId(), "vocabularyID": req.GetVocabularyId(),
 		"pageToken": req.GetPageToken(),
@@ -42,7 +42,7 @@ func (h GetUserDraftCommunitySentencesHandler) GetUserDraftCommunitySentences(ct
 
 	var (
 		totalSentences = len(sentences)
-		result         = &vocabularypb.GetUserDraftCommunitySentencesResponse{
+		result         = &vocabularypb.GetUserCommunitySentenceDraftsResponse{
 			Sentences:     make([]*vocabularypb.CommunitySentenceDraft, 0),
 			NextPageToken: "",
 		}

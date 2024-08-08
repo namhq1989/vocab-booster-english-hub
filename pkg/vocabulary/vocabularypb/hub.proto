@@ -12,7 +12,7 @@ service VocabularyService {
   rpc LikeCommunitySentence(LikeCommunitySentenceRequest) returns (LikeCommunitySentenceResponse) {}
   rpc GetCommunitySentences(GetCommunitySentencesRequest) returns (GetCommunitySentencesResponse) {}
   rpc GetCommunitySentence(GetCommunitySentenceRequest) returns (GetCommunitySentenceResponse) {}
-  rpc GetUserDraftCommunitySentences(GetUserDraftCommunitySentencesRequest) returns (GetUserDraftCommunitySentencesResponse) {}
+  rpc GetUserCommunitySentenceDrafts(GetUserCommunitySentenceDraftsRequest) returns (GetUserCommunitySentenceDraftsResponse) {}
   rpc BookmarkVocabulary(BookmarkVocabularyRequest) returns (BookmarkVocabularyResponse) {}
   rpc GetUserBookmarkedVocabularies(GetUserBookmarkedVocabulariesRequest) returns (GetUserBookmarkedVocabulariesResponse) {}
   rpc GetWordOfTheDay(GetWordOfTheDayRequest) returns (GetWordOfTheDayResponse) {}
@@ -104,13 +104,13 @@ message GetCommunitySentenceResponse {
 
 // GET USER DRAFT COMMUNITY SENTENCES
 
-message GetUserDraftCommunitySentencesRequest {
+message GetUserCommunitySentenceDraftsRequest {
   string vocabularyId = 1;
   string userId = 2;
   string pageToken = 3;
 }
 
-message GetUserDraftCommunitySentencesResponse {
+message GetUserCommunitySentenceDraftsResponse {
   repeated CommunitySentenceDraft sentences = 1;
   string nextPageToken = 2;
 }

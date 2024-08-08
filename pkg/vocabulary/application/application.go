@@ -20,7 +20,7 @@ type (
 		LikeCommunitySentence(ctx *appcontext.AppContext, req *vocabularypb.LikeCommunitySentenceRequest) (*vocabularypb.LikeCommunitySentenceResponse, error)
 		GetCommunitySentences(ctx *appcontext.AppContext, req *vocabularypb.GetCommunitySentencesRequest) (*vocabularypb.GetCommunitySentencesResponse, error)
 		GetCommunitySentence(ctx *appcontext.AppContext, req *vocabularypb.GetCommunitySentenceRequest) (*vocabularypb.GetCommunitySentenceResponse, error)
-		GetUserDraftCommunitySentences(ctx *appcontext.AppContext, req *vocabularypb.GetUserDraftCommunitySentencesRequest) (*vocabularypb.GetUserDraftCommunitySentencesResponse, error)
+		GetUserCommunitySentenceDrafts(ctx *appcontext.AppContext, req *vocabularypb.GetUserCommunitySentenceDraftsRequest) (*vocabularypb.GetUserCommunitySentenceDraftsResponse, error)
 	}
 	App interface {
 		Hubs
@@ -38,7 +38,7 @@ type (
 		hub.LikeCommunitySentenceHandler
 		hub.GetCommunitySentencesHandler
 		hub.GetCommunitySentenceHandler
-		hub.GetUserDraftCommunitySentencesHandler
+		hub.GetUserCommunitySentenceDraftsHandler
 	}
 	Application struct {
 		appHubHandler
@@ -104,7 +104,7 @@ func New(
 			GetCommunitySentenceHandler: hub.NewGetCommunitySentenceHandler(
 				communitySentenceRepository,
 			),
-			GetUserDraftCommunitySentencesHandler: hub.NewGetUserDraftCommunitySentencesHandler(
+			GetUserCommunitySentenceDraftsHandler: hub.NewGetUserCommunitySentenceDraftsHandler(
 				communitySentenceDraftRepository,
 			),
 		},
