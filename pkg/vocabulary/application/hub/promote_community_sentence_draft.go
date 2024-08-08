@@ -120,7 +120,7 @@ func (PromoteCommunitySentenceDraftHandler) setSentenceData(
 		return err
 	}
 
-	if err := sentence.SetRequiredVocabulary(draft.RequiredVocabulary); err != nil {
+	if err := sentence.SetRequiredVocabularies(draft.RequiredVocabularies); err != nil {
 		ctx.Logger().Error("failed to set required vocabulary", err, appcontext.Fields{})
 		return err
 	}

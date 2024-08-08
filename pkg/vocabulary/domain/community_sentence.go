@@ -12,27 +12,28 @@ import (
 
 type CommunitySentenceRepository interface {
 	FindCommunitySentenceByID(ctx *appcontext.AppContext, id string) (*CommunitySentence, error)
-	FindCommunitySentences(ctx *appcontext.AppContext, filter VocabularyCommunitySentenceFilter) ([]ExtendedCommunitySentence, error)
+	FindCommunitySentences(ctx *appcontext.AppContext, filter CommunitySentenceFilter) ([]ExtendedCommunitySentence, error)
 	CreateCommunitySentence(ctx *appcontext.AppContext, sentence CommunitySentence) error
 	UpdateCommunitySentence(ctx *appcontext.AppContext, sentence CommunitySentence) error
 	FindCommunitySentenceWithUserID(ctx *appcontext.AppContext, sentenceID, userID string) (*ExtendedCommunitySentence, error)
 }
 
 type CommunitySentence struct {
-	ID                 string
-	UserID             string
-	VocabularyID       string
-	Content            language.Multilingual
-	RequiredVocabulary []string
-	RequiredTense      Tense
-	Clauses            []SentenceClause
-	PosTags            []PosTag
-	Sentiment          Sentiment
-	Dependencies       []Dependency
-	Verbs              []Verb
-	Level              SentenceLevel
-	StatsLike          int
-	CreatedAt          time.Time
+	ID                   string
+	UserID               string
+	VocabularyID         string
+	Content              language.Multilingual
+	MainWord             VocabularyMainWord
+	RequiredVocabularies []string
+	RequiredTense        Tense
+	Clauses              []SentenceClause
+	PosTags              []PosTag
+	Sentiment            Sentiment
+	Dependencies         []Dependency
+	Verbs                []Verb
+	Level                SentenceLevel
+	StatsLike            int
+	CreatedAt            time.Time
 }
 
 func NewCommunitySentence(userID, vocabularyID string) (*CommunitySentence, error) {
@@ -61,12 +62,25 @@ func (s *CommunitySentence) SetContent(content language.Multilingual) error {
 	return nil
 }
 
-func (s *CommunitySentence) SetRequiredVocabulary(required []string) error {
-	if len(required) == 0 {
-		return apperrors.Common.InvalidRequiredVocabulary
+func (s *CommunitySentence) SetMainWordData(mainWord VocabularyMainWord) error {
+	if mainWord.Base == "" {
+		return apperrors.Vocabulary.InvalidTerm
 	}
 
-	s.RequiredVocabulary = required
+	if mainWord.Word == "" {
+		return apperrors.Vocabulary.InvalidTerm
+	}
+
+	s.MainWord = mainWord
+	return nil
+}
+
+func (s *CommunitySentence) SetRequiredVocabularies(required []string) error {
+	if len(required) == 0 {
+		return apperrors.Common.InvalidRequiredVocabularies
+	}
+
+	s.RequiredVocabularies = required
 	return nil
 }
 
@@ -135,7 +149,7 @@ func (s *CommunitySentence) DecreaseStatsLike() {
 // FILTER
 //
 
-type VocabularyCommunitySentenceFilter struct {
+type CommunitySentenceFilter struct {
 	UserID       string
 	VocabularyID string
 	Lang         string
@@ -143,7 +157,7 @@ type VocabularyCommunitySentenceFilter struct {
 	Limit        int64
 }
 
-func NewVocabularyCommunitySentenceFilter(userID, vocabularyID, lang, pageToken string) (*VocabularyCommunitySentenceFilter, error) {
+func NewCommunitySentenceFilter(userID, vocabularyID, lang, pageToken string) (*CommunitySentenceFilter, error) {
 	if !database.IsValidID(userID) {
 		return nil, apperrors.User.InvalidUserID
 	}
@@ -153,7 +167,7 @@ func NewVocabularyCommunitySentenceFilter(userID, vocabularyID, lang, pageToken 
 	}
 
 	pt := pagetoken.Decode(pageToken)
-	return &VocabularyCommunitySentenceFilter{
+	return &CommunitySentenceFilter{
 		UserID:       userID,
 		VocabularyID: vocabularyID,
 		Timestamp:    pt.Timestamp,

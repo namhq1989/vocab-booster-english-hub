@@ -11,23 +11,28 @@ type CommunitySentenceMapper struct{}
 
 func (CommunitySentenceMapper) FromModelToDomain(sentence model.CommunitySentences) (*domain.CommunitySentence, error) {
 	var result = &domain.CommunitySentence{
-		ID:                 sentence.ID,
-		UserID:             sentence.UserID,
-		VocabularyID:       sentence.VocabularyID,
-		Content:            language.Multilingual{},
-		RequiredVocabulary: sentence.RequiredVocabulary,
-		RequiredTense:      domain.ToTense(sentence.RequiredTense),
-		Clauses:            make([]domain.SentenceClause, 0),
-		PosTags:            make([]domain.PosTag, 0),
-		Sentiment:          domain.Sentiment{},
-		Dependencies:       make([]domain.Dependency, 0),
-		Verbs:              make([]domain.Verb, 0),
-		Level:              domain.ToSentenceLevel(sentence.Level),
-		StatsLike:          int(sentence.StatsLike),
-		CreatedAt:          sentence.CreatedAt,
+		ID:                   sentence.ID,
+		UserID:               sentence.UserID,
+		VocabularyID:         sentence.VocabularyID,
+		Content:              language.Multilingual{},
+		MainWord:             domain.VocabularyMainWord{},
+		RequiredVocabularies: sentence.RequiredVocabularies,
+		RequiredTense:        domain.ToTense(sentence.RequiredTense),
+		Clauses:              make([]domain.SentenceClause, 0),
+		PosTags:              make([]domain.PosTag, 0),
+		Sentiment:            domain.Sentiment{},
+		Dependencies:         make([]domain.Dependency, 0),
+		Verbs:                make([]domain.Verb, 0),
+		Level:                domain.ToSentenceLevel(sentence.Level),
+		StatsLike:            int(sentence.StatsLike),
+		CreatedAt:            sentence.CreatedAt,
 	}
 
 	if err := json.Unmarshal([]byte(sentence.Content), &result.Content); err != nil {
+		return nil, err
+	}
+
+	if err := json.Unmarshal([]byte(sentence.MainWord), &result.MainWord); err != nil {
 		return nil, err
 	}
 
@@ -56,26 +61,38 @@ func (CommunitySentenceMapper) FromModelToDomain(sentence model.CommunitySentenc
 
 func (CommunitySentenceMapper) FromDomainToModel(sentence domain.CommunitySentence) (*model.CommunitySentences, error) {
 	var result = &model.CommunitySentences{
-		ID:                 sentence.ID,
-		UserID:             sentence.UserID,
-		VocabularyID:       sentence.VocabularyID,
-		Content:            "",
-		RequiredVocabulary: sentence.RequiredVocabulary,
-		RequiredTense:      sentence.RequiredTense.String(),
-		Sentiment:          "",
-		Clauses:            "",
-		StatsLike:          int32(sentence.StatsLike),
-		CreatedAt:          sentence.CreatedAt,
-		PosTags:            "",
-		Dependencies:       "",
-		Verbs:              "",
-		Level:              sentence.Level.String(),
+		ID:                   sentence.ID,
+		UserID:               sentence.UserID,
+		VocabularyID:         sentence.VocabularyID,
+		Content:              "",
+		MainWord:             "",
+		RequiredVocabularies: sentence.RequiredVocabularies,
+		RequiredTense:        sentence.RequiredTense.String(),
+		Sentiment:            "",
+		Clauses:              "",
+		StatsLike:            int32(sentence.StatsLike),
+		CreatedAt:            sentence.CreatedAt,
+		PosTags:              "",
+		Dependencies:         "",
+		Verbs:                "",
+		Level:                sentence.Level.String(),
 	}
 
 	if data, err := json.Marshal(sentence.Content); err != nil {
 		return nil, err
 	} else {
 		result.Content = string(data)
+	}
+
+	mainWord := VocabularyMainWord{
+		Word: sentence.MainWord.Word,
+		Base: sentence.MainWord.Base,
+		Pos:  sentence.MainWord.Pos.String(),
+	}
+	if data, err := json.Marshal(mainWord); err != nil {
+		return nil, err
+	} else {
+		result.MainWord = string(data)
 	}
 
 	clauses := make([]SentenceClause, 0)

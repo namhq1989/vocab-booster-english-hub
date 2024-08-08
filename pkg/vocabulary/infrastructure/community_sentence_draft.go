@@ -94,7 +94,7 @@ func (r CommunitySentenceDraftRepository) UpdateCommunitySentenceDraft(ctx *appc
 	return err
 }
 
-func (r CommunitySentenceDraftRepository) DeleteCommunitySentenceDrafts(ctx *appcontext.AppContext, vocabularyID, userID string) error {
+func (r CommunitySentenceDraftRepository) DeleteCommunitySentenceDraft(ctx *appcontext.AppContext, vocabularyID, userID string) error {
 	if !database.IsValidID(userID) {
 		return apperrors.User.InvalidUserID
 	}
@@ -113,4 +113,40 @@ func (r CommunitySentenceDraftRepository) DeleteCommunitySentenceDrafts(ctx *app
 
 	_, err := stmt.ExecContext(ctx.Context(), r.getDB())
 	return err
+}
+
+func (r CommunitySentenceDraftRepository) FindUserCommunitySentenceDrafts(ctx *appcontext.AppContext, filter domain.CommunitySentenceDraftFilter) ([]domain.CommunitySentenceDraft, error) {
+	whereCond := r.getTable().UserID.EQ(postgres.String(filter.UserID))
+	if filter.VocabularyID != "" {
+		whereCond = whereCond.AND(r.getTable().VocabularyID.EQ(postgres.String(filter.VocabularyID)))
+	}
+	whereCond = whereCond.AND(r.getTable().CreatedAt.LT(postgres.TimestampzT(filter.Timestamp)))
+
+	stmt := postgres.SELECT(
+		r.getTable().AllColumns,
+	).
+		FROM(r.getTable()).
+		WHERE(whereCond).
+		LIMIT(filter.Limit).
+		ORDER_BY(r.getTable().CreatedAt.DESC())
+
+	var (
+		docs   = make([]model.CommunitySentenceDrafts, 0)
+		result = make([]domain.CommunitySentenceDraft, 0)
+	)
+	if err := stmt.QueryContext(ctx.Context(), r.getDB(), &docs); err != nil {
+		if r.db.IsNoRowsError(err) {
+			return result, nil
+		}
+		return result, err
+	}
+
+	var (
+		mapper = mapping.CommunitySentenceDraftMapper{}
+	)
+	for _, doc := range docs {
+		ue, _ := mapper.FromModelToDomain(doc)
+		result = append(result, *ue)
+	}
+	return result, nil
 }

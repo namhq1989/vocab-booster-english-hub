@@ -140,7 +140,7 @@ func (r CommunitySentenceRepository) FindCommunitySentenceWithUserID(ctx *appcon
 	return result, nil
 }
 
-func (r CommunitySentenceRepository) FindCommunitySentences(ctx *appcontext.AppContext, filter domain.VocabularyCommunitySentenceFilter) ([]domain.ExtendedCommunitySentence, error) {
+func (r CommunitySentenceRepository) FindCommunitySentences(ctx *appcontext.AppContext, filter domain.CommunitySentenceFilter) ([]domain.ExtendedCommunitySentence, error) {
 	var (
 		cs  = r.getTable().AS("cs")
 		csl = table.CommunitySentenceLikes.AS("csl")

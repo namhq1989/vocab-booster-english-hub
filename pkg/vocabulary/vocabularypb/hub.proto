@@ -12,6 +12,7 @@ service VocabularyService {
   rpc LikeCommunitySentence(LikeCommunitySentenceRequest) returns (LikeCommunitySentenceResponse) {}
   rpc GetCommunitySentences(GetCommunitySentencesRequest) returns (GetCommunitySentencesResponse) {}
   rpc GetCommunitySentence(GetCommunitySentenceRequest) returns (GetCommunitySentenceResponse) {}
+  rpc GetUserCommunitySentenceDrafts(GetUserCommunitySentenceDraftsRequest) returns (GetUserCommunitySentenceDraftsResponse) {}
   rpc BookmarkVocabulary(BookmarkVocabularyRequest) returns (BookmarkVocabularyResponse) {}
   rpc GetUserBookmarkedVocabularies(GetUserBookmarkedVocabulariesRequest) returns (GetUserBookmarkedVocabulariesResponse) {}
   rpc GetWordOfTheDay(GetWordOfTheDayRequest) returns (GetWordOfTheDayResponse) {}
@@ -35,10 +36,9 @@ message SearchVocabularyResponse {
 message CreateCommunitySentenceDraftRequest {
   string userId = 1;
   string vocabularyId = 2;
-  string lang = 3;
-  string sentence = 4;
-  repeated string vocabulary = 5;
-  string tense = 6;
+  string sentence = 3;
+  repeated string vocabularies = 4;
+  string tense = 5;
 }
 
 message CreateCommunitySentenceDraftResponse {
@@ -101,6 +101,20 @@ message GetCommunitySentenceRequest {
 message GetCommunitySentenceResponse {
   CommunitySentence sentence = 1;
 }
+
+// GET USER DRAFT COMMUNITY SENTENCES
+
+message GetUserCommunitySentenceDraftsRequest {
+  string vocabularyId = 1;
+  string userId = 2;
+  string pageToken = 3;
+}
+
+message GetUserCommunitySentenceDraftsResponse {
+  repeated CommunitySentenceDraft sentences = 1;
+  string nextPageToken = 2;
+}
+
 
 // BOOKMARK VOCABULARY
 

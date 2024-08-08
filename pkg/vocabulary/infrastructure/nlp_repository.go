@@ -77,8 +77,8 @@ func (r NlpRepository) TranslateDefinition(ctx *appcontext.AppContext, definitio
 	return r.nlp.Translate(ctx, definition)
 }
 
-func (r NlpRepository) EvaluateSentence(ctx *appcontext.AppContext, sentence, tense string, vocabulary []string) (*domain.NlpSentenceEvaluationResult, error) {
-	result, err := r.nlp.EvaluateSentence(ctx, sentence, tense, vocabulary)
+func (r NlpRepository) EvaluateSentence(ctx *appcontext.AppContext, sentence, tense string, vocabularies []string) (*domain.NlpSentenceEvaluationResult, error) {
+	result, err := r.nlp.EvaluateSentence(ctx, sentence, tense, vocabularies)
 	if err != nil {
 		return nil, err
 	}

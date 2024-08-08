@@ -17,20 +17,21 @@ type communitySentencesTable struct {
 	postgres.Table
 
 	// Columns
-	ID                 postgres.ColumnString
-	UserID             postgres.ColumnString
-	VocabularyID       postgres.ColumnString
-	Content            postgres.ColumnString
-	RequiredVocabulary postgres.ColumnString
-	RequiredTense      postgres.ColumnString
-	Sentiment          postgres.ColumnString
-	Clauses            postgres.ColumnString
-	PosTags            postgres.ColumnString
-	Dependencies       postgres.ColumnString
-	Verbs              postgres.ColumnString
-	Level              postgres.ColumnString
-	StatsLike          postgres.ColumnInteger
-	CreatedAt          postgres.ColumnTimestampz
+	ID                   postgres.ColumnString
+	UserID               postgres.ColumnString
+	VocabularyID         postgres.ColumnString
+	Content              postgres.ColumnString
+	RequiredVocabularies postgres.ColumnString
+	RequiredTense        postgres.ColumnString
+	Sentiment            postgres.ColumnString
+	Clauses              postgres.ColumnString
+	PosTags              postgres.ColumnString
+	Dependencies         postgres.ColumnString
+	Verbs                postgres.ColumnString
+	Level                postgres.ColumnString
+	StatsLike            postgres.ColumnInteger
+	CreatedAt            postgres.ColumnTimestampz
+	MainWord             postgres.ColumnString
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -71,42 +72,44 @@ func newCommunitySentencesTable(schemaName, tableName, alias string) *CommunityS
 
 func newCommunitySentencesTableImpl(schemaName, tableName, alias string) communitySentencesTable {
 	var (
-		IDColumn                 = postgres.StringColumn("id")
-		UserIDColumn             = postgres.StringColumn("user_id")
-		VocabularyIDColumn       = postgres.StringColumn("vocabulary_id")
-		ContentColumn            = postgres.StringColumn("content")
-		RequiredVocabularyColumn = postgres.StringColumn("required_vocabulary")
-		RequiredTenseColumn      = postgres.StringColumn("required_tense")
-		SentimentColumn          = postgres.StringColumn("sentiment")
-		ClausesColumn            = postgres.StringColumn("clauses")
-		PosTagsColumn            = postgres.StringColumn("pos_tags")
-		DependenciesColumn       = postgres.StringColumn("dependencies")
-		VerbsColumn              = postgres.StringColumn("verbs")
-		LevelColumn              = postgres.StringColumn("level")
-		StatsLikeColumn          = postgres.IntegerColumn("stats_like")
-		CreatedAtColumn          = postgres.TimestampzColumn("created_at")
-		allColumns               = postgres.ColumnList{IDColumn, UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, SentimentColumn, ClausesColumn, PosTagsColumn, DependenciesColumn, VerbsColumn, LevelColumn, StatsLikeColumn, CreatedAtColumn}
-		mutableColumns           = postgres.ColumnList{UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, SentimentColumn, ClausesColumn, PosTagsColumn, DependenciesColumn, VerbsColumn, LevelColumn, StatsLikeColumn, CreatedAtColumn}
+		IDColumn                   = postgres.StringColumn("id")
+		UserIDColumn               = postgres.StringColumn("user_id")
+		VocabularyIDColumn         = postgres.StringColumn("vocabulary_id")
+		ContentColumn              = postgres.StringColumn("content")
+		RequiredVocabulariesColumn = postgres.StringColumn("required_vocabularies")
+		RequiredTenseColumn        = postgres.StringColumn("required_tense")
+		SentimentColumn            = postgres.StringColumn("sentiment")
+		ClausesColumn              = postgres.StringColumn("clauses")
+		PosTagsColumn              = postgres.StringColumn("pos_tags")
+		DependenciesColumn         = postgres.StringColumn("dependencies")
+		VerbsColumn                = postgres.StringColumn("verbs")
+		LevelColumn                = postgres.StringColumn("level")
+		StatsLikeColumn            = postgres.IntegerColumn("stats_like")
+		CreatedAtColumn            = postgres.TimestampzColumn("created_at")
+		MainWordColumn             = postgres.StringColumn("main_word")
+		allColumns                 = postgres.ColumnList{IDColumn, UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabulariesColumn, RequiredTenseColumn, SentimentColumn, ClausesColumn, PosTagsColumn, DependenciesColumn, VerbsColumn, LevelColumn, StatsLikeColumn, CreatedAtColumn, MainWordColumn}
+		mutableColumns             = postgres.ColumnList{UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabulariesColumn, RequiredTenseColumn, SentimentColumn, ClausesColumn, PosTagsColumn, DependenciesColumn, VerbsColumn, LevelColumn, StatsLikeColumn, CreatedAtColumn, MainWordColumn}
 	)
 
 	return communitySentencesTable{
 		Table: postgres.NewTable(schemaName, tableName, alias, allColumns...),
 
 		//Columns
-		ID:                 IDColumn,
-		UserID:             UserIDColumn,
-		VocabularyID:       VocabularyIDColumn,
-		Content:            ContentColumn,
-		RequiredVocabulary: RequiredVocabularyColumn,
-		RequiredTense:      RequiredTenseColumn,
-		Sentiment:          SentimentColumn,
-		Clauses:            ClausesColumn,
-		PosTags:            PosTagsColumn,
-		Dependencies:       DependenciesColumn,
-		Verbs:              VerbsColumn,
-		Level:              LevelColumn,
-		StatsLike:          StatsLikeColumn,
-		CreatedAt:          CreatedAtColumn,
+		ID:                   IDColumn,
+		UserID:               UserIDColumn,
+		VocabularyID:         VocabularyIDColumn,
+		Content:              ContentColumn,
+		RequiredVocabularies: RequiredVocabulariesColumn,
+		RequiredTense:        RequiredTenseColumn,
+		Sentiment:            SentimentColumn,
+		Clauses:              ClausesColumn,
+		PosTags:              PosTagsColumn,
+		Dependencies:         DependenciesColumn,
+		Verbs:                VerbsColumn,
+		Level:                LevelColumn,
+		StatsLike:            StatsLikeColumn,
+		CreatedAt:            CreatedAtColumn,
+		MainWord:             MainWordColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

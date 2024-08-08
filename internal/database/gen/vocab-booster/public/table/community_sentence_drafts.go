@@ -17,19 +17,20 @@ type communitySentenceDraftsTable struct {
 	postgres.Table
 
 	// Columns
-	ID                 postgres.ColumnString
-	UserID             postgres.ColumnString
-	VocabularyID       postgres.ColumnString
-	Content            postgres.ColumnString
-	RequiredVocabulary postgres.ColumnString
-	RequiredTense      postgres.ColumnString
-	IsCorrect          postgres.ColumnBool
-	GrammarErrors      postgres.ColumnString
-	ErrorCode          postgres.ColumnString
-	Sentiment          postgres.ColumnString
-	Clauses            postgres.ColumnString
-	CreatedAt          postgres.ColumnTimestampz
-	UpdatedAt          postgres.ColumnTimestampz
+	ID                   postgres.ColumnString
+	UserID               postgres.ColumnString
+	VocabularyID         postgres.ColumnString
+	Content              postgres.ColumnString
+	RequiredVocabularies postgres.ColumnString
+	RequiredTense        postgres.ColumnString
+	IsCorrect            postgres.ColumnBool
+	GrammarErrors        postgres.ColumnString
+	ErrorCode            postgres.ColumnString
+	Sentiment            postgres.ColumnString
+	Clauses              postgres.ColumnString
+	CreatedAt            postgres.ColumnTimestampz
+	UpdatedAt            postgres.ColumnTimestampz
+	Level                postgres.ColumnString
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -70,40 +71,42 @@ func newCommunitySentenceDraftsTable(schemaName, tableName, alias string) *Commu
 
 func newCommunitySentenceDraftsTableImpl(schemaName, tableName, alias string) communitySentenceDraftsTable {
 	var (
-		IDColumn                 = postgres.StringColumn("id")
-		UserIDColumn             = postgres.StringColumn("user_id")
-		VocabularyIDColumn       = postgres.StringColumn("vocabulary_id")
-		ContentColumn            = postgres.StringColumn("content")
-		RequiredVocabularyColumn = postgres.StringColumn("required_vocabulary")
-		RequiredTenseColumn      = postgres.StringColumn("required_tense")
-		IsCorrectColumn          = postgres.BoolColumn("is_correct")
-		GrammarErrorsColumn      = postgres.StringColumn("grammar_errors")
-		ErrorCodeColumn          = postgres.StringColumn("error_code")
-		SentimentColumn          = postgres.StringColumn("sentiment")
-		ClausesColumn            = postgres.StringColumn("clauses")
-		CreatedAtColumn          = postgres.TimestampzColumn("created_at")
-		UpdatedAtColumn          = postgres.TimestampzColumn("updated_at")
-		allColumns               = postgres.ColumnList{IDColumn, UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, IsCorrectColumn, GrammarErrorsColumn, ErrorCodeColumn, SentimentColumn, ClausesColumn, CreatedAtColumn, UpdatedAtColumn}
-		mutableColumns           = postgres.ColumnList{UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabularyColumn, RequiredTenseColumn, IsCorrectColumn, GrammarErrorsColumn, ErrorCodeColumn, SentimentColumn, ClausesColumn, CreatedAtColumn, UpdatedAtColumn}
+		IDColumn                   = postgres.StringColumn("id")
+		UserIDColumn               = postgres.StringColumn("user_id")
+		VocabularyIDColumn         = postgres.StringColumn("vocabulary_id")
+		ContentColumn              = postgres.StringColumn("content")
+		RequiredVocabulariesColumn = postgres.StringColumn("required_vocabularies")
+		RequiredTenseColumn        = postgres.StringColumn("required_tense")
+		IsCorrectColumn            = postgres.BoolColumn("is_correct")
+		GrammarErrorsColumn        = postgres.StringColumn("grammar_errors")
+		ErrorCodeColumn            = postgres.StringColumn("error_code")
+		SentimentColumn            = postgres.StringColumn("sentiment")
+		ClausesColumn              = postgres.StringColumn("clauses")
+		CreatedAtColumn            = postgres.TimestampzColumn("created_at")
+		UpdatedAtColumn            = postgres.TimestampzColumn("updated_at")
+		LevelColumn                = postgres.StringColumn("level")
+		allColumns                 = postgres.ColumnList{IDColumn, UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabulariesColumn, RequiredTenseColumn, IsCorrectColumn, GrammarErrorsColumn, ErrorCodeColumn, SentimentColumn, ClausesColumn, CreatedAtColumn, UpdatedAtColumn, LevelColumn}
+		mutableColumns             = postgres.ColumnList{UserIDColumn, VocabularyIDColumn, ContentColumn, RequiredVocabulariesColumn, RequiredTenseColumn, IsCorrectColumn, GrammarErrorsColumn, ErrorCodeColumn, SentimentColumn, ClausesColumn, CreatedAtColumn, UpdatedAtColumn, LevelColumn}
 	)
 
 	return communitySentenceDraftsTable{
 		Table: postgres.NewTable(schemaName, tableName, alias, allColumns...),
 
 		//Columns
-		ID:                 IDColumn,
-		UserID:             UserIDColumn,
-		VocabularyID:       VocabularyIDColumn,
-		Content:            ContentColumn,
-		RequiredVocabulary: RequiredVocabularyColumn,
-		RequiredTense:      RequiredTenseColumn,
-		IsCorrect:          IsCorrectColumn,
-		GrammarErrors:      GrammarErrorsColumn,
-		ErrorCode:          ErrorCodeColumn,
-		Sentiment:          SentimentColumn,
-		Clauses:            ClausesColumn,
-		CreatedAt:          CreatedAtColumn,
-		UpdatedAt:          UpdatedAtColumn,
+		ID:                   IDColumn,
+		UserID:               UserIDColumn,
+		VocabularyID:         VocabularyIDColumn,
+		Content:              ContentColumn,
+		RequiredVocabularies: RequiredVocabulariesColumn,
+		RequiredTense:        RequiredTenseColumn,
+		IsCorrect:            IsCorrectColumn,
+		GrammarErrors:        GrammarErrorsColumn,
+		ErrorCode:            ErrorCodeColumn,
+		Sentiment:            SentimentColumn,
+		Clauses:              ClausesColumn,
+		CreatedAt:            CreatedAtColumn,
+		UpdatedAt:            UpdatedAtColumn,
+		Level:                LevelColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

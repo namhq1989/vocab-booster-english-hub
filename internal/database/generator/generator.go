@@ -77,7 +77,7 @@ func exercises(field template.TableModelField, column metadata.Column) template.
 }
 
 func communitySentence(field template.TableModelField, column metadata.Column) template.TableModelField {
-	if column.Name == "required_vocabulary" {
+	if column.Name == "required_vocabularies" {
 		field.Type = template.NewType(database.StringArray{})
 	}
 
@@ -85,7 +85,7 @@ func communitySentence(field template.TableModelField, column metadata.Column) t
 }
 
 func communitySentenceDraft(field template.TableModelField, column metadata.Column) template.TableModelField {
-	if column.Name == "required_vocabulary" {
+	if column.Name == "required_vocabularies" {
 		field.Type = template.NewType(database.StringArray{})
 	}
 

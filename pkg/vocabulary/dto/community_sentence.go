@@ -58,13 +58,18 @@ func ConvertCommunitySentenceFromDomainToGrpc(sentence domain.ExtendedCommunityS
 	}
 
 	result := &vocabularypb.CommunitySentence{
-		Id:                 sentence.ID,
-		VocabularyId:       sentence.VocabularyID,
-		Content:            ConvertMultilingualToGrpcData(sentence.Content),
-		RequiredVocabulary: sentence.RequiredVocabulary,
-		RequiredTense:      sentence.RequiredTense.String(),
-		Clauses:            clauses,
-		PosTags:            posTags,
+		Id:           sentence.ID,
+		VocabularyId: sentence.VocabularyID,
+		Content:      ConvertMultilingualToGrpcData(sentence.Content),
+		MainWord: &vocabularypb.VocabularyMainWord{
+			Word: sentence.MainWord.Word,
+			Base: sentence.MainWord.Base,
+			Pos:  sentence.MainWord.Pos.String(),
+		},
+		RequiredVocabularies: sentence.RequiredVocabularies,
+		RequiredTense:        sentence.RequiredTense.String(),
+		Clauses:              clauses,
+		PosTags:              posTags,
 		Sentiment: &vocabularypb.Sentiment{
 			Polarity:     sentence.Sentiment.Polarity,
 			Subjectivity: sentence.Sentiment.Subjectivity,

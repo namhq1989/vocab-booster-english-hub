@@ -11,19 +11,20 @@ type CommunitySentenceDraftMapper struct{}
 
 func (CommunitySentenceDraftMapper) FromModelToDomain(sentence model.CommunitySentenceDrafts) (*domain.CommunitySentenceDraft, error) {
 	var result = &domain.CommunitySentenceDraft{
-		ID:                 sentence.ID,
-		UserID:             sentence.UserID,
-		VocabularyID:       sentence.VocabularyID,
-		Content:            language.Multilingual{},
-		RequiredVocabulary: sentence.RequiredVocabulary,
-		RequiredTense:      domain.ToTense(sentence.RequiredTense),
-		IsCorrect:          sentence.IsCorrect,
-		ErrorCode:          domain.ToSentenceErrorCode(sentence.ErrorCode),
-		GrammarErrors:      make([]domain.SentenceGrammarError, 0),
-		Sentiment:          domain.Sentiment{},
-		Clauses:            make([]domain.SentenceClause, 0),
-		CreatedAt:          sentence.CreatedAt,
-		UpdatedAt:          sentence.UpdatedAt,
+		ID:                   sentence.ID,
+		UserID:               sentence.UserID,
+		VocabularyID:         sentence.VocabularyID,
+		Content:              language.Multilingual{},
+		RequiredVocabularies: sentence.RequiredVocabularies,
+		RequiredTense:        domain.ToTense(sentence.RequiredTense),
+		IsCorrect:            sentence.IsCorrect,
+		ErrorCode:            domain.ToSentenceErrorCode(sentence.ErrorCode),
+		GrammarErrors:        make([]domain.SentenceGrammarError, 0),
+		Sentiment:            domain.Sentiment{},
+		Clauses:              make([]domain.SentenceClause, 0),
+		Level:                domain.ToSentenceLevel(sentence.Level),
+		CreatedAt:            sentence.CreatedAt,
+		UpdatedAt:            sentence.UpdatedAt,
 	}
 
 	if err := json.Unmarshal([]byte(sentence.GrammarErrors), &result.GrammarErrors); err != nil {
@@ -47,19 +48,20 @@ func (CommunitySentenceDraftMapper) FromModelToDomain(sentence model.CommunitySe
 
 func (CommunitySentenceDraftMapper) FromDomainToModel(sentence domain.CommunitySentenceDraft) (*model.CommunitySentenceDrafts, error) {
 	var result = &model.CommunitySentenceDrafts{
-		ID:                 sentence.ID,
-		UserID:             sentence.UserID,
-		VocabularyID:       sentence.VocabularyID,
-		Content:            "",
-		RequiredVocabulary: sentence.RequiredVocabulary,
-		RequiredTense:      sentence.RequiredTense.String(),
-		IsCorrect:          sentence.IsCorrect,
-		ErrorCode:          sentence.ErrorCode.String(),
-		GrammarErrors:      "",
-		Sentiment:          "",
-		Clauses:            "",
-		CreatedAt:          sentence.CreatedAt,
-		UpdatedAt:          sentence.UpdatedAt,
+		ID:                   sentence.ID,
+		UserID:               sentence.UserID,
+		VocabularyID:         sentence.VocabularyID,
+		Content:              "",
+		RequiredVocabularies: sentence.RequiredVocabularies,
+		RequiredTense:        sentence.RequiredTense.String(),
+		IsCorrect:            sentence.IsCorrect,
+		ErrorCode:            sentence.ErrorCode.String(),
+		GrammarErrors:        "",
+		Sentiment:            "",
+		Clauses:              "",
+		Level:                sentence.Level.String(),
+		CreatedAt:            sentence.CreatedAt,
+		UpdatedAt:            sentence.UpdatedAt,
 	}
 
 	grammarErrors := make([]SentenceGrammarError, 0)
